@@ -1,12 +1,15 @@
 plugins {
 	id 'java'
+	id 'checkstyle'
+	id 'jacoco'
+	id "org.sonarqube" version "3.3"
 	id 'org.springframework.boot' version '2.7.5'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
 group = 'io.pakland.mdas'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+version = '1.0.0-SNAPSHOT'
+sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
@@ -14,9 +17,57 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
+	implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+	implementation 'org.projectlombok:lombok:1.18.22'
+
+	annotationProcessor 'org.projectlombok:lombok:1.18.12'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+	testImplementation 'org.mockito:mockito-inline:3.9.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+checkstyle {
+	toolVersion '10.3.2'
+	configFile file("${project.rootDir}/checkstyle.xml")
+	checkstyleTest.enabled = false
+}
+
+checkstyleMain {
+	source ='src/main/java'
+}
+
+test {
+	finalizedBy jacocoTestReport
+	useJUnitPlatform()
+	jacoco {
+		destinationFile = file("${buildDir}/jacoco/jacocoTest.exec")
+		classDumpDir = file("${buildDir}/jacoco/classpathdumps")
+	}
+	jacocoTestReport {
+		reports {
+			xml.enabled true
+			csv.enabled false
+			html.destination file("${buildDir}/jacocoHtml")
+		}
+	}
+}
+
+sonarqube {
+	properties {
+		property "sonar.sources", "src/main/java"
+		property "sonar.tests", "src/test/java"
+		property "sonar.coverage.exclusions",
+				"**/config/**," +
+						"**/advice/**," +
+						"**/model/**," +
+						"**/webclient/**," +
+						"**/kuntur/*Application*"
+	}
 }
