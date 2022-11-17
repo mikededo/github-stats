@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.model;
+package io.pakland.mdas.githubstats.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

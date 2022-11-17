@@ -64,10 +64,6 @@ sonarqube {
 		property "sonar.sources", "src/main/java"
 		property "sonar.tests", "src/test/java"
 		property "sonar.coverage.exclusions",
-				"**/config/**," +
-						"**/advice/**," +
-						"**/model/**," +
-						"**/webclient/**," +
-						"**/kuntur/*Application*"
+				"**/domain/**"
 	}
 }

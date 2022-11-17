@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.model;
+package io.pakland.mdas.githubstats.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * <b>Class</b>: UserOrganitzation <br/>
+ * <b>Class</b>: UserTeam <br/>
  * <b>Copyright</b>: 2022 La Salle - mdas <br/>.
  *
  * @author 2022  MDAS <br/>
@@ -26,12 +26,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "user_by_organization")
-public class UserOrganization {
+@Table(name = "user_by_team")
+public class UserTeam {
 
-  @Column(name = "member_id")
-  private String memberId;
+  @Column(name = "user_id")
+  private int userId;
 
-  @Column(name = "organization_id")
-  private String organizationId;
+  @Column(name = "team_id")
+  private int teamId;
 }
