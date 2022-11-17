@@ -7,11 +7,13 @@ target
 RemoteSystemsTempFiles
 hooks
 build
+build/**
 bin
 gradle
 gradlew*
 .idea
 .gradle
+.gradle/
 .checkstyle
 **/.externalToolBuilders/*
 *.log
