@@ -1,15 +1,13 @@
 package io.pakland.mdas.githubstats.domain;
 
-import java.util.Date;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -39,12 +37,7 @@ public class Commit {
   private int deletions;
 
   @Column(name = "date")
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date date;
-
-  @PrePersist
-  public void prePersist() {
-    this.date = new Date();
-  }
+  @JsonSerialize(using = ToStringSerialize.class)
+  private Instant date;
 
 }
