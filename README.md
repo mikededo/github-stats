@@ -16,7 +16,3 @@
 # run dev mode
 ./mvnw spring-boot:run
 ```
-
-## Build, test and run with Gradle
-
-// Todo
