@@ -2,6 +2,7 @@ spring:
   application:
     name: mdas
   main:
+    banner-mode: off
     allow-bean-definition-overriding: true
   datasource:
     url: jdbc:postgresql://pksuns.pakland.io:9000/dbgithub
@@ -21,3 +22,8 @@ spring:
           time_zone: UTC
   liquibase:
     enabled: false
+logging:
+  level:
+    root: INFO
+  file:
+    name: console_output.log
