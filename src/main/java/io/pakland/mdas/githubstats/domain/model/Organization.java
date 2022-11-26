@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.domain;
+package io.pakland.mdas.githubstats.domain.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,16 +14,16 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "organization")
+public class Organization {
 
   @Id
   @Column(name = "id", updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
-  @Column(name = "login")
-  private String login;
+  @Column(name = "name")
+  private String name;
 
   @Column(name = "organization_url")
   private String organizationUrl;

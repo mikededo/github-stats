@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.shell;
+package io.pakland.mdas.githubstats.infrastructure.shell;
 
 import org.jline.utils.AttributedString;
 import org.springframework.shell.jline.PromptProvider;
