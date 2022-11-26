@@ -1,6 +1,6 @@
-package io.pakland.mdas.githubstats.domain.repository;
+package io.pakland.mdas.githubstats.domain.ports;
 
-import io.pakland.mdas.githubstats.domain.Comment;
+import io.pakland.mdas.githubstats.domain.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
