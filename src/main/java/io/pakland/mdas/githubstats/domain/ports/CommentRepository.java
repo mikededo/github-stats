@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.domain.ports;
 
-import io.pakland.mdas.githubstats.domain.model.Organization;
+import io.pakland.mdas.githubstats.domain.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface IOrganization extends JpaRepository<Organization,Integer> {
+public interface CommentRepository extends JpaRepository<Comment,Integer> {
 }

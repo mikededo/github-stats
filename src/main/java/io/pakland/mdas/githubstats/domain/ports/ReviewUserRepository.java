@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface IReviewUser extends JpaRepository<ReviewUser,Integer> {
+public interface ReviewUserRepository extends JpaRepository<ReviewUser,Integer> {
 }
