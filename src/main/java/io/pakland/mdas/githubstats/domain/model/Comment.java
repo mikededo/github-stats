@@ -18,13 +18,13 @@ import lombok.ToString;
 public class Comment {
 
   @Id
-  @Column(name = "id", updatable = false, nullable = false)
+  @Column(updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
   @Column(name = "review_by_user_id")
   private int reviewByUserId;
 
-  @Column(name = "length")
+  @Column
   private int length;
 }

@@ -18,14 +18,14 @@ import lombok.ToString;
 public class Team {
 
   @Id
-  @Column(name = "id", updatable = false, nullable = false)
+  @Column(updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
   @Column(name = "organization_id")
   private int organizationId;
 
-  @Column(name = "slug")
+  @Column
   private String slug;
 
   @Column(name = "member_url")
