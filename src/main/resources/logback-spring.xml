@@ -2,7 +2,21 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
-    <root>
-        <appender-ref ref="FILE" />
-    </root>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg %mdc %n
+            </pattern>
+        </encoder>
+    </appender>
+    <springProfile name="dev">
+        <root>
+            <appender-ref ref="STDOUT" />
+        </root>
+    </springProfile>
+    <springProfile name="prod">
+        <root>
+            <appender-ref ref="FILE" />
+        </root>
+    </springProfile>
 </configuration>

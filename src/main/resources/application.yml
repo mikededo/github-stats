@@ -21,6 +21,8 @@ spring:
           time_zone: UTC
   liquibase:
     enabled: false
+  profiles:
+    active: dev
 logging:
   level:
     root: INFO
