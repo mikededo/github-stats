@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.domain.ports;
 
-import io.pakland.mdas.githubstats.domain.model.PullRequests;
+import io.pakland.mdas.githubstats.domain.model.PullRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface PullRequestsRepository extends JpaRepository<PullRequests,Integer> {
+public interface PullRequestsRepository extends JpaRepository<PullRequest,Integer> {
 }

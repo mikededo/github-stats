@@ -1,14 +1,15 @@
 package io.pakland.mdas.githubstats.domain.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -20,12 +21,28 @@ public class Organization {
   @Id
   @Column(updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Long id;
 
-  @Column
   private String name;
 
   @Column(name = "organization_url")
   private String organizationUrl;
+
+  @OneToMany(
+    mappedBy = "organization",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+  )
+  private List<Team> teams = new ArrayList<>();
+
+  public void addTeam(Team team) {
+    teams.add(team);
+    team.setOrganization(this);
+  }
+
+  public void removeTeam(Team team) {
+    teams.remove(team);
+    team.setOrganization(null);
+  }
 
 }

@@ -1,11 +1,7 @@
 package io.pakland.mdas.githubstats.domain.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -20,11 +16,23 @@ public class Comment {
   @Id
   @Column(updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Long id;
 
-  @Column(name = "review_by_user_id")
-  private int reviewByUserId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private UserReview userReview;
 
-  @Column
   private int length;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Comment )) return false;
+    return id != null && id.equals(((Comment) o).getId());
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
+
 }
