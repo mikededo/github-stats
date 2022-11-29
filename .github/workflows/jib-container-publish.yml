@@ -1,0 +1,21 @@
+name: JIB container publish
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  jib:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: JIB container build and publish
+        uses: MathieuSoysal/jib-container-publish.yml@v2.1.3
+        with:
+          REGISTRY: docker.io
+          IMAGE_NAME: ${{ github.repository }}
+          tag-name: ${{ github.run_number }}
+          USERNAME: ${{ secrets.DOCKERHUB_USER }}
+          PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+          java-version: 17
