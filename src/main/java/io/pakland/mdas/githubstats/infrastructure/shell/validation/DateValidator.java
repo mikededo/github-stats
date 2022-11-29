@@ -14,20 +14,24 @@ public class DateValidator implements InputValidator<String> {
     }
 
     /**
-     * @param input Must be MM/yy, must be prior to the current month
+     * @param input Must be MM/yy, and prior to the current month. Starting year: 2000 (01/01/99 parses to 01/01/2099)
      */
     @Override
     public boolean validate(String input) {
         if (input == null || input.isBlank()) return false;
 
         try {
-            LocalDateTime date = LocalDateTime.parse("01/" + input + " 00:00", formatter);
+            LocalDateTime date = LocalDateTime.parse(getInitialDateFromMMYY(input), formatter);
             LocalDateTime now = LocalDateTime.now();
             return date.isBefore(now.minusMonths(1));
         } catch (DateTimeParseException e) {
             // Input was not properly formatted
             return false;
         }
+    }
+
+    private String getInitialDateFromMMYY(String input) {
+        return "01/" + input + " 00:00";
     }
 
 }
