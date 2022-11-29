@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface CommitRepository extends JpaRepository<Commit,Integer> {
+public interface CommitRepository extends JpaRepository<Commit,Long> {
 }

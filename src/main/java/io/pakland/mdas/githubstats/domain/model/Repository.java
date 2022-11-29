@@ -1,14 +1,13 @@
 package io.pakland.mdas.githubstats.domain.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,18 +19,10 @@ public class Repository {
   @Id
   @Column(updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Long id;
 
-  @Column(name = "organization_id")
-  private int organizationId;
-
-  @Column(name = "team_id")
-  private int teamId;
-
-  @Column
   private String name;
 
-  @Column
   private String owner;
 
   @Column(name = "merges_url")
@@ -39,5 +30,37 @@ public class Repository {
 
   @Column(name = "commits_url")
   private String commitsUrl;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Team team;
+
+  @OneToMany(
+    mappedBy = "repository",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+  )
+  private List<PullRequest> pullRequests = new ArrayList<>();
+
+  public void addPullRequests(PullRequest pullRequest) {
+    pullRequests.add(pullRequest);
+    pullRequest.setRepository(this);
+  }
+
+  public void removePullRequests(PullRequest pullRequest) {
+    pullRequests.remove(pullRequest);
+    pullRequest.setRepository(null);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Repository )) return false;
+    return id != null && id.equals(((Repository) o).getId());
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 
 }

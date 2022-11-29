@@ -1,9 +1,14 @@
 package io.pakland.mdas.githubstats.domain.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@Data
+@NoArgsConstructor
 @Entity
-@Table(name = "historic_queries")
+@Table(name = "\"historic_queries\"")
 public class HistoricQueries {
 
     @Id
@@ -12,15 +17,26 @@ public class HistoricQueries {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team teamId;
+    private Team team;
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name="\"from\"", nullable = false)
     private String from;
 
-    @Column(nullable = false)
+    @Column(name="\"to\"", nullable = false)
     private String to;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HistoricQueries)) return false;
+        return id != null && id.equals(((HistoricQueries) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

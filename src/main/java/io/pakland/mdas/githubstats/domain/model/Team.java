@@ -1,14 +1,13 @@
 package io.pakland.mdas.githubstats.domain.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,17 +19,76 @@ public class Team {
   @Id
   @Column(updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Long id;
 
-  @Column(name = "organization_id")
-  private int organizationId;
-
-  @Column
   private String slug;
 
   @Column(name = "member_url")
   private String memberUrl;
 
-  @Column(name = "repository_url")
-  private String repositoryUrl;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Organization organization;
+
+  @OneToMany(
+    mappedBy = "team",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+  )
+  private List<User> users = new ArrayList<>();
+
+  @OneToMany(
+    mappedBy = "team",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+  )
+  private List<Repository> repositories = new ArrayList<>();
+
+  @OneToMany(
+    mappedBy = "team",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+  )
+  private List<HistoricQueries> querys = new ArrayList<>();
+
+  public void addUser(User user) {
+    users.add(user);
+    user.setTeam(this);
+  }
+
+  public void removeUser(User user) {
+    users.remove(user);
+    user.setTeam(null);
+  }
+
+  public void addRepository(Repository repository) {
+    repositories.add(repository);
+    repository.setTeam(this);
+  }
+
+  public void removeRepository(Repository repository) {
+    repositories.remove(repository);
+    repository.setTeam(null);
+  }
+
+  public void addQuerys(HistoricQueries historicQuery) {
+    querys.add(historicQuery);
+    historicQuery.setTeam(this);
+  }
+
+  public void removeQuerys(HistoricQueries historicQuery) {
+    querys.remove(historicQuery);
+    historicQuery.setTeam(null);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Team )) return false;
+    return id != null && id.equals(((Team) o).getId());
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

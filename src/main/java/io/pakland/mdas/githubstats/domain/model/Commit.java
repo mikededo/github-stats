@@ -17,22 +17,30 @@ public class Commit {
     @Id
     @Column(updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(name = "user_id")
-    private int userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
-    @Column(name = "pull_requests_id")
-    private int pullRequestsId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private PullRequest pullRequest;
 
-    @Column
     private int additions;
 
-    @Column
     private int deletions;
 
-    @Column
-    @JsonSerialize(using = ToStringSerializer.class)
     private Instant date;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Commit)) return false;
+        return id != null && id.equals(((Commit) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 
 }
