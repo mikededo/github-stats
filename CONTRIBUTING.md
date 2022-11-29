@@ -34,6 +34,9 @@ Make sure to use the PR template that is configured so that all the team is in
 consonancy. There are instructions in th template on how to properly fill the
 fields of the PR. 
 
+Last but not least, pull requests need at least two approvals from members of
+the team.
+
 ## Meetings
 
 We have accorded to have a weekly meeting around 16:00 on weekends to discuss
