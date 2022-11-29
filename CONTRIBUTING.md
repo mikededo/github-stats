@@ -26,13 +26,13 @@ for more information
 
 ## Pull requests
 
-Ideally we should have one branch per ticket/issue. In case the ticket is to
+Ideally we should have one branch per ticket/issue. In case the ticket is too
 big, consider splitting in smaller tickets to prevent having huge PRs which will
 take a lot of time for each member.
 
 Make sure to use the PR template that is configured so that all the team is in
-consonancy. There are instructions in th template on how to properly fill the
-fields of the PR. 
+consonance. There are instructions in th template on how to properly fill the
+fields with the PR. 
 
 Last but not least, pull requests need at least two approvals from members of
 the team.
