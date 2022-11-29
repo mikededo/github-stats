@@ -6,17 +6,19 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserNameValidatorTest {
+    UserNameValidator userNameValidator = new UserNameValidator();
 
     @Test
-    void testValidation() {
-        UserNameValidator userNameValidator = new UserNameValidator();
-
+    void testValidationShouldPass() {
         assertTrue(userNameValidator.validate("name"));
         assertTrue(userNameValidator.validate("test-hello-world"));
         assertTrue(userNameValidator.validate("22312"));
         assertTrue(userNameValidator.validate("alphanumeric-and-hyphens-23"));
         assertTrue(userNameValidator.validate("UPPERcase"));
+    }
 
+    @Test
+    void testValidationShouldFail() {
         assertFalse(userNameValidator.validate("name with spaces"));
         assertFalse(userNameValidator.validate("very-very-very-very-very-very-very-very-very-very-long-name"));
         assertFalse(userNameValidator.validate("-name"));
@@ -26,5 +28,4 @@ public class UserNameValidatorTest {
         assertFalse(userNameValidator.validate("  "));
         assertFalse(userNameValidator.validate(" - "));
     }
-
 }
