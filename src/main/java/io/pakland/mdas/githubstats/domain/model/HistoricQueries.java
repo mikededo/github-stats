@@ -6,11 +6,11 @@ import javax.persistence.*;
 @Table(name = "historic_queries")
 public class HistoricQueries {
     @Id
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team teamId;
 
