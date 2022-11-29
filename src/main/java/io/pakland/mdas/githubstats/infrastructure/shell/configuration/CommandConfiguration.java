@@ -1,5 +1,6 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.configuration;
 
+import io.pakland.mdas.githubstats.infrastructure.shell.components.LoginComponent;
 import io.pakland.mdas.githubstats.infrastructure.shell.components.TeamComponent;
 import io.pakland.mdas.githubstats.infrastructure.shell.components.UserComponent;
 import org.springframework.context.annotation.Bean;
@@ -71,6 +72,25 @@ public class CommandConfiguration {
                 .longNames("to")
                 .label("TO_DATE")
                 .arity(CommandRegistration.OptionArity.EXACTLY_ONE)
+                .type(String.class)
+                .required()
+                .and()
+            .build();
+    }
+
+    @Bean
+    public CommandRegistration buildLoginCommand() {
+        LoginComponent loginComponent = new LoginComponent();
+
+        return CommandRegistration.builder()
+                .command("login")
+                .description("Log in to the Github API before making any requests.")
+            .withTarget()
+                .method(loginComponent, "login")
+                .and()
+            .withOption()
+                .longNames("token")
+                .label("TOKEN")
                 .type(String.class)
                 .required()
                 .and()
