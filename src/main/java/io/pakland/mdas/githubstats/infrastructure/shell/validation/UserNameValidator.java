@@ -14,9 +14,9 @@ public class UserNameValidator implements InputValidator<String> {
     @Override
     public boolean validate(String input) {
         if (input == null || input.isBlank()) return false;
-        return !input.matches("^-")
-            && !input.matches("-$")
-            && input.matches("[a-zA-Z0-9\\-]{0,39}")
-            && !input.matches("--");
+        return !input.matches("^-.*")
+                && !input.matches(".*-$")
+                && input.matches("[a-zA-Z0-9\\-]{0,39}")
+                && !input.matches(".*--.*");
     }
 }
