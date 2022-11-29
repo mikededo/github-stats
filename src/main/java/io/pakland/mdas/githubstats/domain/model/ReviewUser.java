@@ -18,7 +18,7 @@ import lombok.ToString;
 public class ReviewUser {
 
   @Id
-  @Column(name = "id", updatable = false, nullable = false)
+  @Column(updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 

@@ -18,11 +18,11 @@ import lombok.ToString;
 public class User {
 
   @Id
-  @Column(name = "id", updatable = false, nullable = false)
+  @Column(updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
-  @Column(name = "login")
+  @Column
   private String login;
 
   @Column(name = "organization_url")

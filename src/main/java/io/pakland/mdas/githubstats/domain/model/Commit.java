@@ -1,7 +1,5 @@
 package io.pakland.mdas.githubstats.domain.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -17,7 +15,7 @@ import java.time.Instant;
 public class Commit {
 
     @Id
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
@@ -27,13 +25,13 @@ public class Commit {
     @Column(name = "pull_requests_id")
     private int pullRequestsId;
 
-    @Column(name = "additions")
+    @Column
     private int additions;
 
-    @Column(name = "deletions")
+    @Column
     private int deletions;
 
-    @Column(name = "date")
+    @Column
     @JsonSerialize(using = ToStringSerializer.class)
     private Instant date;
 

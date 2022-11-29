@@ -18,7 +18,7 @@ import lombok.ToString;
 public class Repository {
 
   @Id
-  @Column(name = "id", updatable = false, nullable = false)
+  @Column(updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
@@ -28,10 +28,10 @@ public class Repository {
   @Column(name = "team_id")
   private int teamId;
 
-  @Column(name = "name")
+  @Column
   private String name;
 
-  @Column(name = "owner")
+  @Column
   private String owner;
 
   @Column(name = "merges_url")
