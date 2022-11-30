@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "\"historic_queries\"")
+@Table(name = "historic_queries")
 public class HistoricQueries {
 
     @Id
@@ -22,10 +22,10 @@ public class HistoricQueries {
     @Column(nullable = false)
     private String name;
 
-    @Column(name="\"from\"", nullable = false)
+    @Column(name="from", nullable = false)
     private String from;
 
-    @Column(name="\"to\"", nullable = false)
+    @Column(name="to", nullable = false)
     private String to;
 
     @Override
