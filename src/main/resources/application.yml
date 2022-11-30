@@ -11,7 +11,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -19,7 +19,8 @@ spring:
         jdbc:
           time_zone: UTC
   liquibase:
-    enabled: false
+    enabled: true
+    change-log: classpath:db/changelog/changelog-master.yaml
   profiles:
     active: dev
 logging:
