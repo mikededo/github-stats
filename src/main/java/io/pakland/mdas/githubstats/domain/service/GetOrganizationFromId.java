@@ -16,12 +16,16 @@ public class GetOrganizationFromId {
         this.organizationRepository = organizationRepository;
     }
 
+    // For tests sake, we return boolean to know if the code works properly
     @Transactional(readOnly = true)
-    public void execute(Long id) {
+    public boolean execute(Long id) {
         Optional<Organization> org = organizationRepository.findById(id);
-        if (org.isPresent())
-            System.out.println(org.get());
-        else
+        if (org.isPresent()) {
+            return true;
+        }
+        else {
             System.out.println("Organization not found");
+            return false;
+        }
     }
 }
