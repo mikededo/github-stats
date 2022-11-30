@@ -26,6 +26,9 @@ public class Team {
   @Column(name = "member_url")
   private String memberUrl;
 
+  @Column
+  private String name;
+
   @ManyToOne(fetch = FetchType.LAZY)
   private Organization organization;
 
@@ -49,6 +52,14 @@ public class Team {
     orphanRemoval = true
   )
   private List<HistoricQueries> queries = new ArrayList<>();
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return this.name;
+  }
 
   public void addUser(User user) {
     users.add(user);
