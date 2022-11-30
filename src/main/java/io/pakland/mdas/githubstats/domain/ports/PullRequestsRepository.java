@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface PullRequestsRepository extends JpaRepository<PullRequest,Integer> {
+public interface PullRequestsRepository extends JpaRepository<PullRequest,Long> {
 }
