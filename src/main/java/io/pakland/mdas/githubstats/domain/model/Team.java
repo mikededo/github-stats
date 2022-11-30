@@ -48,7 +48,7 @@ public class Team {
     cascade = CascadeType.ALL,
     orphanRemoval = true
   )
-  private List<HistoricQueries> querys = new ArrayList<>();
+  private List<HistoricQueries> queries = new ArrayList<>();
 
   public void addUser(User user) {
     users.add(user);
@@ -70,13 +70,13 @@ public class Team {
     repository.setTeam(null);
   }
 
-  public void addQuerys(HistoricQueries historicQuery) {
-    querys.add(historicQuery);
+  public void addQuery(HistoricQueries historicQuery) {
+    queries.add(historicQuery);
     historicQuery.setTeam(this);
   }
 
-  public void removeQuerys(HistoricQueries historicQuery) {
-    querys.remove(historicQuery);
+  public void removeQuery(HistoricQueries historicQuery) {
+    queries.remove(historicQuery);
     historicQuery.setTeam(null);
   }
 
