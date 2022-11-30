@@ -14,7 +14,7 @@ jobs:
         uses: MathieuSoysal/jib-container-publish.yml@v2.1.3
         with:
           REGISTRY: docker.io
-          IMAGE_NAME: ${{ github.repository }}
+          IMAGE_NAME: githubstats/github-stats
           tag-name: ${{ github.run_number }}
           USERNAME: ${{ secrets.DOCKERHUB_USER }}
           PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
