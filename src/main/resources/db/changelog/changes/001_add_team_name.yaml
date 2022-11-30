@@ -1,0 +1,11 @@
+databaseChangeLog:
+- changeSet:
+    id: 1669767244075-1
+    author: Miquel de Domingo
+    changes:
+    - addColumn:
+        tableName: team
+        columns:
+        - column:
+            name: name
+            type: varchar(255)
