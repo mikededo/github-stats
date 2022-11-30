@@ -1,18 +1,27 @@
 package io.pakland.mdas.githubstats.domain.service;
 
+import io.pakland.mdas.githubstats.domain.model.Organization;
 import io.pakland.mdas.githubstats.domain.ports.OrganizationRepository;
-import io.pakland.mdas.githubstats.domain.ports.UseCase;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-public class GetOrganizationFromId implements UseCase {
+import java.util.Optional;
 
-    final OrganizationRepository organizationRepository;
+@Service
+public class GetOrganizationFromId {
 
-    GetOrganizationFromId(OrganizationRepository organizationRepository) {
+    final private OrganizationRepository organizationRepository;
+
+    public GetOrganizationFromId(OrganizationRepository organizationRepository) {
         this.organizationRepository = organizationRepository;
     }
 
-    @Override
-    public void execute() {
-        organizationRepository.findById(1L);
+    @Transactional(readOnly = true)
+    public void execute(Long id) {
+        Optional<Organization> org = organizationRepository.findById(id);
+        if (org.isPresent())
+            System.out.println(org.get());
+        else
+            System.out.println("Organization not found");
     }
 }

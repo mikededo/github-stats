@@ -9,7 +9,7 @@ spring:
     password: 6%9%cqA#y#89rHS8
     driverClassName: org.postgresql.Driver
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: validate
     properties:
