@@ -13,23 +13,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class GetOrganizationFromIdTest {
     @Test
     public void givenValidId_shouldReturnTrue() {
-        OrganizationRepository orgMock = Mockito.mock(OrganizationRepository.class);
-        Mockito.when(orgMock.findById(Mockito.anyLong())).thenReturn(Optional.of(new Organization()));
+        OrganizationRepository organizationMock = Mockito.mock(OrganizationRepository.class);
+        Mockito.when(organizationMock.findById(Mockito.anyLong())).thenReturn(Optional.of(new Organization()));
 
-        GetOrganizationFromId useCase = new GetOrganizationFromId(orgMock);
-        boolean res = useCase.execute(1L);
+        GetOrganizationFromId useCase = new GetOrganizationFromId(organizationMock);
 
-        assertTrue(res);
+        assertTrue(useCase.execute(1L));
     }
 
     @Test
     public void givenInvalidId_shouldReturnFalse() {
-         OrganizationRepository orgMock = Mockito.mock(OrganizationRepository.class);
-        Mockito.when(orgMock.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+         OrganizationRepository organizationMock = Mockito.mock(OrganizationRepository.class);
+        Mockito.when(organizationMock.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
-        GetOrganizationFromId useCase = new GetOrganizationFromId(orgMock);
-        boolean res = useCase.execute(1L);
+        GetOrganizationFromId useCase = new GetOrganizationFromId(organizationMock);
 
-        assertFalse(res);
+        assertFalse(useCase.execute(1L));
     }
 }
