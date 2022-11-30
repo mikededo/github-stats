@@ -12,15 +12,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GetTeamsFromOrganizationTest {
     @Test
     public void givenOrganization_shouldReturnListOfTeams() {
-        Team t = new Team();
-        t.setId(1L);
-        Organization mockOrg = Mockito.mock(Organization.class);
-        Mockito.when(mockOrg.getTeams()).thenReturn(List.of(t));
+        Team team = new Team();
+        team.setId(1L);
+        Organization organizationMock = Mockito.mock(Organization.class);
+        Mockito.when(organizationMock.getTeams()).thenReturn(List.of(team));
 
         GetTeamsFromOrganization useCase = new GetTeamsFromOrganization();
-        List<Team> teams = useCase.execute(mockOrg);
+        List<Team> teams = useCase.execute(organizationMock);
 
-        Mockito.verify(mockOrg, Mockito.times(1)).getTeams();
-        assertEquals(teams.get(0).getId(), t.getId());
+        Mockito.verify(organizationMock, Mockito.times(1)).getTeams();
+        assertEquals(teams.get(0).getId(), team.getId());
     }
 }
