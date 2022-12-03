@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.domain.ports;
+package io.pakland.mdas.githubstats.domain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

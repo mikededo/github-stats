@@ -2,7 +2,7 @@ package io.pakland.mdas.githubstats.domain.service;
 
 import io.pakland.mdas.githubstats.domain.model.Organization;
 import io.pakland.mdas.githubstats.domain.model.Team;
-import io.pakland.mdas.githubstats.domain.ports.TeamRepository;
+import io.pakland.mdas.githubstats.domain.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
