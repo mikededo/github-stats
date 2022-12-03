@@ -1,5 +1,6 @@
 package io.pakland.mdas.githubstats.domain.service;
 
+import io.pakland.mdas.githubstats.application.GetOrganizationFromId;
 import io.pakland.mdas.githubstats.domain.model.Organization;
 import io.pakland.mdas.githubstats.domain.repository.OrganizationRepository;
 import org.junit.jupiter.api.Test;
