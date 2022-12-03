@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface RepositoryRepository extends JpaRepository<io.pakland.mdas.githubstats.domain.model.Repository,Long> {
+public interface RepositoryRepository extends JpaRepository<io.pakland.mdas.githubstats.domain.Repository,Long> {
 }

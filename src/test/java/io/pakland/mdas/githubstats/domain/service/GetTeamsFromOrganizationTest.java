@@ -1,8 +1,8 @@
 package io.pakland.mdas.githubstats.domain.service;
 
 import io.pakland.mdas.githubstats.application.GetTeamsFromOrganization;
-import io.pakland.mdas.githubstats.domain.model.Organization;
-import io.pakland.mdas.githubstats.domain.model.Team;
+import io.pakland.mdas.githubstats.domain.Organization;
+import io.pakland.mdas.githubstats.domain.Team;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

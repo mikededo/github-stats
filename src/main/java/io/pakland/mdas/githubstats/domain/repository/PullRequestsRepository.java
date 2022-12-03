@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.domain.repository;
 
-import io.pakland.mdas.githubstats.domain.model.PullRequest;
+import io.pakland.mdas.githubstats.domain.PullRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

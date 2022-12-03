@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.domain.model;
+package io.pakland.mdas.githubstats.domain;
 
 import javax.persistence.*;
 
