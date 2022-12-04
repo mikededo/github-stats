@@ -26,7 +26,7 @@ public class GetOrganizationFromId {
             return true;
         }
         else {
-            throw new OrganizationNotFound("Organization with id " + id + " not found.");
+            throw new OrganizationNotFound(id);
         }
     }
 }
