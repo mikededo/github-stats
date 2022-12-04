@@ -4,15 +4,12 @@ import java.util.List;
 
 public class UserReviewAggregation {
 
-    private final int commentLengthSum;
-
-    private UserReviewAggregation(int commentLengthSum) {
-        this.commentLengthSum = commentLengthSum;
-    }
+    private int commentLengthSum;
 
     public static UserReviewAggregation aggregate(List<UserReview> userReviews) {
-        int commentLengthSum = userReviews.stream().mapToInt(UserReview::sumCommentLength).sum();
-        return new UserReviewAggregation(commentLengthSum);
+        UserReviewAggregation userReviewAggregation = new UserReviewAggregation();
+        userReviewAggregation.commentLengthSum = userReviews.stream().mapToInt(UserReview::sumCommentLength).sum();
+        return userReviewAggregation;
     }
 
     public int getCommentLengthSum() {
