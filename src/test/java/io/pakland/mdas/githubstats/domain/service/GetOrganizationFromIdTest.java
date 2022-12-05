@@ -14,9 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GetOrganizationFromIdTest {
-    @SneakyThrows
     @Test
-    public void givenValidId_shouldReturnTrue() {
+    public void givenValidId_shouldReturnTrue() throws OrganizationNotFound {
         OrganizationRepository organizationMock = Mockito.mock(OrganizationRepository.class);
         Mockito.when(organizationMock.findById(Mockito.anyLong())).thenReturn(Optional.of(new Organization()));
 
