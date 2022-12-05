@@ -14,9 +14,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GetOrganizationFromTeamNameTest {
-    @SneakyThrows
     @Test
-    public void givenTeamName_shouldReturnOrganizationFound() {
+    public void givenTeamName_shouldReturnOrganizationFound() throws TeamNotFound {
         Organization organization = new Organization();
         organization.setId(1L);
         Team team = new Team();
