@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -51,7 +50,7 @@ class UserRESTRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        userRESTRepository.getUsersFromTeam(this.ORG_NAME, this.TEAM_SLUG);
+        userRESTRepository.fetchUsersFromTeam(this.ORG_NAME, this.TEAM_SLUG);
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals(String.format("/orgs/%s/teams/%s/members", this.ORG_NAME, this.TEAM_SLUG), request.getPath());
@@ -65,7 +64,7 @@ class UserRESTRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<UserDTO> response = userRESTRepository.getUsersFromTeam(this.ORG_NAME, this.TEAM_SLUG);
+        List<UserDTO> response = userRESTRepository.fetchUsersFromTeam(this.ORG_NAME, this.TEAM_SLUG);
         List<UserDTO> expected = new ArrayList<>();
         expected.add(new UserDTO(33031570, "manerow", "https://api.github.com/users/manerow/orgs"));
 

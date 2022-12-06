@@ -21,7 +21,7 @@ public class UserRESTRepository implements IUserRESTRepository {
     }
 
     @Override
-    public List<UserDTO> getUsersFromTeam(String organizationName, String teamSlug) {
+    public List<UserDTO> fetchUsersFromTeam(String organizationName, String teamSlug) {
         try {
             return this.webClientConfiguration.getWebClient().get()
                     .uri(String.format("/orgs/%s/teams/%s/members", organizationName, teamSlug))
