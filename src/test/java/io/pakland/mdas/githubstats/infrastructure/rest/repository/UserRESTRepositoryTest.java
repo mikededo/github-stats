@@ -1,6 +1,6 @@
-package io.pakland.mdas.githubstats.infrastructure.repository.github;
+package io.pakland.mdas.githubstats.infrastructure.rest.repository;
 
-import io.pakland.mdas.githubstats.infrastructure.repository.github.adapters.UserRESTRepository;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.UserRESTRepository;
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -34,12 +34,9 @@ class UserRESTRepositoryTest {
     void setup() throws IOException {
         this.mockWebServer = new MockWebServer();
         this.mockWebServer.start();
-        this.userRESTRepository = new UserRESTRepository(
-                WebClient.builder(),
-                mockWebServer.url("/").toString(),
-                "test-api-key"
-        );
-        this.teamMembersListResponse = new String(Files.readAllBytes(Paths.get("src/test/java/io/pakland/mdas/githubstats/infrastructure/repository/github/responses/TeamMembers.json")));
+        WebClientConfiguration webClientConfiguration = new WebClientConfiguration(mockWebServer.url("/").toString(), "test-api-key");
+        this.userRESTRepository = new UserRESTRepository(webClientConfiguration);
+        this.teamMembersListResponse = new String(Files.readAllBytes(Paths.get("src/test/java/io/pakland/mdas/githubstats/infrastructure/rest/repository/responses/TeamMembers.json")));
     }
 
     @AfterAll

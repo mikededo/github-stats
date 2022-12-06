@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.infrastructure.repository.github.ports;
+package io.pakland.mdas.githubstats.infrastructure.rest.repository.ports;
 
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
 
