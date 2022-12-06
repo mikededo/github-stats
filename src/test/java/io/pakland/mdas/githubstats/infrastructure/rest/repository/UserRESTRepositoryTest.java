@@ -44,7 +44,7 @@ class UserRESTRepositoryTest {
     }
 
     @Test
-    void givenValidTeamMembersRequest_shouldFetchTeamMembersGitHubURL() throws InterruptedException {
+    void givenValidTeamMembersRequest_shouldCallTeamMembersEndpoint() throws InterruptedException {
         MockResponse mockResponse = new MockResponse()
                 .setBody(this.teamMembersListResponse)
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -57,7 +57,7 @@ class UserRESTRepositoryTest {
     }
 
     @Test
-    void givenValidTeamId_shouldReturnTeamMembers() throws InterruptedException {
+    void givenValidTeamId_shouldReturnTeamMembers() {
 
         MockResponse mockResponse = new MockResponse()
                 .setBody(this.teamMembersListResponse)
@@ -66,7 +66,7 @@ class UserRESTRepositoryTest {
 
         List<UserDTO> response = userRESTRepository.fetchUsersFromTeam(this.ORG_NAME, this.TEAM_SLUG);
         List<UserDTO> expected = new ArrayList<>();
-        expected.add(new UserDTO(33031570, "manerow", "https://api.github.com/users/manerow/orgs"));
+        expected.add(new UserDTO(48334745, "mikededo", "https://api.github.com/users/mikededo/orgs"));
 
         assertArrayEquals(response.toArray(), expected.toArray());
     }
