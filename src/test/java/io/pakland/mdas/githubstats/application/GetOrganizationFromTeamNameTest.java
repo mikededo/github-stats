@@ -1,11 +1,9 @@
-package io.pakland.mdas.githubstats.domain.service;
+package io.pakland.mdas.githubstats.application;
 
-import io.pakland.mdas.githubstats.application.GetOrganizationFromTeamName;
 import io.pakland.mdas.githubstats.application.exceptions.TeamNotFound;
 import io.pakland.mdas.githubstats.domain.Organization;
 import io.pakland.mdas.githubstats.domain.Team;
 import io.pakland.mdas.githubstats.domain.repository.TeamRepository;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

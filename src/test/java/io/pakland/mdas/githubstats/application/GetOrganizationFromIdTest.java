@@ -1,10 +1,8 @@
-package io.pakland.mdas.githubstats.domain.service;
+package io.pakland.mdas.githubstats.application;
 
-import io.pakland.mdas.githubstats.application.GetOrganizationFromId;
 import io.pakland.mdas.githubstats.application.exceptions.OrganizationNotFound;
 import io.pakland.mdas.githubstats.domain.Organization;
 import io.pakland.mdas.githubstats.domain.repository.OrganizationRepository;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

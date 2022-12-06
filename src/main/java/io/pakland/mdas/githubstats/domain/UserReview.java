@@ -34,14 +34,8 @@ public class UserReview {
   )
   private List<Comment> comments = new ArrayList<>();
 
-  public void addReview(Comment comment) {
-    comments.add(comment);
-    comment.setUserReview(this);
-  }
-
-  public void removeReview(Comment comment) {
-    comments.remove(comment);
-    comment.setUserReview(null);
+  public int sumCommentLength() {
+    return comments.stream().mapToInt(Comment::getLength).sum();
   }
 
   @Override
