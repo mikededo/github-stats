@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class OrganizationRESTRepositoryTest {
+class OrganizationRESTRepositoryTest {
 
     private MockWebServer mockWebServer;
     private OrganizationRESTRepository organizationRESTRepository;
@@ -43,7 +43,7 @@ public class OrganizationRESTRepositoryTest {
     }
 
     @Test
-    void givenValidTeamMembersRequest_shouldFetchTeamMembersGitHubURL() throws InterruptedException {
+    void givenValidUserOrganizationsRequest_shouldCallUserOrganizationsEndpoint() throws InterruptedException {
         MockResponse mockResponse = new MockResponse()
                 .setBody(this.availableOrganizationsListResponse)
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -52,11 +52,11 @@ public class OrganizationRESTRepositoryTest {
         organizationRESTRepository.fetchAvailableOrganizations();
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals("user/orgs/", request.getPath());
+        assertEquals("/user/orgs", request.getPath());
     }
 
     @Test
-    void givenValidTeamId_shouldReturnTeamMembers() throws InterruptedException {
+    void givenValidGithubAPIKey_shouldReturnAPIKeyUserOrganizations() {
 
         MockResponse mockResponse = new MockResponse()
                 .setBody(this.availableOrganizationsListResponse)
@@ -65,7 +65,7 @@ public class OrganizationRESTRepositoryTest {
 
         List<OrganizationDTO> response = organizationRESTRepository.fetchAvailableOrganizations();
         List<OrganizationDTO> expected = new ArrayList<>();
-        expected.add(new OrganizationDTO());
+        expected.add(new OrganizationDTO(119930124, "github-stats-22"));
 
         assertArrayEquals(response.toArray(), expected.toArray());
     }
