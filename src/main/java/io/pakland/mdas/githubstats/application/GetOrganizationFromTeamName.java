@@ -1,5 +1,6 @@
 package io.pakland.mdas.githubstats.application;
 
+import io.pakland.mdas.githubstats.application.exceptions.TeamNotFound;
 import io.pakland.mdas.githubstats.domain.Organization;
 import io.pakland.mdas.githubstats.domain.Team;
 import io.pakland.mdas.githubstats.domain.repository.TeamRepository;
@@ -15,11 +16,10 @@ public class GetOrganizationFromTeamName {
         this.teamRepository = teamRepo;
     }
 
-    public Organization execute(String teamName) {
+    public Organization execute(String teamName) throws TeamNotFound {
         Optional<Team> maybeTeam = teamRepository.findTeamByName(teamName);
         if (maybeTeam.isEmpty()) {
-            // TODO: Add exception
-            return null;
+            throw new TeamNotFound(teamName);
         }
 
         return maybeTeam.get().getOrganization();
