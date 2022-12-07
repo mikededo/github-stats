@@ -26,9 +26,6 @@ class UserRESTRepositoryTest {
     private UserRESTRepository userRESTRepository;
     private String teamMembersListResponse;
 
-    private final String ORG_NAME = "MDASTestOrg";
-    private final String TEAM_SLUG = "mdastestteam";
-
     @BeforeAll
     void setup() throws IOException {
         this.mockWebServer = new MockWebServer();
@@ -50,10 +47,10 @@ class UserRESTRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        userRESTRepository.fetchUsersFromTeam(this.ORG_NAME, this.TEAM_SLUG);
+        userRESTRepository.fetchUsersFromTeam("github-stats-22", "gs-developers");
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals(String.format("/orgs/%s/teams/%s/members", this.ORG_NAME, this.TEAM_SLUG), request.getPath());
+        assertEquals(String.format("/orgs/%s/teams/%s/members", "github-stats-22", "gs-developers"), request.getPath());
     }
 
     @Test
@@ -64,13 +61,13 @@ class UserRESTRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<UserDTO> response = userRESTRepository.fetchUsersFromTeam(this.ORG_NAME, this.TEAM_SLUG);
+        List<UserDTO> response = userRESTRepository.fetchUsersFromTeam("github-stats-22", "gs-developers");
         List<UserDTO> expected = new ArrayList<>();
         expected.add(0, new UserDTO(33031570, "manerow", "https://api.github.com/users/manerow/orgs"));
         expected.add(1, new UserDTO(48334745, "mikededo", "https://api.github.com/users/mikededo/orgs"));
         expected.add(2, new UserDTO(54351560, "sdomingobasora", "https://api.github.com/users/sdomingobasora/orgs"));
 
-        assertEquals(response.size(), 3);
+        assertEquals(3, response.size());
         assertArrayEquals(response.toArray(), expected.toArray());
     }
 }
