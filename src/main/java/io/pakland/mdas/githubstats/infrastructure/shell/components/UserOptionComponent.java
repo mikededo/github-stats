@@ -1,15 +1,19 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.components;
 
+import io.pakland.mdas.githubstats.infrastructure.shell.controller.UserOptionController;
+import io.pakland.mdas.githubstats.infrastructure.shell.model.UserOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.DateValidator;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.UserNameValidator;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellOption;
 
 @ShellComponent
-public class UserComponent {
-    
+public class UserOptionComponent {
+    private UserOptionRequest userOptionRequest;
+
     private boolean user(
             @ShellOption(value = {"n"}) String userName,
+            @ShellOption(value = {"key"}) String apiKey,
             @ShellOption(value = {"from"}) String fromDate,
             @ShellOption(value = {"to"}) String toDate
     ) {
@@ -25,6 +29,12 @@ public class UserComponent {
             return false;
         }
 
+        this.userOptionRequest = UserOptionRequest.builder()
+                .userName(userName)
+                .apiKey(apiKey)
+                .build();
+
+        UserOptionController userOptionController = new UserOptionController(this.userOptionRequest);
         // ... Perform request ...
 
         return true;

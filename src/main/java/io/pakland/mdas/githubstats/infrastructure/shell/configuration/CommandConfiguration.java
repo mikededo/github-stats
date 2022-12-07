@@ -1,8 +1,7 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.configuration;
 
-import io.pakland.mdas.githubstats.infrastructure.shell.components.LoginComponent;
 import io.pakland.mdas.githubstats.infrastructure.shell.components.TeamComponent;
-import io.pakland.mdas.githubstats.infrastructure.shell.components.UserComponent;
+import io.pakland.mdas.githubstats.infrastructure.shell.components.UserOptionComponent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.command.CommandRegistration;
@@ -12,13 +11,13 @@ public class CommandConfiguration {
 
     @Bean
     public CommandRegistration buildUserCommand() {
-        UserComponent userComponent = new UserComponent();
+        UserOptionComponent userOptionComponent = new UserOptionComponent();
 
         return CommandRegistration.builder()
                 .command("user")
                 .description("Get data from a specified user.")
             .withTarget()
-                .method(userComponent, "user")
+                .method(userOptionComponent, "user")
                 .and()
             .withOption()
                 .shortNames('n')
@@ -79,24 +78,4 @@ public class CommandConfiguration {
                 .and()
             .build();
     }
-
-    @Bean
-    public CommandRegistration buildLoginCommand() {
-        LoginComponent loginComponent = new LoginComponent();
-
-        return CommandRegistration.builder()
-                .command("login")
-                .description("Log in to the Github API before making any requests.")
-            .withTarget()
-                .method(loginComponent, "login")
-                .and()
-            .withOption()
-                .longNames("token")
-                .label("TOKEN")
-                .type(String.class)
-                .required()
-                .and()
-            .build();
-    }
-
 }
