@@ -66,8 +66,11 @@ class UserRESTRepositoryTest {
 
         List<UserDTO> response = userRESTRepository.fetchUsersFromTeam(this.ORG_NAME, this.TEAM_SLUG);
         List<UserDTO> expected = new ArrayList<>();
-        expected.add(new UserDTO(48334745, "mikededo", "https://api.github.com/users/mikededo/orgs"));
+        expected.add(0, new UserDTO(33031570, "manerow", "https://api.github.com/users/manerow/orgs"));
+        expected.add(1, new UserDTO(48334745, "mikededo", "https://api.github.com/users/mikededo/orgs"));
+        expected.add(2, new UserDTO(54351560, "sdomingobasora", "https://api.github.com/users/sdomingobasora/orgs"));
 
+        assertEquals(response.size(), 3);
         assertArrayEquals(response.toArray(), expected.toArray());
     }
 }
