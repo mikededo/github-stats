@@ -36,8 +36,8 @@ public class UserOptionComponent {
             this.userOptionRequest = UserOptionRequest.builder()
                     .userName(userName)
                     .apiKey(apiKey)
-                    .from(new SimpleDateFormat("dd/MM/yyyy").parse(fromDate))
-                    .to(new SimpleDateFormat("dd/MM/yyyy").parse(toDate))
+                    .from(new SimpleDateFormat("dd/MM/yy").parse("01/"+fromDate))
+                    .to(new SimpleDateFormat("dd/MM/yy").parse("01/"+toDate))
                     .build();
         } catch (ParseException e) {
             throw new RuntimeException(e);

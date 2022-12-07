@@ -12,6 +12,9 @@ public class TeamDTO {
     @JsonProperty("id")
     private Integer id;
 
+    @JsonProperty("name")
+    private String name;
+
     @JsonProperty("slug")
     private String slug;
 }

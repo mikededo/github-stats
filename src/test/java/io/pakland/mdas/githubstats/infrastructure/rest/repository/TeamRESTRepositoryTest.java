@@ -66,7 +66,7 @@ class TeamRESTRepositoryTest {
 
         List<TeamDTO> response = teamRESTRepository.fetchTeamsFromOrganization("github-stats-22");
         List<TeamDTO> expected = new ArrayList<>();
-        expected.add(0, new TeamDTO(7098104, "gs-developers"));
+        expected.add(0, new TeamDTO(7098104, "gs-developers", "gs-developers"));
 
         assertEquals(response.size(), 1);
         assertArrayEquals(response.toArray(), expected.toArray());

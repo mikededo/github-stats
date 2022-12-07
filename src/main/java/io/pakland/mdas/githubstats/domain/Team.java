@@ -2,17 +2,17 @@ package io.pakland.mdas.githubstats.domain;
 
 import javax.persistence.*;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Entity
+@Builder
 @Table(name = "team")
 public class Team {
 
