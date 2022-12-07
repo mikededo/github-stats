@@ -1,6 +1,7 @@
 package io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters;
 
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
+import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.WebClientConfiguration;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.IUserRESTRepository;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class UserRESTRepository implements IUserRESTRepository {
     }
 
     @Override
-    public List<UserDTO> fetchUsersFromTeam(String organizationName, String teamSlug) {
+    public List<UserDTO> fetchUsersFromTeam(String organizationName, String teamSlug) throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
                     .uri(String.format("/orgs/%s/teams/%s/members", organizationName, teamSlug))
@@ -29,14 +30,9 @@ public class UserRESTRepository implements IUserRESTRepository {
                     .bodyToFlux(UserDTO.class)
                     .collectList()
                     .block();
-        } catch (WebClientResponseException ex) {
-            // TODO: How do we prettend to handle exceptions?
+        }  catch (WebClientResponseException ex) {
             logger.error(ex.toString());
-            throw ex;
-        } catch (Exception ex) {
-            logger.error(ex.toString());
-            // TODO: How do we prettend to handle exceptions?
-            throw ex;
+            throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
         }
     }
 }

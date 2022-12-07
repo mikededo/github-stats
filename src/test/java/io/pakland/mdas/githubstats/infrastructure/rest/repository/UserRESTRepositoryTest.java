@@ -1,5 +1,6 @@
 package io.pakland.mdas.githubstats.infrastructure.rest.repository;
 
+import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.UserRESTRepository;
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import okhttp3.mockwebserver.MockResponse;
@@ -41,7 +42,7 @@ class UserRESTRepositoryTest {
     }
 
     @Test
-    void givenValidTeamMembersRequest_shouldCallTeamMembersEndpoint() throws InterruptedException {
+    void givenValidTeamMembersRequest_shouldCallTeamMembersEndpoint() throws InterruptedException, HttpException {
         MockResponse mockResponse = new MockResponse()
                 .setBody(this.teamMembersListResponse)
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -54,7 +55,7 @@ class UserRESTRepositoryTest {
     }
 
     @Test
-    void givenValidTeamId_shouldReturnTeamMembers() {
+    void givenValidTeamId_shouldReturnTeamMembers() throws HttpException {
 
         MockResponse mockResponse = new MockResponse()
                 .setBody(this.teamMembersListResponse)
