@@ -1,0 +1,16 @@
+[
+  {
+    "login": "github-stats-22",
+    "id": 119930124,
+    "node_id": "O_kgDOByX9DA",
+    "url": "https://api.github.com/orgs/github-stats-22",
+    "repos_url": "https://api.github.com/orgs/github-stats-22/repos",
+    "events_url": "https://api.github.com/orgs/github-stats-22/events",
+    "hooks_url": "https://api.github.com/orgs/github-stats-22/hooks",
+    "issues_url": "https://api.github.com/orgs/github-stats-22/issues",
+    "members_url": "https://api.github.com/orgs/github-stats-22/members{/member}",
+    "public_members_url": "https://api.github.com/orgs/github-stats-22/public_members{/member}",
+    "avatar_url": "https://avatars.githubusercontent.com/u/119930124?v=4",
+    "description": null
+  }
+]
