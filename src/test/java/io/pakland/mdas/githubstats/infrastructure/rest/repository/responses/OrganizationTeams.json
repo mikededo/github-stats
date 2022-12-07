@@ -1,0 +1,16 @@
+[
+  {
+    "name": "gs-developers",
+    "id": 7098104,
+    "node_id": "T_kwDOByX9DM4AbE74",
+    "slug": "gs-developers",
+    "description": "Maintainers of GithubStats",
+    "privacy": "closed",
+    "url": "https://api.github.com/organizations/119930124/team/7098104",
+    "html_url": "https://github.com/orgs/github-stats-22/teams/gs-developers",
+    "members_url": "https://api.github.com/organizations/119930124/team/7098104/members{/member}",
+    "repositories_url": "https://api.github.com/organizations/119930124/team/7098104/repos",
+    "permission": "pull",
+    "parent": null
+  }
+]
