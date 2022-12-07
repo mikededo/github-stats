@@ -7,6 +7,9 @@ import io.pakland.mdas.githubstats.infrastructure.shell.validation.UserNameValid
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellOption;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 @ShellComponent
 public class UserOptionComponent {
     private UserOptionRequest userOptionRequest;
@@ -29,12 +32,19 @@ public class UserOptionComponent {
             return false;
         }
 
-        this.userOptionRequest = UserOptionRequest.builder()
-                .userName(userName)
-                .apiKey(apiKey)
-                .build();
+        try {
+            this.userOptionRequest = UserOptionRequest.builder()
+                    .userName(userName)
+                    .apiKey(apiKey)
+                    .from(new SimpleDateFormat("dd/MM/yyyy").parse(fromDate))
+                    .to(new SimpleDateFormat("dd/MM/yyyy").parse(toDate))
+                    .build();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
 
         UserOptionController userOptionController = new UserOptionController(this.userOptionRequest);
+        userOptionController.execute();
         // ... Perform request ...
 
         return true;

@@ -1,6 +1,7 @@
 package io.pakland.mdas.githubstats.infrastructure.rest.repository;
 
 import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
+import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.OrganizationRESTRepository;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -43,7 +44,7 @@ class OrganizationRESTRepositoryTest {
     }
 
     @Test
-    void givenValidUserOrganizationsRequest_shouldCallUserOrganizationsEndpoint() throws InterruptedException {
+    void givenValidUserOrganizationsRequest_shouldCallUserOrganizationsEndpoint() throws InterruptedException, HttpException {
         MockResponse mockResponse = new MockResponse()
                 .setBody(this.availableOrganizationsListResponse)
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -56,7 +57,7 @@ class OrganizationRESTRepositoryTest {
     }
 
     @Test
-    void givenValidGithubAPIKey_shouldReturnAPIKeyUserOrganizations() {
+    void givenValidGithubAPIKey_shouldReturnAPIKeyUserOrganizations() throws HttpException {
 
         MockResponse mockResponse = new MockResponse()
                 .setBody(this.availableOrganizationsListResponse)

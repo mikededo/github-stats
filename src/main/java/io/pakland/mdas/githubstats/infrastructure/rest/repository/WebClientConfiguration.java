@@ -1,14 +1,16 @@
 package io.pakland.mdas.githubstats.infrastructure.rest.repository;
 
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
+@NoArgsConstructor
 public class WebClientConfiguration {
 
-    private final WebClient webClient;
+    private WebClient webClient;
 
     public WebClientConfiguration(String baseUrl, String apiKey) {
         this.webClient = WebClient.builder().baseUrl(baseUrl)

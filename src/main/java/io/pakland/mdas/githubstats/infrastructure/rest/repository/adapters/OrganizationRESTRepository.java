@@ -2,6 +2,7 @@ package io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters;
 
 import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
+import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.WebClientConfiguration;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.IOrganizationRESTRepository;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public class OrganizationRESTRepository implements IOrganizationRESTRepository {
     }
 
     @Override
-    public List<OrganizationDTO> fetchAvailableOrganizations() {
+    public List<OrganizationDTO> fetchAvailableOrganizations() throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
                     .uri("/user/orgs")
@@ -29,12 +30,8 @@ public class OrganizationRESTRepository implements IOrganizationRESTRepository {
                     .collectList()
                     .block();
         } catch (WebClientResponseException ex) {
-            // TODO: How do we prettend to handle exceptions?
             logger.error(ex.toString());
-            throw ex;
-        } catch (Exception ex) {
-            logger.error(ex.toString());
-            // TODO: How do we prettend to handle exceptions?
-            throw ex;
-        }    }
+            throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
+        }
+    }
 }
