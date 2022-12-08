@@ -2,6 +2,8 @@ package io.pakland.mdas.githubstats.domain;
 
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -11,8 +13,10 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Entity
+@Builder
 @Table(name = "repository")
 public class Repository {
 
