@@ -2,14 +2,14 @@ package io.pakland.mdas.githubstats.application;
 
 import io.pakland.mdas.githubstats.application.dto.TeamDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.ITeamRESTRepository;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.TeamExternalRepository;
 
 import java.util.List;
 
 public class FetchTeamsFromOrganization {
-    private ITeamRESTRepository teamRESTRepository;
+    private TeamExternalRepository teamRESTRepository;
 
-    public FetchTeamsFromOrganization(ITeamRESTRepository teamRESTRepository) {
+    public FetchTeamsFromOrganization(TeamExternalRepository teamRESTRepository) {
         this.teamRESTRepository = teamRESTRepository;
     }
 

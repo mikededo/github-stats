@@ -18,9 +18,9 @@ import io.pakland.mdas.githubstats.infrastructure.rest.repository.WebClientConfi
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.OrganizationGitHubRepository;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.RepositoryGitHubRepository;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.TeamGitHubRepository;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.IOrganizationRESTRepository;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.IRepositoryRESTRepository;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.ITeamRESTRepository;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.OrganizationExternalRepository;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.RepositoryExternalRepository;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.TeamExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.UserOptionRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +35,9 @@ public class UserOptionController {
 
     Logger logger = LoggerFactory.getLogger(UserOptionController.class);
     private UserOptionRequest userOptionRequest;
-    private IOrganizationRESTRepository organizationRESTRepository;
-    private ITeamRESTRepository teamRESTRepository;
-    private IRepositoryRESTRepository repositoryRESTRepository;
+    private OrganizationExternalRepository organizationRESTRepository;
+    private TeamExternalRepository teamRESTRepository;
+    private RepositoryExternalRepository repositoryRESTRepository;
 
     public UserOptionController(UserOptionRequest userOptionRequest) {
         this.userOptionRequest = userOptionRequest;

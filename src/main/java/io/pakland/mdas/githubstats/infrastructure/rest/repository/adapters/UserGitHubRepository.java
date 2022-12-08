@@ -3,7 +3,7 @@ package io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters;
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.WebClientConfiguration;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.IUserRESTRepository;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.UserExternalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.util.List;
 
 @Repository
-public class UserGitHubRepository implements IUserRESTRepository {
+public class UserGitHubRepository implements UserExternalRepository {
 
     private final WebClientConfiguration webClientConfiguration;
     Logger logger = LoggerFactory.getLogger(UserGitHubRepository.class);
