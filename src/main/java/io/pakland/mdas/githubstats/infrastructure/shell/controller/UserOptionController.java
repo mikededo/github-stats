@@ -18,9 +18,9 @@ import io.pakland.mdas.githubstats.infrastructure.rest.repository.WebClientConfi
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.OrganizationGitHubRepository;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.RepositoryGitHubRepository;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.TeamGitHubRepository;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.OrganizationExternalRepository;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.RepositoryExternalRepository;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.TeamExternalRepository;
+import io.pakland.mdas.githubstats.domain.repository.OrganizationExternalRepository;
+import io.pakland.mdas.githubstats.domain.repository.RepositoryExternalRepository;
+import io.pakland.mdas.githubstats.domain.repository.TeamExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.UserOptionRequest;
 import java.util.ArrayList;
 import java.util.List;

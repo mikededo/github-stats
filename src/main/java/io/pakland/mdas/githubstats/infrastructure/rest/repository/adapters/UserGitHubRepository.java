@@ -3,7 +3,7 @@ package io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters;
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.WebClientConfiguration;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.UserExternalRepository;
+import io.pakland.mdas.githubstats.domain.repository.UserExternalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
