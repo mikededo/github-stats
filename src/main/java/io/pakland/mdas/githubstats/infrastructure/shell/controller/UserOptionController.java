@@ -64,15 +64,11 @@ public class UserOptionController {
                 organization.setName(organizationDTO.getLogin());
 
                 // with the organization, get the teams and map them to the entities
-                List<TeamDTO> teamDTOList = new FetchTeamsFromOrganization(
-                    teamRESTRepository
-                ).execute(organizationDTO.getLogin());
-                // we only need the teams of the current user
-                List<Team> teamList = teamDTOList.stream().map(TeamMapper::dtoToEntity).toList();
-                organization.setTeams(teamList);
+                List<Team> teams = fetchTeamsFromOrganization(organizationDTO.getLogin());
+                organization.setTeams(teams);
                 organizations.add(organization);
 
-                for (Team team : teamList) {
+                for (Team team : teams) {
                     // obtain the members of each team
                     List<User> users = fetchUsersFromTeam(organizationDTO.getLogin(),
                         team.getSlug());
@@ -85,6 +81,14 @@ public class UserOptionController {
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private List<Team> fetchTeamsFromOrganization(String organization) throws HttpException {
+        List<TeamDTO> teamDTOList = new FetchTeamsFromOrganization(
+            teamRESTRepository
+        ).execute(organization);
+        // we only need the teams of the current user
+        return teamDTOList.stream().map(TeamMapper::dtoToEntity).toList();
     }
 
     private List<User> fetchUsersFromTeam(String orgLogin, String teamSlug) throws HttpException {
