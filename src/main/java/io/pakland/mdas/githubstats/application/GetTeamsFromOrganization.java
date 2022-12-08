@@ -2,6 +2,7 @@ package io.pakland.mdas.githubstats.application;
 
 import io.pakland.mdas.githubstats.domain.Organization;
 import io.pakland.mdas.githubstats.domain.Team;
+import io.pakland.mdas.githubstats.domain.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

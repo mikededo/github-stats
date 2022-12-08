@@ -49,12 +49,10 @@ public class UserOptionController {
     }
 
     public void execute() {
-
-        FetchAvailableOrganizations fetchAvailableOrganizations = new FetchAvailableOrganizations(
-            this.organizationRESTRepository);
         try {
             // dto coming from the backend
-            List<OrganizationDTO> organizationDTOList = fetchAvailableOrganizations.fetch();
+            List<OrganizationDTO> organizationDTOList = new FetchAvailableOrganizations(
+                this.organizationRESTRepository).fetch();
             // entities that we will store in the database
             List<Organization> organizations = new ArrayList<>();
             for (OrganizationDTO organizationDTO : organizationDTOList) {
