@@ -1,5 +1,6 @@
 package io.pakland.mdas.githubstats.domain;
 
+import java.util.Collection;
 import javax.persistence.*;
 
 import lombok.*;
@@ -64,6 +65,17 @@ public class Team {
   public void addUser(User user) {
     users.add(user);
     user.setTeam(this);
+  }
+
+  public void addUsers(Collection<User> teamUsers) {
+    if (users == null) {
+      users = new ArrayList<>();
+    }
+
+    users.addAll(teamUsers);
+    for (User user : teamUsers) {
+      user.setTeam(this);
+    }
   }
 
   public void removeUser(User user) {
