@@ -34,7 +34,7 @@ class OrganizationGitHubRepositoryTest {
         this.mockWebServer.start();
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(mockWebServer.url("/").toString(), "test-api-key");
         this.organizationGithubRepository = new OrganizationGitHubRepository(webClientConfiguration);
-        this.availableOrganizationsListResponse = new String(Files.readAllBytes(Paths.get("src/test/java/io/pakland/mdas/githubstats/infrastructure/rest/repository/responses/AvailableOrganizations.json")));
+        this.availableOrganizationsListResponse = new String(Files.readAllBytes(Paths.get("src/test/java/io/pakland/mdas/githubstats/infrastructure/github/repository/responses/AvailableOrganizations.json")));
     }
 
     @AfterAll
