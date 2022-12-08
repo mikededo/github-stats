@@ -2,15 +2,15 @@ package io.pakland.mdas.githubstats.application;
 
 import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.IOrganizationRESTRepository;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.OrganizationExternalRepository;
 
 import java.util.List;
 
 public class FetchAvailableOrganizations {
 
-    private IOrganizationRESTRepository organizationRESTRepository;
+    private OrganizationExternalRepository organizationRESTRepository;
 
-    public FetchAvailableOrganizations(IOrganizationRESTRepository organizationRESTRepository) {
+    public FetchAvailableOrganizations(OrganizationExternalRepository organizationRESTRepository) {
         this.organizationRESTRepository = organizationRESTRepository;
     }
 
