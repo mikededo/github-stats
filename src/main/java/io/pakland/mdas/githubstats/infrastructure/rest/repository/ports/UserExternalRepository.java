@@ -5,6 +5,6 @@ import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 
 import java.util.List;
 
-public interface IUserRESTRepository {
+public interface UserExternalRepository {
     List<UserDTO> fetchUsersFromTeam(String organizationName, String teamSlug) throws HttpException;
 }
