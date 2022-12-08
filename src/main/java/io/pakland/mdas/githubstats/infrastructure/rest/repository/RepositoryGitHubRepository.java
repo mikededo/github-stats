@@ -1,31 +1,32 @@
-package io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters;
+package io.pakland.mdas.githubstats.infrastructure.rest.repository;
 
-import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
+import io.pakland.mdas.githubstats.application.dto.RepositoryDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.OrganizationGitHubRepository;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.WebClientConfiguration;
-import io.pakland.mdas.githubstats.domain.repository.OrganizationExternalRepository;
+import io.pakland.mdas.githubstats.domain.repository.RepositoryExternalRepository;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.util.List;
-
-public class OrganizationGitHubRepository implements OrganizationExternalRepository {
+public class RepositoryGitHubRepository implements RepositoryExternalRepository {
 
     private final WebClientConfiguration webClientConfiguration;
     Logger logger = LoggerFactory.getLogger(OrganizationGitHubRepository.class);
 
-    public OrganizationGitHubRepository(WebClientConfiguration webClientConfiguration) {
+    public RepositoryGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
     }
 
     @Override
-    public List<OrganizationDTO> fetchAvailableOrganizations() throws HttpException {
+    public List<RepositoryDTO> fetchTeamRepositories(Integer orgId, Integer teamId)
+        throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
-                    .uri("/user/orgs")
+                .uri(String.format("/organizations/%s/team/%d/repos", orgId, teamId))
                     .retrieve()
-                    .bodyToFlux(OrganizationDTO.class)
+                    .bodyToFlux(RepositoryDTO.class)
                     .collectList()
                     .block();
         } catch (WebClientResponseException ex) {
