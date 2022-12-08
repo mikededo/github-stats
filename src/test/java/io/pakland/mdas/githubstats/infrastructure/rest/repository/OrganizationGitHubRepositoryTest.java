@@ -1,8 +1,8 @@
 package io.pakland.mdas.githubstats.infrastructure.rest.repository;
 
+import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.UserRESTRepository;
-import io.pakland.mdas.githubstats.application.dto.UserDTO;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.OrganizationGitHubRepository;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -19,21 +19,23 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UserRESTRepositoryTest {
+class OrganizationGitHubRepositoryTest {
+
     private MockWebServer mockWebServer;
-    private UserRESTRepository userRESTRepository;
-    private String teamMembersListResponse;
+    private OrganizationGitHubRepository organizationGithubRepository;
+    private String availableOrganizationsListResponse;
 
     @BeforeAll
     void setup() throws IOException {
         this.mockWebServer = new MockWebServer();
         this.mockWebServer.start();
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(mockWebServer.url("/").toString(), "test-api-key");
-        this.userRESTRepository = new UserRESTRepository(webClientConfiguration);
-        this.teamMembersListResponse = new String(Files.readAllBytes(Paths.get("src/test/java/io/pakland/mdas/githubstats/infrastructure/rest/repository/responses/TeamMembers.json")));
+        this.organizationGithubRepository = new OrganizationGitHubRepository(webClientConfiguration);
+        this.availableOrganizationsListResponse = new String(Files.readAllBytes(Paths.get("src/test/java/io/pakland/mdas/githubstats/infrastructure/rest/repository/responses/AvailableOrganizations.json")));
     }
 
     @AfterAll
@@ -42,33 +44,30 @@ class UserRESTRepositoryTest {
     }
 
     @Test
-    void givenValidTeamMembersRequest_shouldCallTeamMembersEndpoint() throws InterruptedException, HttpException {
+    void givenValidUserOrganizationsRequest_shouldCallUserOrganizationsEndpoint() throws InterruptedException, HttpException {
         MockResponse mockResponse = new MockResponse()
-                .setBody(this.teamMembersListResponse)
+                .setBody(this.availableOrganizationsListResponse)
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        userRESTRepository.fetchUsersFromTeam("github-stats-22", "gs-developers");
+        organizationGithubRepository.fetchAvailableOrganizations();
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals(String.format("/orgs/%s/teams/%s/members", "github-stats-22", "gs-developers"), request.getPath());
+        assertEquals("/user/orgs", request.getPath());
     }
 
     @Test
-    void givenValidTeamId_shouldReturnTeamMembers() throws HttpException {
+    void givenValidGithubAPIKey_shouldReturnAPIKeyUserOrganizations() throws HttpException {
 
         MockResponse mockResponse = new MockResponse()
-                .setBody(this.teamMembersListResponse)
+                .setBody(this.availableOrganizationsListResponse)
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<UserDTO> response = userRESTRepository.fetchUsersFromTeam("github-stats-22", "gs-developers");
-        List<UserDTO> expected = new ArrayList<>();
-        expected.add(0, new UserDTO(33031570, "manerow", "https://api.github.com/users/manerow/orgs"));
-        expected.add(1, new UserDTO(48334745, "mikededo", "https://api.github.com/users/mikededo/orgs"));
-        expected.add(2, new UserDTO(54351560, "sdomingobasora", "https://api.github.com/users/sdomingobasora/orgs"));
+        List<OrganizationDTO> response = organizationGithubRepository.fetchAvailableOrganizations();
+        List<OrganizationDTO> expected = new ArrayList<>();
+        expected.add(new OrganizationDTO(119930124, "github-stats-22"));
 
-        assertEquals(3, response.size());
         assertArrayEquals(response.toArray(), expected.toArray());
     }
 }
