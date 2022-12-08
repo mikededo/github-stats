@@ -1,9 +1,7 @@
 package io.pakland.mdas.githubstats.infrastructure.rest.repository;
 
-import io.pakland.mdas.githubstats.application.dto.TeamDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.TeamRESTRepository;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.UserRESTRepository;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.UserGitHubRepository;
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -24,18 +22,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class TeamRESTRepositoryTest {
+class UserGitHubRepositoryTest {
     private MockWebServer mockWebServer;
-    private TeamRESTRepository teamRESTRepository;
-    private String organizationTeamsListResponse;
+    private UserGitHubRepository userGitHubRepository;
+    private String teamMembersListResponse;
 
     @BeforeAll
     void setup() throws IOException {
         this.mockWebServer = new MockWebServer();
         this.mockWebServer.start();
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(mockWebServer.url("/").toString(), "test-api-key");
-        this.teamRESTRepository = new TeamRESTRepository(webClientConfiguration);
-        this.organizationTeamsListResponse = new String(Files.readAllBytes(Paths.get("src/test/java/io/pakland/mdas/githubstats/infrastructure/rest/repository/responses/OrganizationTeams.json")));
+        this.userGitHubRepository = new UserGitHubRepository(webClientConfiguration);
+        this.teamMembersListResponse = new String(Files.readAllBytes(Paths.get("src/test/java/io/pakland/mdas/githubstats/infrastructure/rest/repository/responses/TeamMembers.json")));
     }
 
     @AfterAll
@@ -46,29 +44,31 @@ class TeamRESTRepositoryTest {
     @Test
     void givenValidTeamMembersRequest_shouldCallTeamMembersEndpoint() throws InterruptedException, HttpException {
         MockResponse mockResponse = new MockResponse()
-                .setBody(this.organizationTeamsListResponse)
+                .setBody(this.teamMembersListResponse)
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        teamRESTRepository.fetchTeamsFromOrganization("github-stats-22");
+        userGitHubRepository.fetchUsersFromTeam("github-stats-22", "gs-developers");
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals(String.format("/orgs/%s/teams", "github-stats-22"), request.getPath());
+        assertEquals(String.format("/orgs/%s/teams/%s/members", "github-stats-22", "gs-developers"), request.getPath());
     }
 
     @Test
     void givenValidTeamId_shouldReturnTeamMembers() throws HttpException {
 
         MockResponse mockResponse = new MockResponse()
-                .setBody(this.organizationTeamsListResponse)
+                .setBody(this.teamMembersListResponse)
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<TeamDTO> response = teamRESTRepository.fetchTeamsFromOrganization("github-stats-22");
-        List<TeamDTO> expected = new ArrayList<>();
-        expected.add(0, new TeamDTO(7098104, "gs-developers", "gs-developers"));
+        List<UserDTO> response = userGitHubRepository.fetchUsersFromTeam("github-stats-22", "gs-developers");
+        List<UserDTO> expected = new ArrayList<>();
+        expected.add(0, new UserDTO(33031570, "manerow", "https://api.github.com/users/manerow/orgs"));
+        expected.add(1, new UserDTO(48334745, "mikededo", "https://api.github.com/users/mikededo/orgs"));
+        expected.add(2, new UserDTO(54351560, "sdomingobasora", "https://api.github.com/users/sdomingobasora/orgs"));
 
-        assertEquals(response.size(), 1);
+        assertEquals(3, response.size());
         assertArrayEquals(response.toArray(), expected.toArray());
     }
 }

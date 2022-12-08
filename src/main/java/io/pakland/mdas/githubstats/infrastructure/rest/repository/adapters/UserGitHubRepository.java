@@ -1,35 +1,36 @@
 package io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters;
 
-import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.WebClientConfiguration;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.IOrganizationRESTRepository;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.IUserRESTRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.List;
 
-public class OrganizationRESTRepository implements IOrganizationRESTRepository {
+@Repository
+public class UserGitHubRepository implements IUserRESTRepository {
 
     private final WebClientConfiguration webClientConfiguration;
-    Logger logger = LoggerFactory.getLogger(OrganizationRESTRepository.class);
+    Logger logger = LoggerFactory.getLogger(UserGitHubRepository.class);
 
-    public OrganizationRESTRepository(WebClientConfiguration webClientConfiguration) {
+    public UserGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
     }
 
     @Override
-    public List<OrganizationDTO> fetchAvailableOrganizations() throws HttpException {
+    public List<UserDTO> fetchUsersFromTeam(String organizationName, String teamSlug) throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
-                    .uri("/user/orgs")
+                    .uri(String.format("/orgs/%s/teams/%s/members", organizationName, teamSlug))
                     .retrieve()
-                    .bodyToFlux(OrganizationDTO.class)
+                    .bodyToFlux(UserDTO.class)
                     .collectList()
                     .block();
-        } catch (WebClientResponseException ex) {
+        }  catch (WebClientResponseException ex) {
             logger.error(ex.toString());
             throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
         }
