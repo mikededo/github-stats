@@ -1,7 +1,6 @@
 package io.pakland.mdas.githubstats.infrastructure.rest.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.UserGitHubRepository;
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;

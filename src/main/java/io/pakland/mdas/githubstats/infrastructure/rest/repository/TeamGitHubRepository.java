@@ -1,9 +1,8 @@
-package io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters;
+package io.pakland.mdas.githubstats.infrastructure.rest.repository;
 
 import io.pakland.mdas.githubstats.application.dto.TeamDTO;
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.WebClientConfiguration;
 import io.pakland.mdas.githubstats.domain.repository.TeamExternalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
