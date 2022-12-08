@@ -32,7 +32,7 @@ class TeamGitHubRepositoryTest {
         this.mockWebServer.start();
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(mockWebServer.url("/").toString(), "test-api-key");
         this.teamGitHubRepository = new TeamGitHubRepository(webClientConfiguration);
-        this.organizationTeamsListResponse = new String(Files.readAllBytes(Paths.get("src/test/java/io/pakland/mdas/githubstats/infrastructure/rest/repository/responses/OrganizationTeams.json")));
+        this.organizationTeamsListResponse = new String(Files.readAllBytes(Paths.get("src/test/java/io/pakland/mdas/githubstats/infrastructure/github/repository/responses/OrganizationTeams.json")));
     }
 
     @AfterAll
