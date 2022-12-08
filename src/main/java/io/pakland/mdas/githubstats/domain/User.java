@@ -2,6 +2,8 @@ package io.pakland.mdas.githubstats.domain;
 
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -11,7 +13,9 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
+@Builder
 @Entity
 @Table(name = "user")
 public class User {
@@ -24,6 +28,7 @@ public class User {
   private String login;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @ToString.Exclude
   private Team team;
 
   @OneToMany(

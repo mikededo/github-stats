@@ -5,9 +5,11 @@ import io.pakland.mdas.githubstats.application.FetchTeamsFromOrganization;
 import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
 import io.pakland.mdas.githubstats.application.dto.RepositoryDTO;
 import io.pakland.mdas.githubstats.application.dto.TeamDTO;
+import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.RepositoryMapper;
 import io.pakland.mdas.githubstats.application.mappers.TeamMapper;
+import io.pakland.mdas.githubstats.application.mappers.UserMapper;
 import io.pakland.mdas.githubstats.domain.Organization;
 import io.pakland.mdas.githubstats.domain.Repository;
 import io.pakland.mdas.githubstats.domain.Team;
@@ -21,6 +23,7 @@ import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.ITeamRES
 import io.pakland.mdas.githubstats.infrastructure.shell.model.UserOptionRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +37,7 @@ public class UserOptionController {
     private UserOptionRequest userOptionRequest;
     private IOrganizationRESTRepository organizationRESTRepository;
     private ITeamRESTRepository teamRESTRepository;
-    private IRepositoryRESTRepository repositoryRestRepository;
+    private IRepositoryRESTRepository repositoryRESTRepository;
 
     public UserOptionController(UserOptionRequest userOptionRequest) {
         this.userOptionRequest = userOptionRequest;
@@ -42,7 +45,7 @@ public class UserOptionController {
             "https://api.github.com", userOptionRequest.getApiKey());
         this.organizationRESTRepository = new OrganizationRESTRepository(webClientConfiguration);
         this.teamRESTRepository = new TeamRESTRepository(webClientConfiguration);
-        this.repositoryRestRepository = new RepositoryRESTRepository(webClientConfiguration);
+        this.repositoryRESTRepository = new RepositoryRESTRepository(webClientConfiguration);
     }
 
     public void execute() {
@@ -62,15 +65,21 @@ public class UserOptionController {
 
                 // with the organization, get the teams and map them to the entities
                 List<TeamDTO> teamDTOList = new FetchTeamsFromOrganization(
-                    teamRESTRepository).execute(
-                    organizationDTO.getLogin());
+                    teamRESTRepository
+                ).execute(organizationDTO.getLogin());
+                // we only need the teams of the current user
                 List<Team> teamList = teamDTOList.stream().map(TeamMapper::dtoToEntity).toList();
                 organization.setTeams(teamList);
                 organizations.add(organization);
 
-                // obtain the repositories for each team
                 for (Team team : teamList) {
-                    List<RepositoryDTO> repositoryDTOS = repositoryRestRepository.fetchTeamRepositories(
+                    // obtain the members of each team
+                    List<UserDTO> users = teamRESTRepository.fetchMembersOfTeam(
+                        organizationDTO.getLogin(), team.getSlug());
+                    team.addUsers(users.stream().map(UserMapper::dtoToEntity).toList());
+
+                    // also obtain the repositories for each team
+                    List<RepositoryDTO> repositoryDTOS = repositoryRESTRepository.fetchTeamRepositories(
                         organizationDTO.getId(), team.getId().intValue());
                     List<Repository> repositories = repositoryDTOS.stream()
                         .map(RepositoryMapper::dtoToEntity).toList();
