@@ -11,12 +11,12 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import java.util.List;
 
-public class TeamRESTRepository implements ITeamRESTRepository {
+public class TeamGitHubRepository implements ITeamRESTRepository {
 
     private final WebClientConfiguration webClientConfiguration;
-    Logger logger = LoggerFactory.getLogger(TeamRESTRepository.class);
+    Logger logger = LoggerFactory.getLogger(TeamGitHubRepository.class);
 
-    public TeamRESTRepository(WebClientConfiguration webClientConfiguration) {
+    public TeamGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
     }
 

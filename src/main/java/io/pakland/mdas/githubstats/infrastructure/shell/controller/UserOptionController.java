@@ -15,9 +15,9 @@ import io.pakland.mdas.githubstats.domain.Repository;
 import io.pakland.mdas.githubstats.domain.Team;
 import io.pakland.mdas.githubstats.domain.User;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.WebClientConfiguration;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.OrganizationRESTRepository;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.RepositoryRESTRepository;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.TeamRESTRepository;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.OrganizationGitHubRepository;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.RepositoryGitHubRepository;
+import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.TeamGitHubRepository;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.IOrganizationRESTRepository;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.IRepositoryRESTRepository;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.ITeamRESTRepository;
@@ -43,9 +43,9 @@ public class UserOptionController {
         this.userOptionRequest = userOptionRequest;
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(
             "https://api.github.com", userOptionRequest.getApiKey());
-        this.organizationRESTRepository = new OrganizationRESTRepository(webClientConfiguration);
-        this.teamRESTRepository = new TeamRESTRepository(webClientConfiguration);
-        this.repositoryRESTRepository = new RepositoryRESTRepository(webClientConfiguration);
+        this.organizationRESTRepository = new OrganizationGitHubRepository(webClientConfiguration);
+        this.teamRESTRepository = new TeamGitHubRepository(webClientConfiguration);
+        this.repositoryRESTRepository = new RepositoryGitHubRepository(webClientConfiguration);
     }
 
     public void execute() {
