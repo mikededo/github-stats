@@ -2,7 +2,7 @@ package io.pakland.mdas.githubstats.application;
 
 import io.pakland.mdas.githubstats.application.dto.TeamDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.TeamExternalRepository;
+import io.pakland.mdas.githubstats.domain.repository.TeamExternalRepository;
 
 import java.util.List;
 
