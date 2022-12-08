@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.infrastructure.rest.repository;
+package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpHeaders;
