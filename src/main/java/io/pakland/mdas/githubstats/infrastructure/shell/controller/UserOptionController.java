@@ -13,6 +13,7 @@ import io.pakland.mdas.githubstats.application.mappers.UserMapper;
 import io.pakland.mdas.githubstats.domain.Organization;
 import io.pakland.mdas.githubstats.domain.Repository;
 import io.pakland.mdas.githubstats.domain.Team;
+import io.pakland.mdas.githubstats.domain.User;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.WebClientConfiguration;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.OrganizationRESTRepository;
 import io.pakland.mdas.githubstats.infrastructure.rest.repository.adapters.RepositoryRESTRepository;
@@ -23,7 +24,6 @@ import io.pakland.mdas.githubstats.infrastructure.rest.repository.ports.ITeamRES
 import io.pakland.mdas.githubstats.infrastructure.shell.model.UserOptionRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,15 +74,12 @@ public class UserOptionController {
 
                 for (Team team : teamList) {
                     // obtain the members of each team
-                    List<UserDTO> users = teamRESTRepository.fetchMembersOfTeam(
-                        organizationDTO.getLogin(), team.getSlug());
-                    team.addUsers(users.stream().map(UserMapper::dtoToEntity).toList());
-
+                    List<User> users = fetchUsersFromTeam(organizationDTO.getLogin(),
+                        team.getSlug());
+                    team.setUsers(users);
                     // also obtain the repositories for each team
-                    List<RepositoryDTO> repositoryDTOS = repositoryRESTRepository.fetchTeamRepositories(
+                    List<Repository> repositories = fetchRepositoriesFromTeam(
                         organizationDTO.getId(), team.getId().intValue());
-                    List<Repository> repositories = repositoryDTOS.stream()
-                        .map(RepositoryMapper::dtoToEntity).toList();
                 }
             }
         } catch (HttpException e) {
@@ -90,4 +87,15 @@ public class UserOptionController {
         }
     }
 
+    private List<User> fetchUsersFromTeam(String orgLogin, String teamSlug) throws HttpException {
+        List<UserDTO> users = teamRESTRepository.fetchMembersOfTeam(orgLogin, teamSlug);
+        return users.stream().map(UserMapper::dtoToEntity).toList();
+    }
+
+    private List<Repository> fetchRepositoriesFromTeam(Integer orgId, Integer teamId)
+        throws HttpException {
+        List<RepositoryDTO> repositoryDTOS = repositoryRESTRepository.fetchTeamRepositories(
+            orgId, teamId);
+        return repositoryDTOS.stream().map(RepositoryMapper::dtoToEntity).toList();
+    }
 }
