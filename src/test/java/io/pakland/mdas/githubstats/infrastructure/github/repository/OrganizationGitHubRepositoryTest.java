@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.infrastructure.rest.repository;
+package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
