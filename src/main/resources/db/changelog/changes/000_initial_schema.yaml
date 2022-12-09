@@ -6,13 +6,13 @@ databaseChangeLog:
     - createTable:
         columns:
         - column:
-            autoIncrement: true
+            autoIncrement: false
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: comment_pkey
             name: id
-            type: BIGINT
+            type: INT
         - column:
             constraints:
               nullable: false
@@ -20,7 +20,7 @@ databaseChangeLog:
             type: INTEGER
         - column:
             name: user_review_id
-            type: BIGINT
+            type: INT
         tableName: comment
 - changeSet:
     id: 1669767244074-2
@@ -29,13 +29,13 @@ databaseChangeLog:
     - createTable:
         columns:
         - column:
-            autoIncrement: true
+            autoIncrement: false
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: commit_pkey
             name: id
-            type: BIGINT
+            type: INT
         - column:
             constraints:
               nullable: false
@@ -51,10 +51,10 @@ databaseChangeLog:
             type: INTEGER
         - column:
             name: pull_request_id
-            type: BIGINT
+            type: INT
         - column:
             name: user_id
-            type: BIGINT
+            type: INT
         tableName: commit
 - changeSet:
     id: 1669767244074-3
@@ -63,13 +63,13 @@ databaseChangeLog:
     - createTable:
         columns:
         - column:
-            autoIncrement: true
+            autoIncrement: false
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: historic_queries_pkey
             name: id
-            type: BIGINT
+            type: INT
         - column:
             constraints:
               nullable: false
@@ -87,7 +87,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: team_id
-            type: BIGINT
+            type: INT
         tableName: historic_queries
 - changeSet:
     id: 1669767244074-4
@@ -96,13 +96,13 @@ databaseChangeLog:
     - createTable:
         columns:
         - column:
-            autoIncrement: true
+            autoIncrement: false
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: organization_pkey
             name: id
-            type: BIGINT
+            type: INT
         - column:
             name: name
             type: VARCHAR(255)
@@ -117,16 +117,16 @@ databaseChangeLog:
     - createTable:
         columns:
         - column:
-            autoIncrement: true
+            autoIncrement: false
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: pull_request_pkey
             name: id
-            type: BIGINT
+            type: INT
         - column:
             name: repository_id
-            type: BIGINT
+            type: INT
         tableName: pull_request
 - changeSet:
     id: 1669767244074-6
@@ -135,13 +135,13 @@ databaseChangeLog:
     - createTable:
         columns:
         - column:
-            autoIncrement: true
+            autoIncrement: false
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: repository_pkey
             name: id
-            type: BIGINT
+            type: INT
         - column:
             name: commits_url
             type: VARCHAR(255)
@@ -156,7 +156,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: team_id
-            type: BIGINT
+            type: INT
         tableName: repository
 - changeSet:
     id: 1669767244074-7
@@ -165,13 +165,13 @@ databaseChangeLog:
     - createTable:
         columns:
         - column:
-            autoIncrement: true
+            autoIncrement: false
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: team_pkey
             name: id
-            type: BIGINT
+            type: INT
         - column:
             name: member_url
             type: VARCHAR(255)
@@ -180,7 +180,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: organization_id
-            type: BIGINT
+            type: INT
         tableName: team
 - changeSet:
     id: 1669767244074-8
@@ -189,19 +189,19 @@ databaseChangeLog:
     - createTable:
         columns:
         - column:
-            autoIncrement: true
+            autoIncrement: false
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: user_pkey
             name: id
-            type: BIGINT
+            type: INT
         - column:
             name: login
             type: VARCHAR(255)
         - column:
             name: team_id
-            type: BIGINT
+            type: INT
         tableName: user
 - changeSet:
     id: 1669767244074-9
@@ -210,19 +210,19 @@ databaseChangeLog:
     - createTable:
         columns:
         - column:
-            autoIncrement: true
+            autoIncrement: false
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: user_review_pkey
             name: id
-            type: BIGINT
+            type: INT
         - column:
             name: pull_request_id
-            type: BIGINT
+            type: INT
         - column:
             name: user_id
-            type: BIGINT
+            type: INT
         tableName: user_review
 - changeSet:
     id: 1669767244074-10

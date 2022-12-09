@@ -47,7 +47,7 @@ class TeamGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        teamGitHubRepository.fetchTeamsFromOrganization("github-stats-22");
+        teamGitHubRepository.fetchTeamsFromOrganization(119930124);
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals(String.format("/orgs/%s/teams", "github-stats-22"), request.getPath());
@@ -61,7 +61,7 @@ class TeamGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<TeamDTO> response = teamGitHubRepository.fetchTeamsFromOrganization("github-stats-22");
+        List<TeamDTO> response = teamGitHubRepository.fetchTeamsFromOrganization(119930124);
         List<TeamDTO> expected = new ArrayList<>();
         expected.add(0, new TeamDTO(7098104, "gs-developers", "gs-developers"));
 

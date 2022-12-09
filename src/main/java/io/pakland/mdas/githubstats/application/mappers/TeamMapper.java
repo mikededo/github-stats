@@ -5,6 +5,6 @@ import io.pakland.mdas.githubstats.domain.Team;
 
 public final class TeamMapper {
     public static Team dtoToEntity(TeamDTO teamDTO) {
-        return Team.builder().id(teamDTO.getId().longValue()).name(teamDTO.getName()).slug(teamDTO.getSlug()).build();
+        return Team.builder().id(teamDTO.getId()).slug(teamDTO.getSlug()).build();
     }
 }

@@ -20,7 +20,7 @@ public class GetOrganizationFromId {
 
     // For tests sake, we return boolean to know if the code works properly
     @Transactional(readOnly = true)
-    public boolean execute(Long id) throws OrganizationNotFound {
+    public boolean execute(Integer id) throws OrganizationNotFound {
         Optional<Organization> org = organizationRepository.findById(id);
         if (org.isPresent()) {
             return true;

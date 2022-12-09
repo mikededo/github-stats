@@ -15,7 +15,7 @@ public class GetOrganizationFromTeamNameTest {
     @Test
     public void givenTeamName_shouldReturnOrganizationFound() throws TeamNotFound {
         Organization organization = new Organization();
-        organization.setId(1L);
+        organization.setId(1);
         Team team = new Team();
         team.setOrganization(organization);
 

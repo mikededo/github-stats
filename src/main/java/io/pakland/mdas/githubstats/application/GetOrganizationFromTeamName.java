@@ -17,7 +17,7 @@ public class GetOrganizationFromTeamName {
     }
 
     public Organization execute(String teamName) throws TeamNotFound {
-        Optional<Team> maybeTeam = teamRepository.findTeamByName(teamName);
+        Optional<Team> maybeTeam = teamRepository.findTeamBySlug(teamName);
         if (maybeTeam.isEmpty()) {
             throw new TeamNotFound(teamName);
         }

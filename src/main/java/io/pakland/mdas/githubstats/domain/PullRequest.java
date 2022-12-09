@@ -19,7 +19,7 @@ public class PullRequest {
   @Id
   @Column(updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @OneToMany(
     mappedBy = "pullRequest",
