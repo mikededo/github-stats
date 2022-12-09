@@ -20,29 +20,14 @@ public class TeamGitHubRepository implements TeamExternalRepository {
     }
 
     @Override
-    public List<TeamDTO> fetchTeamsFromOrganization(String organizationName) throws HttpException {
+    public List<TeamDTO> fetchTeamsFromOrganization(Integer organizationId) throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
-                    .uri(String.format("/orgs/%s/teams", organizationName))
+                    .uri(String.format("/orgs/%s/teams", organizationId))
                     .retrieve()
                     .bodyToFlux(TeamDTO.class)
                     .collectList()
                     .block();
-        }  catch (WebClientResponseException ex) {
-            logger.error(ex.toString());
-            throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
-        }
-    }
-
-    @Override
-    public List<UserDTO> fetchMembersOfTeam(String orgName, String teamSlug) throws HttpException {
-        try {
-            return this.webClientConfiguration.getWebClient().get()
-                .uri(String.format("/orgs/%s/teams/%s/members", orgName, teamSlug))
-                .retrieve()
-                .bodyToFlux(UserDTO.class)
-                .collectList()
-                .block();
         }  catch (WebClientResponseException ex) {
             logger.error(ex.toString());
             throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
