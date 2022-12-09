@@ -11,26 +11,26 @@ public class SaveOrganizationTest {
     @Test
     public void shouldSaveOrganization_whenDoesNotExist() {
         Organization organization = new Organization();
-        organization.setId(1L);
+        organization.setId(1);
         OrganizationRepository orgRepositoryMock = Mockito.mock(OrganizationRepository.class);
-        Mockito.when(orgRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+        Mockito.when(orgRepositoryMock.findById(Mockito.anyInt())).thenReturn(Optional.empty());
 
         new SaveOrganization(orgRepositoryMock).execute(organization);
 
-        Mockito.verify(orgRepositoryMock, Mockito.times(1)).findById(1L);
+        Mockito.verify(orgRepositoryMock, Mockito.times(1)).findById(1);
         Mockito.verify(orgRepositoryMock, Mockito.times(1)).save(organization);
     }
 
     @Test
     public void shouldNotSaveOrganization_wheDoesExist() {
         Organization organization = new Organization();
-        organization.setId(1L);
+        organization.setId(1);
         OrganizationRepository orgRepositoryMock = Mockito.mock(OrganizationRepository.class);
-        Mockito.when(orgRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(organization));
+        Mockito.when(orgRepositoryMock.findById(Mockito.anyInt())).thenReturn(Optional.of(organization));
 
         new SaveOrganization(orgRepositoryMock).execute(organization);
 
-        Mockito.verify(orgRepositoryMock, Mockito.times(1)).findById(1L);
+        Mockito.verify(orgRepositoryMock, Mockito.times(1)).findById(1);
         Mockito.verify(orgRepositoryMock, Mockito.times(0)).save(Mockito.any(Organization.class));
     }
 }

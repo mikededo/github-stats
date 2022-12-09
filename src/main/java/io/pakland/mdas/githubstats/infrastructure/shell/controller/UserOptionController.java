@@ -1,23 +1,17 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.controller;
 
+import io.pakland.mdas.githubstats.FetchUsersFromTeam;
 import io.pakland.mdas.githubstats.application.FetchAvailableOrganizations;
+import io.pakland.mdas.githubstats.application.FetchRepositoriesFromTeam;
 import io.pakland.mdas.githubstats.application.FetchTeamsFromOrganization;
-import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
-import io.pakland.mdas.githubstats.application.dto.RepositoryDTO;
-import io.pakland.mdas.githubstats.application.dto.TeamDTO;
-import io.pakland.mdas.githubstats.application.dto.UserDTO;
+import io.pakland.mdas.githubstats.application.dto.*;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.RepositoryMapper;
 import io.pakland.mdas.githubstats.application.mappers.TeamMapper;
 import io.pakland.mdas.githubstats.application.mappers.UserMapper;
-import io.pakland.mdas.githubstats.domain.Organization;
-import io.pakland.mdas.githubstats.domain.Repository;
-import io.pakland.mdas.githubstats.domain.Team;
-import io.pakland.mdas.githubstats.domain.User;
-import io.pakland.mdas.githubstats.infrastructure.github.repository.WebClientConfiguration;
-import io.pakland.mdas.githubstats.infrastructure.github.repository.OrganizationGitHubRepository;
-import io.pakland.mdas.githubstats.infrastructure.github.repository.RepositoryGitHubRepository;
-import io.pakland.mdas.githubstats.infrastructure.github.repository.TeamGitHubRepository;
+import io.pakland.mdas.githubstats.domain.*;
+import io.pakland.mdas.githubstats.domain.repository.UserExternalRepository;
+import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
 import io.pakland.mdas.githubstats.domain.repository.OrganizationExternalRepository;
 import io.pakland.mdas.githubstats.domain.repository.RepositoryExternalRepository;
 import io.pakland.mdas.githubstats.domain.repository.TeamExternalRepository;
@@ -35,69 +29,83 @@ public class UserOptionController {
 
     Logger logger = LoggerFactory.getLogger(UserOptionController.class);
     private UserOptionRequest userOptionRequest;
-    private OrganizationExternalRepository organizationRESTRepository;
-    private TeamExternalRepository teamRESTRepository;
-    private RepositoryExternalRepository repositoryRESTRepository;
+    private OrganizationExternalRepository organizationExternalRepository;
+    private TeamExternalRepository teamExternalRepository;
+    
+    private UserExternalRepository userExternalRepository;
+    private RepositoryExternalRepository repositoryExternalRepository;
 
     public UserOptionController(UserOptionRequest userOptionRequest) {
         this.userOptionRequest = userOptionRequest;
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(
             "https://api.github.com", userOptionRequest.getApiKey());
-        this.organizationRESTRepository = new OrganizationGitHubRepository(webClientConfiguration);
-        this.teamRESTRepository = new TeamGitHubRepository(webClientConfiguration);
-        this.repositoryRESTRepository = new RepositoryGitHubRepository(webClientConfiguration);
+        this.organizationExternalRepository = new OrganizationGitHubRepository(webClientConfiguration);
+        this.teamExternalRepository = new TeamGitHubRepository(webClientConfiguration);
+        this.userExternalRepository = new UserGitHubRepository(webClientConfiguration);
+        this.repositoryExternalRepository = new RepositoryGitHubRepository(webClientConfiguration);
     }
 
     public void execute() {
         try {
             // dto coming from the backend
             List<OrganizationDTO> organizationDTOList = new FetchAvailableOrganizations(
-                this.organizationRESTRepository).fetch();
+                this.organizationExternalRepository).execute();
             // entities that we will store in the database
-            List<Organization> organizations = new ArrayList<>();
+            List<Organization> userAvaliableOrganizationList = new ArrayList<>();
             for (OrganizationDTO organizationDTO : organizationDTOList) {
                 // fetch the organization
                 Organization organization = new Organization();
-                organization.setId(organizationDTO.getId().longValue());
+                organization.setId(organizationDTO.getId());
                 organization.setName(organizationDTO.getLogin());
 
                 // with the organization, get the teams and map them to the entities
-                List<Team> teams = fetchTeamsFromOrganization(organizationDTO.getLogin());
-                organization.setTeams(teams);
-                organizations.add(organization);
-
+                List<Team> teams = fetchTeamsFromOrganization(organization.getId());
                 for (Team team : teams) {
                     // obtain the members of each team
-                    List<User> users = fetchUsersFromTeam(organizationDTO.getLogin(),
-                        team.getSlug());
-                    team.setUsers(users);
+                    List<User> users = fetchUsersFromTeam(organization.getId(),
+                        team.getId());
                     // also obtain the repositories for each team
                     List<Repository> repositories = fetchRepositoriesFromTeam(
-                        organizationDTO.getId(), team.getId().intValue());
+                        organization.getId(), team.getId());
+                    for (Repository repository : repositories) {
+                        //TODO: obtain pull requests
+                        List<PullRequest> pullRequests = fetchPullRequestsFromRepository();
+                        //TODO: for each pr:
+                        //  TODO: if the user of the PR belongs to the team, increment prs_executed.
+                        //  TODO: fetch commits from PR
+                        //TODO: add
+                    }
+                    team.setUsers(users);
+                    team.setRepositories(repositories);
                 }
+                userAvaliableOrganizationList.add(organization);
             }
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private List<Team> fetchTeamsFromOrganization(String organization) throws HttpException {
+    private List<Team> fetchTeamsFromOrganization(Integer organizationId) throws HttpException {
         List<TeamDTO> teamDTOList = new FetchTeamsFromOrganization(
-            teamRESTRepository
-        ).execute(organization);
+            teamExternalRepository
+        ).execute(organizationId);
         // we only need the teams of the current user
         return teamDTOList.stream().map(TeamMapper::dtoToEntity).toList();
     }
 
-    private List<User> fetchUsersFromTeam(String orgLogin, String teamSlug) throws HttpException {
-        List<UserDTO> users = teamRESTRepository.fetchMembersOfTeam(orgLogin, teamSlug);
+    private List<User> fetchUsersFromTeam(Integer organizationId, Integer teamId) throws HttpException {
+        List<UserDTO> users = new FetchUsersFromTeam(userExternalRepository).execute(organizationId, teamId);
         return users.stream().map(UserMapper::dtoToEntity).toList();
     }
 
-    private List<Repository> fetchRepositoriesFromTeam(Integer orgId, Integer teamId)
+    private List<Repository> fetchRepositoriesFromTeam(Integer organizationId, Integer teamId)
         throws HttpException {
-        List<RepositoryDTO> repositoryDTOS = repositoryRESTRepository.fetchTeamRepositories(
-            orgId, teamId);
+        List<RepositoryDTO> repositoryDTOS = new FetchRepositoriesFromTeam(repositoryExternalRepository).execute(organizationId, teamId);
         return repositoryDTOS.stream().map(RepositoryMapper::dtoToEntity).toList();
+    }
+
+    private List<PullRequest> fetchPullRequestsFromRepository()
+        throws HttpException {
+        return null;
     }
 }

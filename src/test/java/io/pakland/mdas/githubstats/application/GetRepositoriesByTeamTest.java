@@ -14,7 +14,7 @@ public class GetRepositoriesByTeamTest {
     @Test
     public void givenTeam_shouldReturnListOfRepositories() {
         Repository repository = new Repository();
-        repository.setId(1L);
+        repository.setId(1);
         Team mockTeam = Mockito.mock(Team.class);
         Mockito.when(mockTeam.getRepositories()).thenReturn(List.of(repository));
 

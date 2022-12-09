@@ -6,5 +6,5 @@ import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import java.util.List;
 
 public interface RepositoryExternalRepository {
-    List<RepositoryDTO> fetchTeamRepositories(Integer orgId, Integer teamId) throws HttpException;
+    List<RepositoryDTO> fetchTeamRepositories(Integer organizationId, Integer teamId) throws HttpException;
 }

@@ -8,13 +8,13 @@ import java.util.List;
 
 public class FetchAvailableOrganizations {
 
-    private OrganizationExternalRepository organizationRESTRepository;
+    private final OrganizationExternalRepository organizationRESTRepository;
 
     public FetchAvailableOrganizations(OrganizationExternalRepository organizationRESTRepository) {
         this.organizationRESTRepository = organizationRESTRepository;
     }
 
-    public List<OrganizationDTO> fetch() throws HttpException {
+    public List<OrganizationDTO> execute() throws HttpException {
         return organizationRESTRepository.fetchAvailableOrganizations();
     }
 }
