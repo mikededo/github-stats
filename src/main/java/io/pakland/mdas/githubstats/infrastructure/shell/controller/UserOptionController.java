@@ -106,7 +106,6 @@ public class UserOptionController {
 
     private List<PullRequest> fetchPullRequestsFromRepository()
         throws HttpException {
-//        List<PullRequestDTO> pullRequestDTOS =
         return null;
     }
 }
