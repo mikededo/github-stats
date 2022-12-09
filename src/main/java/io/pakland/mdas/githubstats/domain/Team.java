@@ -20,15 +20,12 @@ public class Team {
   @Id
   @Column(updatable = false, nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   private String slug;
 
   @Column(name = "member_url")
   private String memberUrl;
-
-  @Column
-  private String name;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Organization organization;
@@ -54,12 +51,12 @@ public class Team {
   )
   private List<HistoricQueries> queries = new ArrayList<>();
 
-  public void setName(String name) {
-    this.name = name;
+  public void setSlug(String slug) {
+    this.slug = slug;
   }
 
-  public String getName() {
-    return this.name;
+  public String getSlug() {
+    return this.slug;
   }
 
   public void addUser(User user) {

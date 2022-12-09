@@ -5,6 +5,6 @@ import io.pakland.mdas.githubstats.domain.Repository;
 
 public class RepositoryMapper {
   public static Repository dtoToEntity(RepositoryDTO dto) {
-    return Repository.builder().id(dto.getId().longValue()).name(dto.getName()).build();
+    return Repository.builder().id(dto.getId()).name(dto.getName()).build();
   }
 }

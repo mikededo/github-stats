@@ -47,7 +47,7 @@ class UserGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        userGitHubRepository.fetchUsersFromTeam("github-stats-22", "gs-developers");
+        userGitHubRepository.fetchUsersFromTeam(119930124, 7098104);
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals(String.format("/orgs/%s/teams/%s/members", "github-stats-22", "gs-developers"), request.getPath());
@@ -61,7 +61,7 @@ class UserGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<UserDTO> response = userGitHubRepository.fetchUsersFromTeam("github-stats-22", "gs-developers");
+        List<UserDTO> response = userGitHubRepository.fetchUsersFromTeam(119930124, 7098104);
         List<UserDTO> expected = new ArrayList<>();
         expected.add(0, new UserDTO(33031570, "manerow", "https://api.github.com/users/manerow/orgs"));
         expected.add(1, new UserDTO(48334745, "mikededo", "https://api.github.com/users/mikededo/orgs"));

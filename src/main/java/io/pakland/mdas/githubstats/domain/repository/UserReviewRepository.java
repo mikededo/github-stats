@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface UserReviewRepository extends JpaRepository<UserReview,Long> {
+public interface UserReviewRepository extends JpaRepository<UserReview,Integer> {
 }

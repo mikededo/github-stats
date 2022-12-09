@@ -13,7 +13,7 @@ public class GetTeamsFromOrganizationTest {
     @Test
     public void givenOrganization_shouldReturnListOfTeams() {
         Team team = new Team();
-        team.setId(1L);
+        team.setId(1);
         Organization organizationMock = Mockito.mock(Organization.class);
         Mockito.when(organizationMock.getTeams()).thenReturn(List.of(team));
 
