@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 public class GetOrganizationFromId {
 
-    final private OrganizationRepository organizationRepository;
+    private final OrganizationRepository organizationRepository;
 
     public GetOrganizationFromId(OrganizationRepository organizationRepository) {
         this.organizationRepository = organizationRepository;

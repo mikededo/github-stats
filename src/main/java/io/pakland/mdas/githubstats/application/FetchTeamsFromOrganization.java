@@ -7,13 +7,13 @@ import io.pakland.mdas.githubstats.domain.repository.TeamExternalRepository;
 import java.util.List;
 
 public class FetchTeamsFromOrganization {
-    private final TeamExternalRepository teamRESTRepository;
+    private final TeamExternalRepository teamExternalRepository;
 
-    public FetchTeamsFromOrganization(TeamExternalRepository teamRESTRepository) {
-        this.teamRESTRepository = teamRESTRepository;
+    public FetchTeamsFromOrganization(TeamExternalRepository teamExternalRepository) {
+        this.teamExternalRepository = teamExternalRepository;
     }
 
     public List<TeamDTO> execute(Integer organizationId) throws HttpException {
-        return teamRESTRepository.fetchTeamsFromOrganization(organizationId);
+        return teamExternalRepository.fetchTeamsFromOrganization(organizationId);
     }
 }
