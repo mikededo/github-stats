@@ -2,6 +2,7 @@ package io.pakland.mdas.githubstats.infrastructure.shell.controller;
 
 import io.pakland.mdas.githubstats.FetchUsersFromTeam;
 import io.pakland.mdas.githubstats.application.FetchAvailableOrganizations;
+import io.pakland.mdas.githubstats.application.FetchPullRequestsFromRepository;
 import io.pakland.mdas.githubstats.application.FetchRepositoriesFromTeam;
 import io.pakland.mdas.githubstats.application.FetchTeamsFromOrganization;
 import io.pakland.mdas.githubstats.application.dto.*;
@@ -10,11 +11,8 @@ import io.pakland.mdas.githubstats.application.mappers.RepositoryMapper;
 import io.pakland.mdas.githubstats.application.mappers.TeamMapper;
 import io.pakland.mdas.githubstats.application.mappers.UserMapper;
 import io.pakland.mdas.githubstats.domain.*;
-import io.pakland.mdas.githubstats.domain.repository.UserExternalRepository;
+import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
-import io.pakland.mdas.githubstats.domain.repository.OrganizationExternalRepository;
-import io.pakland.mdas.githubstats.domain.repository.RepositoryExternalRepository;
-import io.pakland.mdas.githubstats.domain.repository.TeamExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.UserOptionRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +31,7 @@ public class UserOptionController {
     private TeamExternalRepository teamExternalRepository;
     private UserExternalRepository userExternalRepository;
     private RepositoryExternalRepository repositoryExternalRepository;
+    private PullRequestExternalRepository pullRequestExternalRepository;
 
     public UserOptionController(UserOptionRequest userOptionRequest) {
         this.userOptionRequest = userOptionRequest;
@@ -42,6 +41,7 @@ public class UserOptionController {
         this.teamExternalRepository = new TeamGitHubRepository(webClientConfiguration);
         this.userExternalRepository = new UserGitHubRepository(webClientConfiguration);
         this.repositoryExternalRepository = new RepositoryGitHubRepository(webClientConfiguration);
+        this.pullRequestExternalRepository = new PullRequestGitHubRepository(webClientConfiguration);
     }
 
     public void execute() {
@@ -64,27 +64,28 @@ public class UserOptionController {
                             .execute(organizationDTO.getId(), teamDTO.getId());
 
                     for (RepositoryDTO repositoryDTO : repositoryDTOList) {
-                        //TODO: obtain pull requests
-                        List<PullRequest> pullRequests = fetchPullRequestsFromRepository();
-                        //TODO: for each pr:
-                        //  TODO: if the user of the PR belongs to the team, increment prs_executed.
-                        //  TODO: fetch commits from PR
-                        //TODO: add
+                        // Fetch pull requests from each team.
+                        List<PullRequestDTO> pullRequestDTOList = new FetchPullRequestsFromRepository(pullRequestExternalRepository)
+                                .execute(repositoryDTO.getRepositoryOwnerId(), repositoryDTO.getId());
+                        for (PullRequestDTO pullRequestDTO : pullRequestDTOList) {
+                            /*
+                                TODO: if the user of the PR belongs to the team, increment the prs executed inside the team,
+                                TODO: else increment the prs executed outside the team.
+                            */
+                            //  TODO: fetch commits from each PR.
+                        }
+
+                        repositoryDTO.setPullRequests(pullRequestDTOList);
                     }
+
                     teamDTO.setUsers(userDTOList);
                     teamDTO.setRepositories(repositoryDTOList);
-                    teamDTOList.add(teamDTO);
                 }
+
                 organizationDTO.setTeams(teamDTOList);
-                organizationDTOList.add(organizationDTO);
             }
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private List<PullRequest> fetchPullRequestsFromRepository()
-        throws HttpException {
-        return null;
     }
 }
