@@ -173,9 +173,6 @@ databaseChangeLog:
             name: id
             type: INT
         - column:
-            name: member_url
-            type: VARCHAR(255)
-        - column:
             name: slug
             type: VARCHAR(255)
         - column:
