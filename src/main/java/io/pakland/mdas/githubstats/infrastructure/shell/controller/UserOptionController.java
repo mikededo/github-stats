@@ -80,7 +80,6 @@ public class UserOptionController {
                     team.setRepositories(repositoryList);
                 }
 
-                // TODO: Set teams entity list to organization.
                 organization.setTeams(teamList);
             }
         } catch (HttpException e) {

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,10 @@ public class PullRequest {
   @Column(name="number")
   @JsonProperty("number")
   private Integer number;
+
+  @Column
+  @JsonProperty("state")
+  private PullRequestState state;
 
   @OneToMany(
     mappedBy = "pullRequest",
