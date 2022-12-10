@@ -13,7 +13,7 @@ public class FetchTeamsFromOrganization {
         this.teamExternalRepository = teamExternalRepository;
     }
 
-    public List<Team> execute(Integer organizationId) throws HttpException {
-        return teamExternalRepository.fetchTeamsFromOrganization(organizationId);
+    public List<Team> execute(String organizationName) throws HttpException {
+        return teamExternalRepository.fetchTeamsFromOrganization(organizationName);
     }
 }

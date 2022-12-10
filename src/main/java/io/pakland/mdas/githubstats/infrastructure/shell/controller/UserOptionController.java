@@ -50,7 +50,7 @@ public class UserOptionController {
             for (Organization organization : organizationList) {
                 // Fetch the teams belonging to the available organization.
                 List<Team> teamList = new FetchTeamsFromOrganization(teamExternalRepository)
-                        .execute(organization.getId());
+                        .execute(organization.getLogin());
 
                 for (Team team : teamList) {
                     // Fetch the members of each team.

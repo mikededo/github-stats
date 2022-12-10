@@ -6,5 +6,5 @@ import io.pakland.mdas.githubstats.domain.Team;
 import java.util.List;
 
 public interface TeamExternalRepository {
-    List<Team> fetchTeamsFromOrganization(Integer organizationId) throws HttpException;
+    List<Team> fetchTeamsFromOrganization(String organizationName) throws HttpException;
 }
