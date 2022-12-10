@@ -1,5 +1,6 @@
 package io.pakland.mdas.githubstats.domain;
 
+import java.util.Map;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,7 +30,6 @@ public class Repository {
   private String name;
 
   @Column(name = "owner_login")
-  @JsonProperty("owner.login")
   private String ownerLogin;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -41,4 +41,9 @@ public class Repository {
     orphanRemoval = true
   )
   private List<PullRequest> pullRequests = new ArrayList<>();
+
+  @JsonProperty("owner")
+  private void unpackNameFromNestedObject(Map<String, String> owner) {
+    this.ownerLogin = owner.get("login");
+  }
 }
