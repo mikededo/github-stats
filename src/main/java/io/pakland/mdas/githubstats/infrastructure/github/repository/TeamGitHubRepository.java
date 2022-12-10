@@ -1,8 +1,7 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
-import io.pakland.mdas.githubstats.application.dto.TeamDTO;
-import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.domain.Team;
 import io.pakland.mdas.githubstats.domain.repository.TeamExternalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +19,12 @@ public class TeamGitHubRepository implements TeamExternalRepository {
     }
 
     @Override
-    public List<TeamDTO> fetchTeamsFromOrganization(Integer organizationId) throws HttpException {
+    public List<Team> fetchTeamsFromOrganization(Integer organizationId) throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
                     .uri(String.format("/orgs/%d/teams", organizationId))
                     .retrieve()
-                    .bodyToFlux(TeamDTO.class)
+                    .bodyToFlux(Team.class)
                     .collectList()
                     .block();
         }  catch (WebClientResponseException ex) {

@@ -1,9 +1,9 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
-import io.pakland.mdas.githubstats.application.dto.RepositoryDTO;
-import io.pakland.mdas.githubstats.application.dto.TeamDTO;
-import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.domain.Repository;
+import io.pakland.mdas.githubstats.domain.Team;
+import io.pakland.mdas.githubstats.domain.User;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -20,7 +20,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TeamGitHubRepositoryTest {
@@ -65,11 +66,11 @@ class TeamGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<TeamDTO> response = teamGitHubRepository.fetchTeamsFromOrganization(this.organizationId);
-        List<TeamDTO> expected = new ArrayList<>();
-        expected.add(0, new TeamDTO(this.teamId, "gs-developers", null, null));
+        List<Team> response = teamGitHubRepository.fetchTeamsFromOrganization(this.organizationId);
+        List<Team> expected = new ArrayList<>();
+        expected.add(0, new Team(this.teamId, "gs-developers", null, new ArrayList<User>(), new ArrayList<Repository>()));
 
-        assertEquals(response.size(), 1);
+        assertEquals(1, response.size());
         assertArrayEquals(response.toArray(), expected.toArray());
     }
 }
