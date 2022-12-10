@@ -31,7 +31,6 @@ public class UserOptionController {
     private UserOptionRequest userOptionRequest;
     private OrganizationExternalRepository organizationExternalRepository;
     private TeamExternalRepository teamExternalRepository;
-    
     private UserExternalRepository userExternalRepository;
     private RepositoryExternalRepository repositoryExternalRepository;
 
@@ -47,27 +46,24 @@ public class UserOptionController {
 
     public void execute() {
         try {
-            // dto coming from the backend
-            List<OrganizationDTO> organizationDTOList = new FetchAvailableOrganizations(
-                this.organizationExternalRepository).execute();
-            // entities that we will store in the database
-            List<Organization> userAvaliableOrganizationList = new ArrayList<>();
+            // Fetch the API key's available organizations.
+            List<OrganizationDTO> organizationDTOList = new FetchAvailableOrganizations(this.organizationExternalRepository)
+                    .execute();
+            // Start building the github-stats relational schema.
             for (OrganizationDTO organizationDTO : organizationDTOList) {
-                // fetch the organization
-                Organization organization = new Organization();
-                organization.setId(organizationDTO.getId());
-                organization.setName(organizationDTO.getLogin());
+                // Fetch the teams belonging to the available organization DTOs.
+                List<TeamDTO> teamDTOList = new FetchTeamsFromOrganization(teamExternalRepository)
+                        .execute(organizationDTO.getId());
 
-                // with the organization, get the teams and map them to the entities
-                List<Team> teams = fetchTeamsFromOrganization(organization.getId());
-                for (Team team : teams) {
-                    // obtain the members of each team
-                    List<User> users = fetchUsersFromTeam(organization.getId(),
-                        team.getId());
-                    // also obtain the repositories for each team
-                    List<Repository> repositories = fetchRepositoriesFromTeam(
-                        organization.getId(), team.getId());
-                    for (Repository repository : repositories) {
+                for (TeamDTO teamDTO : teamDTOList) {
+                    // Fetch the members of each team.
+                    List<UserDTO> userDTOList = new FetchUsersFromTeam(userExternalRepository)
+                            .execute(organizationDTO.getId(), teamDTO.getId());
+                    // Fetch the repositories for each team.
+                    List<RepositoryDTO> repositoryDTOList = new FetchRepositoriesFromTeam(repositoryExternalRepository)
+                            .execute(organizationDTO.getId(), teamDTO.getId());
+
+                    for (RepositoryDTO repositoryDTO : repositoryDTOList) {
                         //TODO: obtain pull requests
                         List<PullRequest> pullRequests = fetchPullRequestsFromRepository();
                         //TODO: for each pr:
@@ -75,33 +71,16 @@ public class UserOptionController {
                         //  TODO: fetch commits from PR
                         //TODO: add
                     }
-                    team.setUsers(users);
-                    team.setRepositories(repositories);
+                    teamDTO.setUsers(userDTOList);
+                    teamDTO.setRepositories(repositoryDTOList);
+                    teamDTOList.add(teamDTO);
                 }
-                userAvaliableOrganizationList.add(organization);
+                organizationDTO.setTeams(teamDTOList);
+                organizationDTOList.add(organizationDTO);
             }
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private List<Team> fetchTeamsFromOrganization(Integer organizationId) throws HttpException {
-        List<TeamDTO> teamDTOList = new FetchTeamsFromOrganization(
-            teamExternalRepository
-        ).execute(organizationId);
-        // we only need the teams of the current user
-        return teamDTOList.stream().map(TeamMapper::dtoToEntity).toList();
-    }
-
-    private List<User> fetchUsersFromTeam(Integer organizationId, Integer teamId) throws HttpException {
-        List<UserDTO> users = new FetchUsersFromTeam(userExternalRepository).execute(organizationId, teamId);
-        return users.stream().map(UserMapper::dtoToEntity).toList();
-    }
-
-    private List<Repository> fetchRepositoriesFromTeam(Integer organizationId, Integer teamId)
-        throws HttpException {
-        List<RepositoryDTO> repositoryDTOS = new FetchRepositoriesFromTeam(repositoryExternalRepository).execute(organizationId, teamId);
-        return repositoryDTOS.stream().map(RepositoryMapper::dtoToEntity).toList();
     }
 
     private List<PullRequest> fetchPullRequestsFromRepository()
