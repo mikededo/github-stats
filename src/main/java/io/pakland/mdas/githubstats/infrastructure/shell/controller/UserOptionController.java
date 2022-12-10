@@ -5,21 +5,21 @@ import io.pakland.mdas.githubstats.application.FetchAvailableOrganizations;
 import io.pakland.mdas.githubstats.application.FetchPullRequestsFromRepository;
 import io.pakland.mdas.githubstats.application.FetchRepositoriesFromTeam;
 import io.pakland.mdas.githubstats.application.FetchTeamsFromOrganization;
-import io.pakland.mdas.githubstats.application.dto.*;
+import io.pakland.mdas.githubstats.application.dto.PullRequestDTO;
+import io.pakland.mdas.githubstats.application.dto.RepositoryDTO;
+import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.application.mappers.RepositoryMapper;
-import io.pakland.mdas.githubstats.application.mappers.TeamMapper;
-import io.pakland.mdas.githubstats.application.mappers.UserMapper;
-import io.pakland.mdas.githubstats.domain.*;
+import io.pakland.mdas.githubstats.domain.Organization;
+import io.pakland.mdas.githubstats.domain.Team;
 import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.UserOptionRequest;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @NoArgsConstructor
@@ -53,16 +53,16 @@ public class UserOptionController {
             // Start building the github-stats relational schema.
             for (Organization organization : organizationList) {
                 // Fetch the teams belonging to the available organization DTOs.
-                List<TeamDTO> teamDTOList = new FetchTeamsFromOrganization(teamExternalRepository)
+                List<Team> teamList = new FetchTeamsFromOrganization(teamExternalRepository)
                         .execute(organization.getId());
 
-                for (TeamDTO teamDTO : teamDTOList) {
+                for (Team team : teamList) {
                     // Fetch the members of each team.
                     List<UserDTO> userDTOList = new FetchUsersFromTeam(userExternalRepository)
-                            .execute(organization.getId(), teamDTO.getId());
+                            .execute(organization.getId(), team.getId());
                     // Fetch the repositories for each team.
                     List<RepositoryDTO> repositoryDTOList = new FetchRepositoriesFromTeam(repositoryExternalRepository)
-                            .execute(organization.getId(), teamDTO.getId());
+                            .execute(organization.getId(), team.getId());
 
                     for (RepositoryDTO repositoryDTO : repositoryDTOList) {
                         // Fetch pull requests from each team.
@@ -79,12 +79,14 @@ public class UserOptionController {
                         repositoryDTO.setPullRequests(pullRequestDTOList);
                     }
 
-                    teamDTO.setUsers(userDTOList);
-                    teamDTO.setRepositories(repositoryDTOList);
+                    //TODO: Set user entity list to team.
+//                    team.setUsers(userDTOList);
+                    //TODO: Set repositoty entity list to team.
+//                    team.setRepositories(repositoryDTOList);
                 }
 
                 // TODO: Set teams entity list to organization.
-//                organization.setTeams(teamList);
+                organization.setTeams(teamList);
             }
         } catch (HttpException e) {
             throw new RuntimeException(e);
