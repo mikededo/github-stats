@@ -26,7 +26,7 @@ class UserGitHubRepositoryTest {
     private UserGitHubRepository userGitHubRepository;
     private String teamMembersListResponse;
 
-    private final Integer orgId = 119930124;
+    private final Integer organizationId = 119930124;
     private final Integer teamId = 7098104;
 
     @BeforeAll
@@ -50,10 +50,10 @@ class UserGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        userGitHubRepository.fetchUsersFromTeam(orgId, teamId);
+        userGitHubRepository.fetchUsersFromTeam(this.organizationId, this.teamId);
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals(String.format("/orgs/%d/teams/%d/members", orgId, teamId), request.getPath());
+        assertEquals(String.format("/orgs/%d/teams/%d/members", this.organizationId, this.teamId), request.getPath());
     }
 
     @Test
@@ -64,7 +64,7 @@ class UserGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<UserDTO> response = userGitHubRepository.fetchUsersFromTeam(orgId, teamId);
+        List<UserDTO> response = userGitHubRepository.fetchUsersFromTeam(this.organizationId, this.teamId);
         List<UserDTO> expected = new ArrayList<>();
         expected.add(0, new UserDTO(33031570, "manerow", "https://api.github.com/users/manerow/orgs"));
         expected.add(1, new UserDTO(48334745, "mikededo", "https://api.github.com/users/mikededo/orgs"));

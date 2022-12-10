@@ -28,6 +28,9 @@ class OrganizationGitHubRepositoryTest {
     private OrganizationGitHubRepository organizationGithubRepository;
     private String availableOrganizationsListResponse;
 
+    private final Integer organizationId = 119930124;
+    private final Integer teamId = 7098104;
+
     @BeforeAll
     void setup() throws IOException {
         this.mockWebServer = new MockWebServer();
@@ -65,7 +68,7 @@ class OrganizationGitHubRepositoryTest {
 
         List<OrganizationDTO> response = organizationGithubRepository.fetchAvailableOrganizations();
         List<OrganizationDTO> expected = new ArrayList<>();
-        expected.add(new OrganizationDTO(119930124, "github-stats-22"));
+        expected.add(new OrganizationDTO(this.organizationId, "github-stats-22", null));
 
         assertArrayEquals(response.toArray(), expected.toArray());
     }
