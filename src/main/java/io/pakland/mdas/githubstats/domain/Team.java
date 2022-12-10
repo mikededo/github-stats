@@ -22,6 +22,7 @@ public class Team {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  @Column(name = "slug")
   private String slug;
 
   @Column(name = "member_url")
