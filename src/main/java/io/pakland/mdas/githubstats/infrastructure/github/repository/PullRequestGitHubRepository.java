@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
-import io.pakland.mdas.githubstats.application.dto.PullRequestDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.domain.PullRequest;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +19,12 @@ public class PullRequestGitHubRepository implements PullRequestExternalRepositor
     }
 
     @Override
-    public List<PullRequestDTO> fetchPullRequestsFromRepository(Integer repositoryOwnerId, Integer repositoryId) throws HttpException {
+    public List<PullRequest> fetchPullRequestsFromRepository(String repositoryOwnerLogin, String repositoryName) throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
-                    .uri(String.format("/organizations/%d/team/%d/repos", repositoryOwnerId, repositoryId))
+                    .uri(String.format("/organizations/%d/team/%d/repos", repositoryOwnerLogin, repositoryName))
                     .retrieve()
-                    .bodyToFlux(PullRequestDTO.class)
+                    .bodyToFlux(PullRequest.class)
                     .collectList()
                     .block();
         } catch (WebClientResponseException ex) {
