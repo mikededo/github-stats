@@ -125,6 +125,9 @@ databaseChangeLog:
             name: id
             type: INT
         - column:
+              name: number
+              type: INT
+        - column:
             name: repository_id
             type: INT
         tableName: pull_request
@@ -143,16 +146,10 @@ databaseChangeLog:
             name: id
             type: INT
         - column:
-            name: commits_url
-            type: VARCHAR(255)
-        - column:
-            name: merges_url
-            type: VARCHAR(255)
-        - column:
             name: name
             type: VARCHAR(255)
         - column:
-            name: owner
+            name: owner_login
             type: VARCHAR(255)
         - column:
             name: team_id

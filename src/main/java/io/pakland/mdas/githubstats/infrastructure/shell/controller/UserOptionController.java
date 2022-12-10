@@ -5,12 +5,8 @@ import io.pakland.mdas.githubstats.application.FetchAvailableOrganizations;
 import io.pakland.mdas.githubstats.application.FetchPullRequestsFromRepository;
 import io.pakland.mdas.githubstats.application.FetchRepositoriesFromTeam;
 import io.pakland.mdas.githubstats.application.FetchTeamsFromOrganization;
-import io.pakland.mdas.githubstats.application.dto.PullRequestDTO;
-import io.pakland.mdas.githubstats.application.dto.RepositoryDTO;
-import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.domain.Organization;
-import io.pakland.mdas.githubstats.domain.Team;
+import io.pakland.mdas.githubstats.domain.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.UserOptionRequest;
@@ -52,23 +48,23 @@ public class UserOptionController {
                     .execute();
             // Start building the github-stats relational schema.
             for (Organization organization : organizationList) {
-                // Fetch the teams belonging to the available organization DTOs.
+                // Fetch the teams belonging to the available organization.
                 List<Team> teamList = new FetchTeamsFromOrganization(teamExternalRepository)
                         .execute(organization.getId());
 
                 for (Team team : teamList) {
                     // Fetch the members of each team.
-                    List<UserDTO> userDTOList = new FetchUsersFromTeam(userExternalRepository)
+                    List<User> userList = new FetchUsersFromTeam(userExternalRepository)
                             .execute(organization.getId(), team.getId());
                     // Fetch the repositories for each team.
-                    List<RepositoryDTO> repositoryDTOList = new FetchRepositoriesFromTeam(repositoryExternalRepository)
-                            .execute(organization.getId(), team.getId());
+                    List<Repository> repositoryList = new FetchRepositoriesFromTeam(repositoryExternalRepository)
+                            .execute(organization.getLogin(), team.getSlug());
 
-                    for (RepositoryDTO repositoryDTO : repositoryDTOList) {
+                    for (Repository repository : repositoryList) {
                         // Fetch pull requests from each team.
-                        List<PullRequestDTO> pullRequestDTOList = new FetchPullRequestsFromRepository(pullRequestExternalRepository)
-                                .execute(repositoryDTO.getRepositoryOwnerId(), repositoryDTO.getId());
-                        for (PullRequestDTO pullRequestDTO : pullRequestDTOList) {
+                        List<PullRequest> pullRequestList = new FetchPullRequestsFromRepository(pullRequestExternalRepository)
+                                .execute(repository.getOwnerLogin(), repository.getName());
+                        for (PullRequest pullRequest : pullRequestList) {
                             /*
                                 TODO: if the user of the PR belongs to the team, increment the prs executed inside the team,
                                 TODO: else increment the prs executed outside the team.
@@ -76,13 +72,11 @@ public class UserOptionController {
                             //  TODO: fetch commits from each PR.
                         }
 
-                        repositoryDTO.setPullRequests(pullRequestDTOList);
+                        repository.setPullRequests(pullRequestList);
                     }
 
-                    //TODO: Set user entity list to team.
-//                    team.setUsers(userDTOList);
-                    //TODO: Set repositoty entity list to team.
-//                    team.setRepositories(repositoryDTOList);
+                    team.setUsers(userList);
+                    team.setRepositories(repositoryList);
                 }
 
                 // TODO: Set teams entity list to organization.
