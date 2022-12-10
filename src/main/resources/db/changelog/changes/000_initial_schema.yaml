@@ -104,7 +104,7 @@ databaseChangeLog:
             name: id
             type: INT
         - column:
-            name: name
+            name: login
             type: VARCHAR(255)
         - column:
             name: organization_url

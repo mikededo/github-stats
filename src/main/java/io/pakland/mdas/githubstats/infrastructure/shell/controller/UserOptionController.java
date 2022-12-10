@@ -46,22 +46,23 @@ public class UserOptionController {
 
     public void execute() {
         try {
+            // TODO: If the execution succeeds, we should make an entry to the historic_queries table.
             // Fetch the API key's available organizations.
-            List<OrganizationDTO> organizationDTOList = new FetchAvailableOrganizations(this.organizationExternalRepository)
+            List<Organization> organizationList = new FetchAvailableOrganizations(this.organizationExternalRepository)
                     .execute();
             // Start building the github-stats relational schema.
-            for (OrganizationDTO organizationDTO : organizationDTOList) {
+            for (Organization organization : organizationList) {
                 // Fetch the teams belonging to the available organization DTOs.
                 List<TeamDTO> teamDTOList = new FetchTeamsFromOrganization(teamExternalRepository)
-                        .execute(organizationDTO.getId());
+                        .execute(organization.getId());
 
                 for (TeamDTO teamDTO : teamDTOList) {
                     // Fetch the members of each team.
                     List<UserDTO> userDTOList = new FetchUsersFromTeam(userExternalRepository)
-                            .execute(organizationDTO.getId(), teamDTO.getId());
+                            .execute(organization.getId(), teamDTO.getId());
                     // Fetch the repositories for each team.
                     List<RepositoryDTO> repositoryDTOList = new FetchRepositoriesFromTeam(repositoryExternalRepository)
-                            .execute(organizationDTO.getId(), teamDTO.getId());
+                            .execute(organization.getId(), teamDTO.getId());
 
                     for (RepositoryDTO repositoryDTO : repositoryDTOList) {
                         // Fetch pull requests from each team.
@@ -82,7 +83,8 @@ public class UserOptionController {
                     teamDTO.setRepositories(repositoryDTOList);
                 }
 
-                organizationDTO.setTeams(teamDTOList);
+                // TODO: Set teams entity list to organization.
+//                organization.setTeams(teamList);
             }
         } catch (HttpException e) {
             throw new RuntimeException(e);

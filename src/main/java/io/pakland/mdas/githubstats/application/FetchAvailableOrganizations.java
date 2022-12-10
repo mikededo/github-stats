@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.application;
 
-import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.domain.Organization;
 import io.pakland.mdas.githubstats.domain.repository.OrganizationExternalRepository;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class FetchAvailableOrganizations {
         this.organizationExternalRepository = organizationExternalRepository;
     }
 
-    public List<OrganizationDTO> execute() throws HttpException {
+    public List<Organization> execute() throws HttpException {
         return organizationExternalRepository.fetchAvailableOrganizations();
     }
 }
