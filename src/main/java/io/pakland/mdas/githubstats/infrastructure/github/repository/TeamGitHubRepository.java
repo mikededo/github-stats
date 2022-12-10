@@ -13,7 +13,7 @@ import java.util.List;
 public class TeamGitHubRepository implements TeamExternalRepository {
 
     private final WebClientConfiguration webClientConfiguration;
-    Logger logger = LoggerFactory.getLogger(TeamGitHubRepository.class);
+    private final Logger logger = LoggerFactory.getLogger(TeamGitHubRepository.class);
 
     public TeamGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
@@ -23,7 +23,7 @@ public class TeamGitHubRepository implements TeamExternalRepository {
     public List<TeamDTO> fetchTeamsFromOrganization(Integer organizationId) throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
-                    .uri(String.format("/orgs/%s/teams", organizationId))
+                    .uri(String.format("/orgs/%d/teams", organizationId))
                     .retrieve()
                     .bodyToFlux(TeamDTO.class)
                     .collectList()

@@ -12,7 +12,7 @@ import java.util.List;
 public class OrganizationGitHubRepository implements OrganizationExternalRepository {
 
     private final WebClientConfiguration webClientConfiguration;
-    Logger logger = LoggerFactory.getLogger(OrganizationGitHubRepository.class);
+    private final Logger logger = LoggerFactory.getLogger(OrganizationGitHubRepository.class);
 
     public OrganizationGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
