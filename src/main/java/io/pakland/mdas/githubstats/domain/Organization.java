@@ -22,6 +22,7 @@ public class Organization {
   @JsonProperty("id")
   private Integer id;
 
+  @Column
   @JsonProperty("login")
   private String login;
 

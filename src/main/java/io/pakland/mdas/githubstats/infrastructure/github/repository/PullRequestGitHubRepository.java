@@ -19,10 +19,10 @@ public class PullRequestGitHubRepository implements PullRequestExternalRepositor
     }
 
     @Override
-    public List<PullRequest> fetchPullRequestsFromRepository(String repositoryOwnerLogin, String repositoryName) throws HttpException {
+    public List<PullRequest> fetchPullRequestsFromRepository(String repositoryOwner, String repositoryName) throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
-                    .uri(String.format("/organizations/%d/team/%d/repos", repositoryOwnerLogin, repositoryName))
+                    .uri(String.format("/repos/%s/%s/pulls", repositoryOwner, repositoryName))
                     .retrieve()
                     .bodyToFlux(PullRequest.class)
                     .collectList()

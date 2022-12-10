@@ -54,6 +54,7 @@ public class UserOptionController {
 
                 for (Team team : teamList) {
                     // Fetch the members of each team.
+                    logger.info(organization.getLogin());
                     List<User> userList = new FetchUsersFromTeam(userExternalRepository)
                             .execute(organization.getLogin(), team.getSlug());
                     // Fetch the repositories for each team.
