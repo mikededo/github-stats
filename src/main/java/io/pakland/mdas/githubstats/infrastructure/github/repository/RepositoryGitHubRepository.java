@@ -22,7 +22,7 @@ public class RepositoryGitHubRepository implements RepositoryExternalRepository 
         throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
-                .uri(String.format("/organizations/%d/team/%d/repos", organizationLogin, teamSlug))
+                .uri(String.format("/orgs/%s/teams/%s/repos", organizationLogin, teamSlug))
                     .retrieve()
                     .bodyToFlux(Repository.class)
                     .collectList()
