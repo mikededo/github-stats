@@ -11,18 +11,18 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 public class RepositoryGitHubRepository implements RepositoryExternalRepository {
 
     private final WebClientConfiguration webClientConfiguration;
-    Logger logger = LoggerFactory.getLogger(OrganizationGitHubRepository.class);
+    private final Logger logger = LoggerFactory.getLogger(OrganizationGitHubRepository.class);
 
     public RepositoryGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
     }
 
     @Override
-    public List<RepositoryDTO> fetchTeamRepositories(Integer orgId, Integer teamId)
+    public List<RepositoryDTO> fetchTeamRepositories(Integer organizationId, Integer teamId)
         throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
-                .uri(String.format("/organizations/%s/team/%d/repos", orgId, teamId))
+                .uri(String.format("/organizations/%d/team/%d/repos", organizationId, teamId))
                     .retrieve()
                     .bodyToFlux(RepositoryDTO.class)
                     .collectList()

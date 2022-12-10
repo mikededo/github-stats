@@ -14,7 +14,7 @@ import java.util.List;
 public class UserGitHubRepository implements UserExternalRepository {
 
     private final WebClientConfiguration webClientConfiguration;
-    Logger logger = LoggerFactory.getLogger(UserGitHubRepository.class);
+    private final Logger logger = LoggerFactory.getLogger(UserGitHubRepository.class);
 
     public UserGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
@@ -24,7 +24,7 @@ public class UserGitHubRepository implements UserExternalRepository {
     public List<UserDTO> fetchUsersFromTeam(Integer organizationId, Integer teamId) throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
-                    .uri(String.format("/orgs/%s/teams/%s/members", organizationId, teamId))
+                    .uri(String.format("/orgs/%d/teams/%d/members", organizationId, teamId))
                     .retrieve()
                     .bodyToFlux(UserDTO.class)
                     .collectList()
