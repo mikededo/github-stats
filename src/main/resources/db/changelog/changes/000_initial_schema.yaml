@@ -128,6 +128,9 @@ databaseChangeLog:
               name: number
               type: INT
         - column:
+              name: state
+              type: INT
+        - column:
             name: repository_id
             type: INT
         tableName: pull_request

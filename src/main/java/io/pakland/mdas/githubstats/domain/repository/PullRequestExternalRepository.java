@@ -2,9 +2,28 @@ package io.pakland.mdas.githubstats.domain.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.PullRequest;
-
+import io.pakland.mdas.githubstats.domain.PullRequestState;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public interface PullRequestExternalRepository {
-    public List<PullRequest> fetchPullRequestsFromRepository(String repositoryOwnerId, String repositoryId) throws HttpException;
+
+    List<PullRequest> fetchPullRequestsFromRepository(FetchPullRequestFromRepositoryRequest request)
+        throws HttpException;
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Getter
+    public static class FetchPullRequestFromRepositoryRequest {
+
+        private String repositoryOwner;
+        private String repository;
+        private Integer page;
+        private Integer perPage;
+        private PullRequestState state = PullRequestState.ALL;
+    }
 }
