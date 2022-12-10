@@ -2,6 +2,8 @@ package io.pakland.mdas.githubstats.domain;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -11,20 +13,17 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@ToString
+@AllArgsConstructor
 @Entity
 @Table(name = "organization")
 public class Organization {
-
   @Id
   @Column(updatable = false, nullable = false)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
   private Integer id;
 
-  private String name;
-
-  @Column(name = "organization_url")
-  private String organizationUrl;
+  @JsonProperty("login")
+  private String login;
 
   @OneToMany(
     mappedBy = "organization",
@@ -32,15 +31,4 @@ public class Organization {
     orphanRemoval = true
   )
   private List<Team> teams = new ArrayList<>();
-
-  public void addTeam(Team team) {
-    teams.add(team);
-    team.setOrganization(this);
-  }
-
-  public void removeTeam(Team team) {
-    teams.remove(team);
-    team.setOrganization(null);
-  }
-
 }

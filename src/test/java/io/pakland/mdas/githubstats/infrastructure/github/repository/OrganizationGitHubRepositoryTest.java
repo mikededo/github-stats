@@ -1,7 +1,8 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
-import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.domain.Organization;
+import io.pakland.mdas.githubstats.domain.Team;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -66,9 +67,9 @@ class OrganizationGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<OrganizationDTO> response = organizationGithubRepository.fetchAvailableOrganizations();
-        List<OrganizationDTO> expected = new ArrayList<>();
-        expected.add(new OrganizationDTO(this.organizationId, "github-stats-22", null));
+        List<Organization> response = organizationGithubRepository.fetchAvailableOrganizations();
+        List<Organization> expected = new ArrayList<>();
+        expected.add(new Organization(this.organizationId, "github-stats-22", new ArrayList<Team>()));
 
         assertArrayEquals(response.toArray(), expected.toArray());
     }

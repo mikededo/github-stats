@@ -45,13 +45,6 @@ public class Team {
   )
   private List<Repository> repositories = new ArrayList<>();
 
-  @OneToMany(
-    mappedBy = "team",
-    cascade = CascadeType.ALL,
-    orphanRemoval = true
-  )
-  private List<HistoricQueries> queries = new ArrayList<>();
-
   public void setSlug(String slug) {
     this.slug = slug;
   }
@@ -89,16 +82,6 @@ public class Team {
   public void removeRepository(Repository repository) {
     repositories.remove(repository);
     repository.setTeam(null);
-  }
-
-  public void addQuery(HistoricQueries historicQuery) {
-    queries.add(historicQuery);
-    historicQuery.setTeam(this);
-  }
-
-  public void removeQuery(HistoricQueries historicQuery) {
-    queries.remove(historicQuery);
-    historicQuery.setTeam(null);
   }
 
   @Override

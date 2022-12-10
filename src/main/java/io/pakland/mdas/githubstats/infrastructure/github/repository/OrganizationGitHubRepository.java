@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
-import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.domain.Organization;
 import io.pakland.mdas.githubstats.domain.repository.OrganizationExternalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +19,12 @@ public class OrganizationGitHubRepository implements OrganizationExternalReposit
     }
 
     @Override
-    public List<OrganizationDTO> fetchAvailableOrganizations() throws HttpException {
+    public List<Organization> fetchAvailableOrganizations() throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
                     .uri("/user/orgs")
                     .retrieve()
-                    .bodyToFlux(OrganizationDTO.class)
+                    .bodyToFlux(Organization.class)
                     .collectList()
                     .block();
         } catch (WebClientResponseException ex) {
