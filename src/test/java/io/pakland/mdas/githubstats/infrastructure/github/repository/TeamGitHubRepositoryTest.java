@@ -29,8 +29,8 @@ class TeamGitHubRepositoryTest {
     private TeamGitHubRepository teamGitHubRepository;
     private String organizationTeamsListResponse;
 
-    private final Integer organizationId = 119930124;
-    private final Integer teamId = 7098104;
+    private final String organizationName = "github-stats-22";
+    private final String teamName = "gs-developers";
 
     @BeforeAll
     void setup() throws IOException {
@@ -53,22 +53,22 @@ class TeamGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        teamGitHubRepository.fetchTeamsFromOrganization(this.organizationId);
+        teamGitHubRepository.fetchTeamsFromOrganization(this.organizationName);
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals(String.format("/orgs/%d/teams", this.organizationId), request.getPath());
+        assertEquals(String.format("/orgs/%s/teams", this.organizationName), request.getPath());
     }
 
     @Test
-    void givenValidTeamId_shouldReturnTeamMembers() throws HttpException {
+    void givenValidTeamName_shouldReturnTeamMembers() throws HttpException {
         MockResponse mockResponse = new MockResponse()
                 .setBody(this.organizationTeamsListResponse)
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<Team> response = teamGitHubRepository.fetchTeamsFromOrganization(this.organizationId);
+        List<Team> response = teamGitHubRepository.fetchTeamsFromOrganization(this.organizationName);
         List<Team> expected = new ArrayList<>();
-        expected.add(0, new Team(this.teamId, "gs-developers", null, new ArrayList<User>(), new ArrayList<Repository>()));
+        expected.add(0, new Team(7098104, "gs-developers", null, new ArrayList<User>(), new ArrayList<Repository>()));
 
         assertEquals(1, response.size());
         assertArrayEquals(response.toArray(), expected.toArray());

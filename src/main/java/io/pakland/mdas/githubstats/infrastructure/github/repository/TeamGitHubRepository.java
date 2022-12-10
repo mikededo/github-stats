@@ -19,10 +19,10 @@ public class TeamGitHubRepository implements TeamExternalRepository {
     }
 
     @Override
-    public List<Team> fetchTeamsFromOrganization(Integer organizationId) throws HttpException {
+    public List<Team> fetchTeamsFromOrganization(String organizationName) throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
-                    .uri(String.format("/orgs/%d/teams", organizationId))
+                    .uri(String.format("/orgs/%s/teams", organizationName))
                     .retrieve()
                     .bodyToFlux(Team.class)
                     .collectList()
