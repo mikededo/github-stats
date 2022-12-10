@@ -14,7 +14,7 @@ public class FetchUsersFromTeam {
         this.userExternalRepository = userExternalRepository;
     }
 
-     public List<User> execute(Integer organizationId, Integer teamId) throws HttpException {
-        return this.userExternalRepository.fetchUsersFromTeam(organizationId, teamId);
+     public List<User> execute(String organizationName, String teamName) throws HttpException {
+        return this.userExternalRepository.fetchUsersFromTeam(organizationName, teamName);
      }
 }

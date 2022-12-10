@@ -21,10 +21,10 @@ public class UserGitHubRepository implements UserExternalRepository {
     }
 
     @Override
-    public List<User> fetchUsersFromTeam(Integer organizationId, Integer teamId) throws HttpException {
+    public List<User> fetchUsersFromTeam(String organizationName, String teamName) throws HttpException {
         try {
             return this.webClientConfiguration.getWebClient().get()
-                    .uri(String.format("/orgs/%d/teams/%d/members", organizationId, teamId))
+                    .uri(String.format("/orgs/%s/teams/%s/members", organizationName, teamName))
                     .retrieve()
                     .bodyToFlux(User.class)
                     .collectList()

@@ -27,8 +27,8 @@ class UserGitHubRepositoryTest {
     private UserGitHubRepository userGitHubRepository;
     private String teamMembersListResponse;
 
-    private final Integer organizationId = 119930124;
-    private final Integer teamId = 7098104;
+    private final String organizationName = "github-stats-22";
+    private final String teamName = "gs-developers";
 
     @BeforeAll
     void setup() throws IOException {
@@ -51,10 +51,10 @@ class UserGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        userGitHubRepository.fetchUsersFromTeam(this.organizationId, this.teamId);
+        userGitHubRepository.fetchUsersFromTeam(this.organizationName, this.teamName);
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals(String.format("/orgs/%d/teams/%d/members", this.organizationId, this.teamId), request.getPath());
+        assertEquals(String.format("/orgs/%s/teams/%s/members", this.organizationName, this.teamName), request.getPath());
     }
 
     @Test
@@ -65,7 +65,7 @@ class UserGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<User> response = userGitHubRepository.fetchUsersFromTeam(this.organizationId, this.teamId);
+        List<User> response = userGitHubRepository.fetchUsersFromTeam(this.organizationName, this.teamName);
         List<User> expected = new ArrayList<>();
         expected.add(0, new User(33031570, "manerow", null, new ArrayList<>(), new ArrayList<>()));
         expected.add(1, new User(48334745, "mikededo", null, new ArrayList<>(), new ArrayList<>()));
