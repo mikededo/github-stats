@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.application.dto.UserDTO;
+import io.pakland.mdas.githubstats.domain.User;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -18,7 +18,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserGitHubRepositoryTest {
@@ -64,11 +65,11 @@ class UserGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<UserDTO> response = userGitHubRepository.fetchUsersFromTeam(this.organizationId, this.teamId);
-        List<UserDTO> expected = new ArrayList<>();
-        expected.add(0, new UserDTO(33031570, "manerow", "https://api.github.com/users/manerow/orgs"));
-        expected.add(1, new UserDTO(48334745, "mikededo", "https://api.github.com/users/mikededo/orgs"));
-        expected.add(2, new UserDTO(54351560, "sdomingobasora", "https://api.github.com/users/sdomingobasora/orgs"));
+        List<User> response = userGitHubRepository.fetchUsersFromTeam(this.organizationId, this.teamId);
+        List<User> expected = new ArrayList<>();
+        expected.add(0, new User(33031570, "manerow", null, new ArrayList<>(), new ArrayList<>()));
+        expected.add(1, new User(48334745, "mikededo", null, new ArrayList<>(), new ArrayList<>()));
+        expected.add(2, new User(54351560, "sdomingobasora", null, new ArrayList<>(), new ArrayList<>()));
 
         assertEquals(3, response.size());
         assertArrayEquals(response.toArray(), expected.toArray());

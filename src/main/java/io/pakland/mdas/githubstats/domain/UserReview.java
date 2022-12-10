@@ -18,7 +18,6 @@ public class UserReview {
 
   @Id
   @Column(updatable = false, nullable = false)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
   @ManyToOne(fetch = FetchType.LAZY)

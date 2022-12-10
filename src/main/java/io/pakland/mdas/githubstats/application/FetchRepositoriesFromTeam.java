@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.application;
 
-import io.pakland.mdas.githubstats.application.dto.RepositoryDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.domain.Repository;
 import io.pakland.mdas.githubstats.domain.repository.RepositoryExternalRepository;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class FetchRepositoriesFromTeam {
         this.repositoryExternalRepository = repositoryExternalRepository;
     }
 
-    public List<RepositoryDTO> execute(Integer organizationId, Integer teamId) throws HttpException {
-        return this.repositoryExternalRepository.fetchTeamRepositories(organizationId, teamId);
+    public List<Repository> execute(String organizationLogin, String teamSlug) throws HttpException {
+        return this.repositoryExternalRepository.fetchTeamRepositories(organizationLogin, teamSlug);
     }
 }

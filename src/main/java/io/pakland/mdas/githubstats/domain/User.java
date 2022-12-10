@@ -1,34 +1,31 @@
 package io.pakland.mdas.githubstats.domain;
 
-import javax.persistence.*;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@Builder
 @Entity
 @Table(name = "user")
 public class User {
 
   @Id
   @Column(updatable = false, nullable = false)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
   private Integer id;
 
+  @Column(name = "login")
+  @JsonProperty("login")
   private String login;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @ToString.Exclude
   private Team team;
 
   @OneToMany(
@@ -44,36 +41,4 @@ public class User {
     orphanRemoval = true
   )
   private List<Commit> commits = new ArrayList<>();
-
-  public void addReview(UserReview userReview) {
-    userReviews.add(userReview);
-    userReview.setUser(this);
-  }
-
-  public void removeReview(UserReview userReview) {
-    userReviews.remove(userReview);
-    userReview.setUser(null);
-  }
-
-  public void addCommit(Commit commit) {
-    commits.add(commit);
-    commit.setUser(this);
-  }
-
-  public void removeCommit(Commit commit) {
-    commits.remove(commit);
-    commit.setUser(null);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof User )) return false;
-    return id != null && id.equals(((User) o).getId());
-  }
-
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
-  }
 }
