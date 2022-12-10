@@ -1,6 +1,8 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
+import io.pakland.mdas.githubstats.application.dto.RepositoryDTO;
 import io.pakland.mdas.githubstats.application.dto.TeamDTO;
+import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -26,7 +28,8 @@ class TeamGitHubRepositoryTest {
     private TeamGitHubRepository teamGitHubRepository;
     private String organizationTeamsListResponse;
 
-    private final Integer orgId = 119930124;
+    private final Integer organizationId = 119930124;
+    private final Integer teamId = 7098104;
 
     @BeforeAll
     void setup() throws IOException {
@@ -49,23 +52,22 @@ class TeamGitHubRepositoryTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        teamGitHubRepository.fetchTeamsFromOrganization(orgId);
+        teamGitHubRepository.fetchTeamsFromOrganization(this.organizationId);
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals(String.format("/orgs/%d/teams", orgId), request.getPath());
+        assertEquals(String.format("/orgs/%d/teams", this.organizationId), request.getPath());
     }
 
     @Test
     void givenValidTeamId_shouldReturnTeamMembers() throws HttpException {
-        Integer teamId = 7098104;
         MockResponse mockResponse = new MockResponse()
                 .setBody(this.organizationTeamsListResponse)
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<TeamDTO> response = teamGitHubRepository.fetchTeamsFromOrganization(orgId);
+        List<TeamDTO> response = teamGitHubRepository.fetchTeamsFromOrganization(this.organizationId);
         List<TeamDTO> expected = new ArrayList<>();
-        expected.add(0, new TeamDTO(teamId, "gs-developers", "gs-developers"));
+        expected.add(0, new TeamDTO(this.teamId, "gs-developers", null, null));
 
         assertEquals(response.size(), 1);
         assertArrayEquals(response.toArray(), expected.toArray());
