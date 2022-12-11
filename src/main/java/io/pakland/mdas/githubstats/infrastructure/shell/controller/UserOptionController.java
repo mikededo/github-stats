@@ -53,6 +53,7 @@ public class UserOptionController {
                         .execute(organization.getLogin());
 
                 for (Team team : teamList) {
+                    organization.addTeam(team);
                     // Fetch the members of each team.
                     List<User> userList = new FetchUsersFromTeam(userExternalRepository)
                             .execute(organization.getLogin(), team.getSlug());
@@ -78,8 +79,6 @@ public class UserOptionController {
 
                     team.setUsers(userList);
                 }
-
-                organization.setTeams(teamList);
             }
         } catch (HttpException e) {
             throw new RuntimeException(e);
