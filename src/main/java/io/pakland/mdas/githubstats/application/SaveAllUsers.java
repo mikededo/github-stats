@@ -5,23 +5,20 @@ import io.pakland.mdas.githubstats.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
-public class SaveUser {
+public class SaveAllUsers {
 
     public final UserRepository userRepository;
 
-    public SaveUser(UserRepository userRepository) {
+    public SaveAllUsers(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Transactional
-    public void execute(User user) {
-        Optional<User> found = userRepository.findById(user.getId());
-        if (found.isPresent()) {
-            return;
-        }
-        userRepository.save(user);
+    public void execute(List<User> users) {
+        userRepository.saveAll(users);
     }
+
 }
