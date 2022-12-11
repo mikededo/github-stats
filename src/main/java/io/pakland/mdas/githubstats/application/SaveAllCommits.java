@@ -6,11 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public class SaveCommits {
+public class SaveAllCommits {
 
     private final CommitRepository commitRepository;
 
-    SaveCommits(CommitRepository commitRepository) {
+    SaveAllCommits(CommitRepository commitRepository) {
         this.commitRepository = commitRepository;
     }
 
