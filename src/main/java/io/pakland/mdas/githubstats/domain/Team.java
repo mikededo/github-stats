@@ -1,9 +1,7 @@
 package io.pakland.mdas.githubstats.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "team")
 public class Team {
 
@@ -41,4 +40,15 @@ public class Team {
     orphanRemoval = true
   )
   private List<Repository> repositories = new ArrayList<>();
+
+  public void addRepository(Repository repository) {
+    if (repositories == null) {
+      repositories = new ArrayList<>();
+    }
+
+    if (!repositories.contains(repository)) {
+      repositories.add(repository);
+    }
+    repository.setTeam(this);
+  }
 }
