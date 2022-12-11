@@ -3,10 +3,7 @@ package io.pakland.mdas.githubstats.domain;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "organization")
 public class Organization {
   @Id
@@ -32,4 +30,34 @@ public class Organization {
     orphanRemoval = true
   )
   private List<Team> teams = new ArrayList<>();
+
+  public void addTeam(Team team) {
+    if (teams == null) {
+      teams = new ArrayList<>();
+    }
+
+    if (!teams.contains(team)) {
+      teams.add(team);
+    }
+    team.setOrganization(this);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Organization that = (Organization) o;
+
+    return id.equals(that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
 }
