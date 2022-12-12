@@ -2,10 +2,12 @@ package io.pakland.mdas.githubstats.application;
 
 import io.pakland.mdas.githubstats.domain.Commit;
 import io.pakland.mdas.githubstats.domain.repository.CommitRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Service
 public class SaveAllCommits {
 
     private final CommitRepository commitRepository;

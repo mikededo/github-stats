@@ -5,9 +5,12 @@ import io.pakland.mdas.githubstats.domain.PullRequest;
 import io.pakland.mdas.githubstats.domain.PullRequestState;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository.FetchPullRequestFromRepositoryRequest;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class FetchPullRequestsFromRepository {
 
     private final PullRequestExternalRepository pullRequestExternalRepository;
