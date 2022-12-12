@@ -1,9 +1,11 @@
 package io.pakland.mdas.githubstats.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Collections;
+import java.util.HashSet;
 import org.junit.jupiter.api.Test;
 
 public class TeamTest {
@@ -24,7 +26,7 @@ public class TeamTest {
     public void shouldNotAddTheRepository_whenTheRepositoryIsAlreadyContained() {
         Team team = Team.builder().id(1).slug("gs-developers").build();
         Repository repository = Repository.builder().id(1).name("github-stats").build();
-        team.setRepositories(Collections.singleton(repository));
+        team.setRepositories(new HashSet<>(Collections.singletonList(repository)));
 
         assertNull(repository.getTeam());
         assertEquals(1, team.getRepositories().size());
@@ -32,6 +34,16 @@ public class TeamTest {
 
         assertEquals(repository.getTeam(), team);
         assertEquals(1, team.getRepositories().size());
+    }
+
+    @Test
+    public void shouldCheckForEqualTeams() {
+        Team original = Team.builder().id(1).build();
+        Team equal = Team.builder().id(1).build();
+        Team notEqual = Team.builder().id(2).build();
+
+        assertEquals(original, equal);
+        assertNotEquals(original, notEqual);
     }
 
 }
