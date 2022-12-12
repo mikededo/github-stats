@@ -14,6 +14,6 @@ public class GetTeamsFromOrganization {
 
     @Transactional
     public List<Team> execute(Organization org) {
-        return org.getTeams();
+        return org.getTeams().stream().toList();
     }
 }

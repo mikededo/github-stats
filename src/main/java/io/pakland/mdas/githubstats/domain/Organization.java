@@ -2,6 +2,7 @@ package io.pakland.mdas.githubstats.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -39,6 +40,10 @@ public class Organization {
 
         teams.add(team);
         team.setOrganization(this);
+    }
+
+    public List<Team> getTeams() {
+        return teams.stream().toList();
     }
 
     @Override
