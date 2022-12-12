@@ -14,7 +14,7 @@ public class GetRepositoriesByTeam {
 
     @Transactional
     public List<Repository> execute(Team team) {
-        return team.getRepositories();
+        return team.getRepositories().stream().toList();
     }
 
 }

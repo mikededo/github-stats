@@ -48,6 +48,10 @@ public class Team {
         repository.setTeam(this);
     }
 
+    public List<Repository> getRepositories() {
+        return repositories.stream().toList();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
