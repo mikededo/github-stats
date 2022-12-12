@@ -33,6 +33,7 @@ public class Repository {
   private String ownerLogin;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @ToString.Exclude
   private Team team;
 
   @OneToMany(

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -44,5 +45,6 @@ public class PullRequest {
   private List<Commit> commits = new ArrayList<>();
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @ToString.Exclude
   private Repository repository;
 }
