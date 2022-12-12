@@ -24,7 +24,7 @@ public class TeamTest {
     public void shouldNotAddTheRepository_whenTheRepositoryIsAlreadyContained() {
         Team team = Team.builder().id(1).slug("gs-developers").build();
         Repository repository = Repository.builder().id(1).name("github-stats").build();
-        team.setRepositories(Collections.singletonList(repository));
+        team.setRepositories(Collections.singleton(repository));
 
         assertNull(repository.getTeam());
         assertEquals(1, team.getRepositories().size());

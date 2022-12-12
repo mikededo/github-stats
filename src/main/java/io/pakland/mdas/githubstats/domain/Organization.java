@@ -1,12 +1,11 @@
 package io.pakland.mdas.githubstats.domain;
 
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -15,49 +14,49 @@ import java.util.List;
 @Builder
 @Table(name = "organization")
 public class Organization {
-  @Id
-  @Column(updatable = false, nullable = false)
-  @JsonProperty("id")
-  private Integer id;
 
-  @Column
-  @JsonProperty("login")
-  private String login;
+    @Id
+    @Column(updatable = false, nullable = false)
+    @JsonProperty("id")
+    @NotNull
+    private Integer id;
 
-  @OneToMany(
-    mappedBy = "organization",
-    cascade = CascadeType.ALL,
-    orphanRemoval = true
-  )
-  private List<Team> teams = new ArrayList<>();
+    @Column
+    @JsonProperty("login")
+    private String login;
 
-  public void addTeam(Team team) {
-    if (teams == null) {
-      teams = new ArrayList<>();
+    @OneToMany(
+        mappedBy = "organization",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private Set<Team> teams = new HashSet<>();
+
+    public void addTeam(Team team) {
+        if (teams == null) {
+            teams = new HashSet<>();
+        }
+
+        teams.add(team);
+        team.setOrganization(this);
     }
 
-    if (!teams.contains(team)) {
-      teams.add(team);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Organization that = (Organization) o;
+
+        return id.equals(that.id);
     }
-    team.setOrganization(this);
-  }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Organization that = (Organization) o;
-
-    return id.equals(that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return id.hashCode();
-  }
 }
