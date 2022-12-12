@@ -11,7 +11,7 @@ public class OrganizationTest {
     public void shouldAddTheTeamToTheOrganization_andSetTheTeamOrganization() {
         Organization organization = Organization.builder().id(1).login("github-stats").build();
         Team team = Team.builder().id(1).slug("gs-developers").build();
-        
+
         assertNull(team.getOrganization());
         organization.addTeam(team);
 
@@ -23,7 +23,7 @@ public class OrganizationTest {
     public void shouldNotAddTheTeam_whenTheTeamIsAlreadyContained() {
         Organization organization = Organization.builder().id(1).login("github-stats").build();
         Team team = Team.builder().id(1).slug("gs-developers").build();
-        organization.setTeams(Collections.singletonList(team));
+        organization.setTeams(Collections.singleton(team));
 
         assertNull(team.getOrganization());
         assertEquals(organization.getTeams().size(), 1);
