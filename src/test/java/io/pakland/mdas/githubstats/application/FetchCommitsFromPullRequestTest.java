@@ -2,83 +2,100 @@ package io.pakland.mdas.githubstats.application;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.Commit;
-import io.pakland.mdas.githubstats.domain.PullRequestState;
-import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository.FetchPullRequestFromRepositoryRequest;
+import io.pakland.mdas.githubstats.domain.repository.CommitExternalRepository;
+import io.pakland.mdas.githubstats.domain.repository.CommitExternalRepository.FetchCommitsFromPullRequestRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FetchCommitsFromPullRequestTest {
-
-    private void validateRequestCaptor(
-            ArgumentCaptor<FetchPullRequestFromRepositoryRequest> captor) {
-        assertEquals("github-stats-22", captor.getValue().getRepositoryOwner());
-        assertEquals("github-stats", captor.getValue().getRepository());
-        assertEquals(1, captor.getValue().getPage());
-        assertEquals(100, captor.getValue().getPerPage());
-        assertEquals(PullRequestState.ALL, captor.getValue().getState());
-    }
 
     @Test
     public void whenValidOrganizationAndRepository_shouldReturnTheListOfPullRequests()
             throws HttpException {
         Commit commit = new Commit();
-        commit.setId(1157910685);
-        prOne.setNumber(71);
-        PullRequest prTwo = new PullRequest();
-        prTwo.setId(1157867973);
-        prTwo.setNumber(69);
+        commit.setSha("a0b3ed9d5f1356575f2b16ab8ef5d93c5ce77575");
+        commit.setDate(new Date());
+        Commit commit1 = new Commit();
+        commit1.setSha("f16b593d35d6e66dc7e1c8727d4eaa829d3973ed");
+        commit1.setDate(new Date());
 
-        PullRequestExternalRepository repository = Mockito.mock(
-                PullRequestExternalRepository.class);
-        Mockito.when(repository.fetchPullRequestsFromRepository(Mockito.any(
-                FetchPullRequestFromRepositoryRequest.class))).thenReturn(List.of(prOne, prTwo));
+        CommitExternalRepository repository = Mockito.mock(
+                CommitExternalRepository.class);
+        FetchCommitsFromPullRequestRequest fetchCommitsFromPullRequestRequest = FetchCommitsFromPullRequestRequest.builder()
+                .pullRequestNumber(1)
+                .repositoryName("github-stats")
+                .repositoryOwner("github-stats-22")
+                .page(1)
+                .perPage(100)
+                .build();
+        FetchCommitsFromPullRequestRequest fetchCommitsFromPullRequestRequest1 = FetchCommitsFromPullRequestRequest.builder()
+                .pullRequestNumber(1)
+                .repositoryName("github-stats")
+                .repositoryOwner("github-stats-22")
+                .page(2)
+                .perPage(100)
+                .build();
 
-        List<PullRequest> response = new FetchPullRequestsFromRepository(repository).execute(
-                "github-stats-22", "github-stats"
+        Mockito.when(repository.fetchCommitsFromPullRequest(Mockito.any(
+                FetchCommitsFromPullRequestRequest.class))).thenReturn(new ArrayList<>(Arrays.asList(commit, commit1))).thenReturn(new ArrayList<>());
+
+        List<Commit> response = new FetchCommitsFromPullRequest(repository).execute(
+                "github-stats-22", "github-stats", 1
         );
 
-        ArgumentCaptor<FetchPullRequestFromRepositoryRequest> captor = ArgumentCaptor.forClass(
-                FetchPullRequestFromRepositoryRequest.class);
-        Mockito.verify(repository).fetchPullRequestsFromRepository(captor.capture());
-
-        validateRequestCaptor(captor);
+        ArgumentCaptor<FetchCommitsFromPullRequestRequest> captor = ArgumentCaptor.forClass(
+                FetchCommitsFromPullRequestRequest.class);
+        Mockito.verify(repository, Mockito.times(2)).fetchCommitsFromPullRequest(captor.capture());
+        assertEquals("github-stats-22", captor.getValue().getRepositoryOwner());
+        assertEquals("github-stats", captor.getValue().getRepositoryName());
+        assertEquals(2, captor.getValue().getPage());
+        assertEquals(100, captor.getValue().getPerPage());
         assertEquals(2, response.size());
-        assertEquals(prOne.getId(), response.get(0).getId());
-        assertEquals(prTwo.getId(), response.get(1).getId());
+        assertEquals(commit.getSha(), response.get(0).getSha());
+        assertEquals(commit1.getSha(), response.get(1).getSha());
     }
 
     @Test
     public void whenRepositoryReturnsEmptyResponse_shouldReturnEmptyList() throws HttpException {
-//        PullRequestExternalRepository repository = Mockito.mock(
-//                PullRequestExternalRepository.class);
-//        Mockito.when(repository.fetchPullRequestsFromRepository(Mockito.any(
-//                FetchPullRequestFromRepositoryRequest.class))).thenReturn(new ArrayList<>());
-//
-//        List<PullRequest> response = new FetchPullRequestsFromRepository(repository).execute(
-//                "github-stats-22", "github-stats"
-//        );
-//
-//        ArgumentCaptor<FetchPullRequestFromRepositoryRequest> captor = ArgumentCaptor.forClass(
-//                FetchPullRequestFromRepositoryRequest.class);
-//        Mockito.verify(repository).fetchPullRequestsFromRepository(captor.capture());
-//
-//        validateRequestCaptor(captor);
-//        assertEquals(0, response.size());
+        CommitExternalRepository repository = Mockito.mock(
+                CommitExternalRepository.class);
+        Mockito.when(repository.fetchCommitsFromPullRequest(Mockito.any(
+                FetchCommitsFromPullRequestRequest.class))).thenReturn(new ArrayList<>());
+
+        List<Commit> response = new FetchCommitsFromPullRequest(repository).execute(
+                "github-stats-22", "github-stats", 1
+        );
+
+        ArgumentCaptor<FetchCommitsFromPullRequestRequest> captor = ArgumentCaptor.forClass(
+                FetchCommitsFromPullRequestRequest.class);
+        Mockito.verify(repository).fetchCommitsFromPullRequest(captor.capture());
+
+        assertEquals("github-stats-22", captor.getValue().getRepositoryOwner());
+        assertEquals("github-stats", captor.getValue().getRepositoryName());
+        assertEquals(1, captor.getValue().getPage());
+        assertEquals(100, captor.getValue().getPerPage());
+        assertEquals(0, response.size());
     }
 
     @Test
     public void whenRepositoryThrowsException_shouldThrowHttpException() throws HttpException {
-//        PullRequestExternalRepository repository = Mockito.mock(
-//                PullRequestExternalRepository.class);
-//        Mockito.when(repository.fetchPullRequestsFromRepository(Mockito.any(
-//                        FetchPullRequestFromRepositoryRequest.class)))
-//                .thenThrow(new HttpException(404, "Page not found."));
-//
-//        assertThrows(HttpException.class, () -> {
-//            new FetchPullRequestsFromRepository(repository).execute("github-stats-22",
-//                    "github-stats");
-//        });
+        CommitExternalRepository repository = Mockito.mock(
+                CommitExternalRepository.class);
+        Mockito.when(repository.fetchCommitsFromPullRequest(Mockito.any(
+                FetchCommitsFromPullRequestRequest.class))).thenThrow(new HttpException(404, "Page not found."));
+
+        assertThrows(HttpException.class, () -> {
+            new FetchCommitsFromPullRequest(repository).execute("github-stats-22",
+                    "github-stats", 1);
+        });
     }
 }

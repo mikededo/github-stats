@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 
@@ -22,17 +21,17 @@ public class Commit {
     @JsonProperty("sha")
     private String sha;
 
+    @Column(name = "date")
+    private Date date;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private PullRequest pullRequest;
 
-    @Column(name = "date")
-    private Date date;
-
     @JsonProperty("commit")
-    private void unpackNameFromNestedObject(Map<String, Map<String, String>> owner) {
-        this.date = Date.from(Instant.parse(owner.get("commiter").get("date")));
+    private void unpackDateFromNestedObject(Map<String, Object> commit) {
+        //        this.date = Date.from(Instant.parse(commiter.get("date").toString()));
     }
 }

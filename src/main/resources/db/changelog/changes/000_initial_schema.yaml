@@ -38,7 +38,7 @@ databaseChangeLog:
                   type: VARCHAR(255)
               - column:
                   name: date
-                  type: TIMESTAMP WITHOUT TIME ZONE
+                  type: TIMESTAMP
               - column:
                   name: pull_request_id
                   type: INT

@@ -11,8 +11,9 @@ public class CommitAggregation {
     public static CommitAggregation aggregate(List<Commit> commits) {
         CommitAggregation commitAggregation = new CommitAggregation();
         commitAggregation.numCommits = (int) commits.stream().distinct().count();
-        commitAggregation.linesAdded = commits.stream().mapToInt(Commit::getAdditions).sum();
-        commitAggregation.linesRemoved = commits.stream().mapToInt(Commit::getDeletions).sum();
+        //TODO: This should come from the PR, not the commit.
+//        commitAggregation.linesAdded = commits.stream().mapToInt(Commit::getAdditions).sum();
+//        commitAggregation.linesRemoved = commits.stream().mapToInt(Commit::getDeletions).sum();
         return commitAggregation;
     }
 

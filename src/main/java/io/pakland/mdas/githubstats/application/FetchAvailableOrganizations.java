@@ -3,11 +3,9 @@ package io.pakland.mdas.githubstats.application;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.Organization;
 import io.pakland.mdas.githubstats.domain.repository.OrganizationExternalRepository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class FetchAvailableOrganizations {
 
     private final OrganizationExternalRepository organizationExternalRepository;
