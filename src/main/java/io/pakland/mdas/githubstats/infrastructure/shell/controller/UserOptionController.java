@@ -1,10 +1,7 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.controller;
 
 import io.pakland.mdas.githubstats.FetchUsersFromTeam;
-import io.pakland.mdas.githubstats.application.FetchAvailableOrganizations;
-import io.pakland.mdas.githubstats.application.FetchPullRequestsFromRepository;
-import io.pakland.mdas.githubstats.application.FetchRepositoriesFromTeam;
-import io.pakland.mdas.githubstats.application.FetchTeamsFromOrganization;
+import io.pakland.mdas.githubstats.application.*;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
@@ -28,16 +25,18 @@ public class UserOptionController {
     private UserExternalRepository userExternalRepository;
     private RepositoryExternalRepository repositoryExternalRepository;
     private PullRequestExternalRepository pullRequestExternalRepository;
+    private CommitExternalRepository commitExternalRepository;
 
     public UserOptionController(UserOptionRequest userOptionRequest) {
         this.userOptionRequest = userOptionRequest;
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(
-            "https://api.github.com", userOptionRequest.getApiKey());
+                "https://api.github.com", userOptionRequest.getApiKey());
         this.organizationExternalRepository = new OrganizationGitHubRepository(webClientConfiguration);
         this.teamExternalRepository = new TeamGitHubRepository(webClientConfiguration);
         this.userExternalRepository = new UserGitHubRepository(webClientConfiguration);
         this.repositoryExternalRepository = new RepositoryGitHubRepository(webClientConfiguration);
         this.pullRequestExternalRepository = new PullRequestGitHubRepository(webClientConfiguration);
+        this.commitExternalRepository = new CommitGitHubRepository(webClientConfiguration);
     }
 
     public void execute() {
@@ -54,7 +53,6 @@ public class UserOptionController {
 
                 for (Team team : teamList) {
                     // Fetch the members of each team.
-                    logger.info(organization.getLogin());
                     List<User> userList = new FetchUsersFromTeam(userExternalRepository)
                             .execute(organization.getLogin(), team.getSlug());
                     // Fetch the repositories for each team.
@@ -70,7 +68,15 @@ public class UserOptionController {
                                 TODO: if the user of the PR belongs to the team, increment the prs executed inside the team,
                                 TODO: else increment the prs executed outside the team.
                             */
-                            //  TODO: fetch commits from each PR.
+                            // TODO: Save for later calculate the Additions from PR aggregation.
+                            // TODO: Save for later calculate the Deletions from PR aggregation.
+                            // TODO: Save for later calculate the commit number from PR aggregation.
+                            List<Commit> commitList = new FetchCommitsFromPullRequest(commitExternalRepository)
+                                    .execute(repository.getOwnerLogin(), repository.getName(), pullRequest.getNumber());
+                            logger.info(String.valueOf(commitList.size()));
+                            for (Commit commit : commitList) {
+                                // TODO: Fetch PR reviews.
+                            }
                         }
 
                         repository.setPullRequests(pullRequestList);
