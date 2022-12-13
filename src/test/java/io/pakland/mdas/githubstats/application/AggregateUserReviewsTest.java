@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AggregateUserReviewsTest {
 
     @Test
-    public void aggregatingReviews_shouldGiveValidCommentLengthSum() {
+    public void aggregatingReviews_shouldGiveValidCommentLengthAvg() {
         int sum = 0;
         List<UserReview> reviews = new ArrayList<>();
         Random random = new Random();
@@ -34,8 +34,10 @@ public class AggregateUserReviewsTest {
             userReview.setComments(comments);
             reviews.add(userReview);
         }
+        float avg = sum / 10f;
 
-        int commentLengthSum = UserReviewAggregation.aggregate(reviews).getCommentLengthSum();
-        assertEquals(sum, commentLengthSum);
+        UserReviewAggregation userReviewAggregation = new UserReviewAggregation();
+        float commentLengthAvg = userReviewAggregation.aggregate(reviews).getCommentLengthAvg();
+        assertEquals(avg, commentLengthAvg);
     }
 }
