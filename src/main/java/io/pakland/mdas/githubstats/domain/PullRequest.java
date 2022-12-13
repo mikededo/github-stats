@@ -47,4 +47,8 @@ public class PullRequest {
   @ManyToOne(fetch = FetchType.LAZY)
   @ToString.Exclude
   private Repository repository;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private User user;
+
 }

@@ -41,4 +41,11 @@ public class User {
     orphanRemoval = true
   )
   private List<Commit> commits = new ArrayList<>();
+
+  @OneToMany(
+    mappedBy = "user",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+  )
+  private List<PullRequest> pullRequests = new ArrayList<>();
 }
