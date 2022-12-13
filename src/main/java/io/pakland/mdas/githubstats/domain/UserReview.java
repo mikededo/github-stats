@@ -49,4 +49,8 @@ public class UserReview {
     return getClass().hashCode();
   }
 
+  public boolean isReviewFromTeam(Team team) {
+    return pullRequest.getRepository().getTeam().equals(team);
+  }
+
 }

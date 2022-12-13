@@ -51,4 +51,26 @@ public class PullRequest {
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
+  public List<Commit> getCommitsByUser(User user) {
+    return commits
+        .stream()
+        .filter(commit -> commit.getUser().equals(user))
+        .toList();
+  }
+
+  public boolean isClosed() {
+    return state.equals(PullRequestState.CLOSED);
+  }
+
+  public boolean isCreatedByUser(User user) {
+    return this.user.equals(user);
+  }
+
+  public List<UserReview> getReviewsFromUser(User user) {
+    return userReviews
+        .stream()
+        .filter(x -> x.getUser().equals(user))
+        .toList();
+  }
+
 }
