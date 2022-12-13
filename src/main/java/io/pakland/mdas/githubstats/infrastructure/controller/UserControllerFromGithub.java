@@ -1,6 +1,5 @@
 package io.pakland.mdas.githubstats.infrastructure.controller;
 
-import io.pakland.mdas.githubstats.FetchUsersFromTeam;
 import io.pakland.mdas.githubstats.application.*;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.*;
