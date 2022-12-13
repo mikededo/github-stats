@@ -1,5 +1,6 @@
 package io.pakland.mdas.githubstats.application;
 
+import io.pakland.mdas.githubstats.application.unnused.GetRepositoriesByTeam;
 import io.pakland.mdas.githubstats.domain.Repository;
 import io.pakland.mdas.githubstats.domain.Team;
 import org.junit.jupiter.api.Test;
