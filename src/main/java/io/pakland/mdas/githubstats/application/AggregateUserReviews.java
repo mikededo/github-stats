@@ -9,10 +9,11 @@ import java.util.List;
 @Service
 public class AggregateUserReviews {
 
+    UserReviewAggregation userReviewAggregation = new UserReviewAggregation();
     public AggregateUserReviews() {}
 
     public UserReviewAggregation execute(List<UserReview> userReviews) {
-        return UserReviewAggregation.aggregate(userReviews);
+        return userReviewAggregation.aggregate(userReviews);
     }
 
 }
