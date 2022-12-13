@@ -22,7 +22,7 @@ public class SaveOrganizationTest {
     }
 
     @Test
-    public void shouldNotSaveOrganization_wheDoesExist() {
+    public void shouldNotSaveOrganization_whenDoesExist() {
         Organization organization = new Organization();
         organization.setId(1);
         OrganizationRepository orgRepositoryMock = Mockito.mock(OrganizationRepository.class);
