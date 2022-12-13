@@ -28,7 +28,7 @@ public class Commit {
 
     private int deletions;
 
-    private Instant date;
+    private Instant created_at;
 
     @Override
     public boolean equals(Object o) {
