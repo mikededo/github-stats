@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.infrastructure.shell.controller;
+package io.pakland.mdas.githubstats.infrastructure.controller;
 
 import io.pakland.mdas.githubstats.FetchUsersFromTeam;
 import io.pakland.mdas.githubstats.application.*;
@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @NoArgsConstructor
-public class UserOptionController {
+public class UserControllerFromGithub {
 
-    Logger logger = LoggerFactory.getLogger(UserOptionController.class);
+    Logger logger = LoggerFactory.getLogger(UserControllerFromGithub.class);
     private UserOptionRequest userOptionRequest;
     private OrganizationExternalRepository organizationExternalRepository;
     private TeamExternalRepository teamExternalRepository;
@@ -25,7 +25,7 @@ public class UserOptionController {
     private RepositoryExternalRepository repositoryExternalRepository;
     private PullRequestExternalRepository pullRequestExternalRepository;
 
-    public UserOptionController(UserOptionRequest userOptionRequest) {
+    public UserControllerFromGithub(UserOptionRequest userOptionRequest) {
         this.userOptionRequest = userOptionRequest;
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(
             "https://api.github.com", userOptionRequest.getApiKey());
