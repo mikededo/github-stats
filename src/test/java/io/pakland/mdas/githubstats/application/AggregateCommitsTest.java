@@ -27,42 +27,4 @@ public class AggregateCommitsTest {
         assertEquals(commitAggregation.getNumCommits(), numCommits);
     }
 
-    @Test
-    public void aggregatingCommits_shouldGiveValidLinesAdded() {
-        //TODO: Additions should come form PullRequests.
-//        List<Commit> commits = new ArrayList<>();
-//
-//        int totalLines = 0;
-//
-//        for (int i = 0; i < 10; i++) {
-//            int numLines = new Random().nextInt(1000);
-//            Commit commit = mock(Commit.class);
-//            when(commit.getAdditions()).thenReturn(numLines);
-//            commits.add(commit);
-//            totalLines += numLines;
-//        }
-//
-//        CommitAggregation commitAggregation = CommitAggregation.aggregate(commits);
-//        assertEquals(commitAggregation.getLinesAdded(), totalLines);
-    }
-
-    @Test
-    public void aggregatingCommits_shouldGiveValidLinesRemoved() {
-        //TODO: Additions should come form PullRequests.
-//        List<Commit> commits = new ArrayList<>();
-//
-//        int totalLines = 0;
-//
-//        for (int i = 0; i < 10; i++) {
-//            int numLines = new Random().nextInt(1000);
-//            Commit commit = mock(Commit.class);
-//            when(commit.getDeletions()).thenReturn(numLines);
-//            commits.add(commit);
-//            totalLines += numLines;
-//        }
-//
-//        CommitAggregation commitAggregation = CommitAggregation.aggregate(commits);
-//        assertEquals(commitAggregation.getLinesRemoved(), totalLines);
-    }
-
 }
