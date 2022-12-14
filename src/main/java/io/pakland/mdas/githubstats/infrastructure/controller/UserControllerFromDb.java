@@ -43,38 +43,31 @@ public class UserControllerFromDb {
         User user = getUserByLogin.execute(userOptionRequest.getUserName());
 
         List<Commit> userCommits = new ArrayList<>();
-        List<PullRequest> userPullRequests = new ArrayList<>();
 
-        orgs.forEach(org -> {
-            org.getTeams().forEach(team -> {
-                team.getRepositories().forEach(repo -> {
-                    repo.getPullRequests().forEach(pull -> {
+        List<PullRequest> pullRequests = orgs.stream()
+            .flatMap(org -> org.getTeams().stream())
+            .flatMap(team -> team.getRepositories().stream())
+            .flatMap(repo -> repo.getPullRequests().stream())
+            .filter(pull -> pull.isClosed() && pull.isCreatedByUser(user))
+            .toList();
 
-                        // PRs merged
-                        if (pull.isClosed() && pull.isCreatedByUser(user)) {
-                            userPullRequests.add(pull);
-                        }
+        pullRequests.forEach(pull -> {
+            List<Commit> commits = pull.getCommitsByUser(user);
+            userCommits.addAll(commits);
 
-                        List<Commit> commits = pull.getCommitsByUser(user);
-                        userCommits.addAll(commits);
+            CommitAggregation commitAggregation = new AggregateCommits().execute(commits);
+            int linesAdded = commitAggregation.getLinesAdded();
+            int linesRemoved = commitAggregation.getLinesRemoved();
+            // aggregate additions, deletions
 
-                        CommitAggregation commitAggregation = new AggregateCommits().execute(commits);
-                        int linesAdded = commitAggregation.getLinesAdded();
-                        int linesRemoved = commitAggregation.getLinesRemoved();
-                        // aggregate additions, deletions
+            List<UserReview> userReviews = pull.getReviewsFromUser(user);
 
-                        List<UserReview> userReviews = pull.getReviewsFromUser(user);
-
-                        long numReviewsInsideTeam = userReviews
-                                .stream()
-                                .filter(review -> review.isReviewFromTeam(team))
-                                .count();
-                        long numReviewsOutsideTeam = userReviews.size() - numReviewsInsideTeam;
-                        // aggregate numReviewsInsideTeam, numReviewsOutsideTeam
-
-                    });
-                });
-            });
+            long numReviewsInsideTeam = userReviews
+                    .stream()
+                    .filter(review -> review.isReviewFromTeam(pull.getRepository().getTeam()))
+                    .count();
+            long numReviewsOutsideTeam = userReviews.size() - numReviewsInsideTeam;
+            // aggregate numReviewsInsideTeam, numReviewsOutsideTeam
         });
 
         // TODO: aggregate_orchestrator(AggregateCommits, AggregateUserReviews, AggregatePullRequests)
