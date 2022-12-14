@@ -5,36 +5,34 @@ import io.pakland.mdas.githubstats.domain.PullRequest;
 import io.pakland.mdas.githubstats.domain.PullRequestState;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository.FetchPullRequestFromRepositoryRequest;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 public class FetchPullRequestsFromRepository {
 
     private final PullRequestExternalRepository pullRequestExternalRepository;
 
     public FetchPullRequestsFromRepository(
-        PullRequestExternalRepository pullRequestExternalRepository) {
+            PullRequestExternalRepository pullRequestExternalRepository) {
         this.pullRequestExternalRepository = pullRequestExternalRepository;
     }
 
     public List<PullRequest> execute(String repositoryOwnerLogin, String repositoryName)
-        throws HttpException {
+            throws HttpException {
         int page = 1;
         List<PullRequest> pullRequestList = new ArrayList<>();
         int responseResults;
         do {
             FetchPullRequestFromRepositoryRequest request = FetchPullRequestFromRepositoryRequest.builder()
-                .repositoryOwner(repositoryOwnerLogin)
-                .repository(repositoryName)
-                .page(page)
-                .perPage(100)
-                .state(PullRequestState.ALL)
-                .build();
+                    .repositoryOwner(repositoryOwnerLogin)
+                    .repository(repositoryName)
+                    .page(page)
+                    .perPage(100)
+                    .state(PullRequestState.ALL)
+                    .build();
             List<PullRequest> apiResults = this.pullRequestExternalRepository.fetchPullRequestsFromRepository(
-                request);
+                    request);
 
             pullRequestList.addAll(apiResults);
             responseResults = apiResults.size();

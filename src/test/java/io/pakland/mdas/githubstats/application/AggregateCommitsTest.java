@@ -10,7 +10,6 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class AggregateCommitsTest {
 
@@ -26,42 +25,6 @@ public class AggregateCommitsTest {
 
         CommitAggregation commitAggregation = CommitAggregation.aggregate(commits);
         assertEquals(commitAggregation.getNumCommits(), numCommits);
-    }
-
-    @Test
-    public void aggregatingCommits_shouldGiveValidLinesAdded() {
-        List<Commit> commits = new ArrayList<>();
-
-        int totalLines = 0;
-
-        for (int i = 0; i < 10; i++) {
-            int numLines = new Random().nextInt(1000);
-            Commit commit = mock(Commit.class);
-            when(commit.getAdditions()).thenReturn(numLines);
-            commits.add(commit);
-            totalLines += numLines;
-        }
-
-        CommitAggregation commitAggregation = CommitAggregation.aggregate(commits);
-        assertEquals(commitAggregation.getLinesAdded(), totalLines);
-    }
-
-    @Test
-    public void aggregatingCommits_shouldGiveValidLinesRemoved() {
-        List<Commit> commits = new ArrayList<>();
-
-        int totalLines = 0;
-
-        for (int i = 0; i < 10; i++) {
-            int numLines = new Random().nextInt(1000);
-            Commit commit = mock(Commit.class);
-            when(commit.getDeletions()).thenReturn(numLines);
-            commits.add(commit);
-            totalLines += numLines;
-        }
-
-        CommitAggregation commitAggregation = CommitAggregation.aggregate(commits);
-        assertEquals(commitAggregation.getLinesRemoved(), totalLines);
     }
 
 }
