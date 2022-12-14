@@ -1,8 +1,8 @@
 package io.pakland.mdas.githubstats.infrastructure.controller;
 
-import io.pakland.mdas.githubstats.application.AggregateCommits;
 import io.pakland.mdas.githubstats.application.FetchAvailableOrganizations;
 import io.pakland.mdas.githubstats.application.GetUserByLogin;
+import io.pakland.mdas.githubstats.application.OrchestrateAggregators;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.exceptions.UserLoginNotFound;
 import io.pakland.mdas.githubstats.domain.*;
@@ -11,7 +11,6 @@ import io.pakland.mdas.githubstats.infrastructure.github.repository.Organization
 import io.pakland.mdas.githubstats.infrastructure.github.repository.WebClientConfiguration;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.UserOptionRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserControllerFromDb {
@@ -42,8 +41,6 @@ public class UserControllerFromDb {
 
         User user = getUserByLogin.execute(userOptionRequest.getUserName());
 
-        List<Commit> userCommits = new ArrayList<>();
-
         List<PullRequest> pullRequests = orgs.stream()
             .flatMap(org -> org.getTeams().stream())
             .flatMap(team -> team.getRepositories().stream())
@@ -51,26 +48,8 @@ public class UserControllerFromDb {
             .filter(pull -> pull.isClosed() && pull.isCreatedByUser(user))
             .toList();
 
-        pullRequests.forEach(pull -> {
-            List<Commit> commits = pull.getCommitsByUser(user);
-            userCommits.addAll(commits);
-
-            CommitAggregation commitAggregation = new AggregateCommits().execute(commits);
-            int linesAdded = commitAggregation.getLinesAdded();
-            int linesRemoved = commitAggregation.getLinesRemoved();
-            // aggregate additions, deletions
-
-            List<UserReview> userReviews = pull.getReviewsFromUser(user);
-
-            long numReviewsInsideTeam = userReviews
-                    .stream()
-                    .filter(review -> review.isReviewFromTeam(pull.getRepository().getTeam()))
-                    .count();
-            long numReviewsOutsideTeam = userReviews.size() - numReviewsInsideTeam;
-            // aggregate numReviewsInsideTeam, numReviewsOutsideTeam
-        });
-
-        // TODO: aggregate_orchestrator(AggregateCommits, AggregateUserReviews, AggregatePullRequests)
-
+        // TODO: we could have a chain of responsibility instead of a use case orchestrator
+        OrchestrateAggregators orchestrator = new OrchestrateAggregators();
+        orchestrator.execute(user, pullRequests);
     }
 }
