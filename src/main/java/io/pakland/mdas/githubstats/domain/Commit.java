@@ -1,6 +1,7 @@
 package io.pakland.mdas.githubstats.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.Instant;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -31,7 +32,8 @@ public class Commit {
     private PullRequest pullRequest;
 
     @JsonProperty("commit")
-    private void unpackDateFromNestedObject(Map<String, Object> commit) {
-        //        this.date = Date.from(Instant.parse(commiter.get("date").toString()));
+    private void unpackDateFromNestedObject(Map<String, Object> commitJson) {
+        Map<String, Object> committer = (Map<String, Object>)commitJson.get("committer");
+        this.date = Date.from(Instant.parse(committer.get("date").toString()));
     }
 }

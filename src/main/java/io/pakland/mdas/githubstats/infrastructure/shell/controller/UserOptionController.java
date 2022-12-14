@@ -76,10 +76,9 @@ public class UserOptionController {
                                 TODO: if the user of the PR belongs to the team, increment the prs executed inside the team,
                                 TODO: else increment the prs executed outside the team.
                             */
-                            // TODO: Save for later calculate the Additions, Deletionjs and commit num. from PR aggregation.
+                            // TODO: Save for later calculate the additions, deletions and commit num. from PR aggregation.
                             List<Commit> commitList = new FetchCommitsFromPullRequest(commitExternalRepository)
                                     .execute(repository.getOwnerLogin(), repository.getName(), pullRequest.getNumber());
-                            logger.info(String.valueOf(commitList.size()));
                             for (Commit commit : commitList) {
                                 // TODO: Fetch PR reviews.
 

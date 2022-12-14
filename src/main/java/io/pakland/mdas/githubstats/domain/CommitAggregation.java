@@ -15,5 +15,5 @@ public class CommitAggregation {
     public int getNumCommits() {
         return numCommits;
     }
-    
+
 }
