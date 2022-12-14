@@ -8,18 +8,18 @@ import org.mockito.Mockito;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GetOrganizationFromIdTest {
     @Test
     public void givenValidId_shouldReturnTrue() throws OrganizationNotFound {
         OrganizationRepository organizationMock = Mockito.mock(OrganizationRepository.class);
-        Mockito.when(organizationMock.findById(Mockito.anyInt())).thenReturn(Optional.of(new Organization()));
+        Organization organization = new Organization();
+        Mockito.when(organizationMock.findById(Mockito.anyInt())).thenReturn(Optional.of(organization));
 
         GetOrganizationFromId useCase = new GetOrganizationFromId(organizationMock);
 
-        assertTrue(useCase.execute(1));
+        assertEquals(useCase.execute(1), organization);
     }
 
     @Test
