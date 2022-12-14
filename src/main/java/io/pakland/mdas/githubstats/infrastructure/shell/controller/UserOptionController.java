@@ -53,6 +53,7 @@ public class UserOptionController {
                         .execute(organization.getLogin());
 
                 for (Team team : teamList) {
+                    organization.addTeam(team);
                     // Fetch the members of each team.
                     List<User> userList = new FetchUsersFromTeam(userExternalRepository)
                             .execute(organization.getLogin(), team.getSlug());
@@ -64,6 +65,7 @@ public class UserOptionController {
                     repositoryList.forEach(r -> r.setTeam(team));
 
                     for (Repository repository : repositoryList) {
+                        team.addRepository(repository);
                         // Fetch pull requests from each team.
                         List<PullRequest> pullRequestList = new FetchPullRequestsFromRepository(
                                 pullRequestExternalRepository)
@@ -89,10 +91,7 @@ public class UserOptionController {
                     }
 
                     team.setUsers(userList);
-                    team.setRepositories(repositoryList);
                 }
-
-                organization.setTeams(teamList);
             }
         } catch (HttpException e) {
             throw new RuntimeException(e);
