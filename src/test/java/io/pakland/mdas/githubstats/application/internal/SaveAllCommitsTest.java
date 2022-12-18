@@ -1,5 +1,6 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.application.internal;
 
+import io.pakland.mdas.githubstats.application.internal.SaveAllCommits;
 import io.pakland.mdas.githubstats.domain.entity.Commit;
 import io.pakland.mdas.githubstats.domain.repository.CommitRepository;
 import org.junit.jupiter.api.Test;

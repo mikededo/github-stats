@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.application.unused;
 
 import io.pakland.mdas.githubstats.application.unnused.GetTeamsFromOrganization;
 import io.pakland.mdas.githubstats.domain.entity.Organization;

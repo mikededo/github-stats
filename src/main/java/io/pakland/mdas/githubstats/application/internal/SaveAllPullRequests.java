@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.application.internal;
 
 import io.pakland.mdas.githubstats.domain.entity.PullRequest;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestRepository;

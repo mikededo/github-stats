@@ -1,5 +1,6 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.application.internal;
 
+import io.pakland.mdas.githubstats.application.internal.SaveAllTeams;
 import io.pakland.mdas.githubstats.domain.entity.Team;
 import io.pakland.mdas.githubstats.domain.repository.TeamRepository;
 import org.junit.jupiter.api.Test;
