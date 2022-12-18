@@ -30,8 +30,8 @@ public class OrchestrateAggregators {
             List<Commit> commits = pull.getCommitsByUser(user);
 
             CommitAggregation commitAggregation = new AggregateCommits().execute(commits);
-            int linesAdded = commitAggregation.getLinesAdded();
-            int linesRemoved = commitAggregation.getLinesRemoved();
+            //int linesAdded = commitAggregation.getLinesAdded();
+            //int linesRemoved = commitAggregation.getLinesRemoved();
             // aggregate additions, deletions
 
             List<UserReview> userReviews = pull.getReviewsFromUser(user);
