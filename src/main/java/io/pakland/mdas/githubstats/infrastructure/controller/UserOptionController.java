@@ -4,8 +4,8 @@ import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.external.*;
 import io.pakland.mdas.githubstats.domain.entity.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
+import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
-import io.pakland.mdas.githubstats.infrastructure.shell.model.UserOptionRequest;
 import java.util.List;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class UserOptionController {
     private PullRequestExternalRepository pullRequestExternalRepository;
     private CommitExternalRepository commitExternalRepository;
 
-    public UserOptionController(UserOptionRequest userOptionRequest) {
+    public UserOptionController(GitHubUserOptionRequest userOptionRequest) {
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(
             "https://api.github.com", userOptionRequest.getApiKey());
         this.organizationExternalRepository = new OrganizationGitHubRepository(

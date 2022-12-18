@@ -2,6 +2,7 @@ package io.pakland.mdas.githubstats.infrastructure.shell.components;
 
 
 import io.pakland.mdas.githubstats.infrastructure.controller.UserOptionController;
+import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.UserOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.DateValidator;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.UserNameValidator;
@@ -45,7 +46,9 @@ public class UserOptionComponent {
         }
 
         UserOptionController userControllerFromGithub = new UserOptionController(
-            this.userOptionRequest);
+            GitHubUserOptionRequest.builder().userName(
+                    userOptionRequest.getUserName()).apiKey(userOptionRequest.getApiKey())
+                .from(userOptionRequest.getFrom()).to(userOptionRequest.getTo()).build());
         userControllerFromGithub.execute();
         // ... Perform request ...
 
