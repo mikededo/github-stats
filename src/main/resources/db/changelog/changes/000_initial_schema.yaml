@@ -45,6 +45,12 @@ databaseChangeLog:
               - column:
                   name: user_id
                   type: INT
+              - column:
+                  name: additions
+                  type: INT
+              - column:
+                  name: deletions
+                  type: INT
             tableName: commit
   - changeSet:
       id: 1669767244074-3
