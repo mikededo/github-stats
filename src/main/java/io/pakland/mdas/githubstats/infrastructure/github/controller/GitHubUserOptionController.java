@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.infrastructure.controller;
+package io.pakland.mdas.githubstats.infrastructure.github.controller;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.external.*;
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @NoArgsConstructor
-public class UserOptionController {
+public class GitHubUserOptionController {
 
-    Logger logger = LoggerFactory.getLogger(UserOptionController.class);
+    Logger logger = LoggerFactory.getLogger(GitHubUserOptionController.class);
     private OrganizationExternalRepository organizationExternalRepository;
     private TeamExternalRepository teamExternalRepository;
     private UserExternalRepository userExternalRepository;
@@ -24,7 +24,7 @@ public class UserOptionController {
     private PullRequestExternalRepository pullRequestExternalRepository;
     private CommitExternalRepository commitExternalRepository;
 
-    public UserOptionController(GitHubUserOptionRequest userOptionRequest) {
+    public GitHubUserOptionController(GitHubUserOptionRequest userOptionRequest) {
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(
             "https://api.github.com", userOptionRequest.getApiKey());
         this.organizationExternalRepository = new OrganizationGitHubRepository(
