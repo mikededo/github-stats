@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import io.pakland.mdas.githubstats.domain.entity.Organization;
+import io.pakland.mdas.githubstats.domain.entity.Team;
 import java.util.Collections;
 import java.util.HashSet;
 import org.junit.jupiter.api.Test;

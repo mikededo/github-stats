@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RepositoryRepository extends JpaRepository<io.pakland.mdas.githubstats.domain.Repository, Integer> {
+public interface RepositoryRepository extends JpaRepository<io.pakland.mdas.githubstats.domain.entity.Repository, Integer> {
 }

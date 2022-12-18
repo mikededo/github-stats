@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.application;
 
-import io.pakland.mdas.githubstats.domain.Repository;
+import io.pakland.mdas.githubstats.domain.entity.Repository;
 import io.pakland.mdas.githubstats.domain.repository.RepositoryRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

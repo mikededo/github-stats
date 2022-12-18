@@ -1,8 +1,8 @@
 package io.pakland.mdas.githubstats.application;
 
 import io.pakland.mdas.githubstats.application.unnused.GetRepositoriesByTeam;
-import io.pakland.mdas.githubstats.domain.Repository;
-import io.pakland.mdas.githubstats.domain.Team;
+import io.pakland.mdas.githubstats.domain.entity.Repository;
+import io.pakland.mdas.githubstats.domain.entity.Team;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

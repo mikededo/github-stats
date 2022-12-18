@@ -1,8 +1,8 @@
 package io.pakland.mdas.githubstats.application.unnused;
 
 import io.pakland.mdas.githubstats.application.exceptions.TeamNotFound;
-import io.pakland.mdas.githubstats.domain.Organization;
-import io.pakland.mdas.githubstats.domain.Team;
+import io.pakland.mdas.githubstats.domain.entity.Organization;
+import io.pakland.mdas.githubstats.domain.entity.Team;
 import io.pakland.mdas.githubstats.domain.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 
