@@ -6,19 +6,22 @@
 
 Command definition:
 
-```
-login - Log in to the Github API before making any requests.
-Usage: login --token <TOKEN>
+```sh
+user # Get data from a specified user.
+Usage: user -n <github-user-name> -k <github-api-key> --from <from-date> --to <to-date>
+    FROM_DATE: month and year in MM/yy format (starting Jan 2000)
+    TO_DATE: same format as FROM_DATE, accepts until current_month - 1
 
-team - Get data from a specified team and its sub teams.
+team # Get data from a specified team and its sub teams.
 Usage: team -n <NAME> --from <FROM_DATE> --to <TO_DATE>
     FROM_DATE: month and year in MM/yy format (starting Jan 2000)
     TO_DATE: same format as FROM_DATE, accepts until current_month - 1 
-
-user - Get data from a specified user.
-Usage: user -n <NAME> --from <FROM_DATE> --to <TO_DATE>
-    FROM_DATE: month and year in MM/yy format (starting Jan 2000)
-    TO_DATE: same format as FROM_DATE, accepts until current_month - 1
+    
+# You can find the available commands running
+help
+# and also help for each command
+user help ...
+team help ...
 ```
 
 ## Software stack

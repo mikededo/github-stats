@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.domain.PullRequest;
+import io.pakland.mdas.githubstats.domain.entity.PullRequest;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository;
 import java.util.List;
 import org.slf4j.Logger;

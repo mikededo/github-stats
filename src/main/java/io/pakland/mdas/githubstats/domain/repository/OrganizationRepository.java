@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.domain.repository;
 
-import io.pakland.mdas.githubstats.domain.Organization;
+import io.pakland.mdas.githubstats.domain.entity.Organization;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

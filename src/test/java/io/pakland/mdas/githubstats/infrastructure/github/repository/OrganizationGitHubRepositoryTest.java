@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.domain.Organization;
+import io.pakland.mdas.githubstats.domain.entity.Organization;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
