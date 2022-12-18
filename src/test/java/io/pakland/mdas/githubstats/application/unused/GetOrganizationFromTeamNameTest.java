@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.application.unused;
 
 import io.pakland.mdas.githubstats.application.exceptions.TeamNotFound;
 import io.pakland.mdas.githubstats.application.unnused.GetOrganizationFromTeamName;

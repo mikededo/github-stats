@@ -1,5 +1,7 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.application.internal;
 
+import io.pakland.mdas.githubstats.application.internal.AggregateCommits;
+import io.pakland.mdas.githubstats.application.internal.AggregateUserReviews;
 import io.pakland.mdas.githubstats.domain.entity.*;
 import org.springframework.stereotype.Service;
 

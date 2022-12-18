@@ -1,6 +1,7 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.application.internal;
 
 import io.pakland.mdas.githubstats.application.exceptions.OrganizationNotFound;
+import io.pakland.mdas.githubstats.application.internal.GetOrganizationFromId;
 import io.pakland.mdas.githubstats.domain.entity.Organization;
 import io.pakland.mdas.githubstats.domain.repository.OrganizationRepository;
 import org.junit.jupiter.api.Test;

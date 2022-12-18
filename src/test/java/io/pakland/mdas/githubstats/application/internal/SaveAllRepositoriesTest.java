@@ -1,5 +1,6 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.application.internal;
 
+import io.pakland.mdas.githubstats.application.internal.SaveAllRepositories;
 import io.pakland.mdas.githubstats.domain.entity.Repository;
 import io.pakland.mdas.githubstats.domain.repository.RepositoryRepository;
 import org.junit.jupiter.api.Test;
