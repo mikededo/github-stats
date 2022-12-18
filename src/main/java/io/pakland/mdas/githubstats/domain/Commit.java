@@ -1,11 +1,14 @@
 package io.pakland.mdas.githubstats.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.Instant;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.Instant;
+import java.util.Date;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +19,11 @@ public class Commit {
 
     @Id
     @Column(updatable = false, nullable = false)
-    private Integer id;
+    @JsonProperty("sha")
+    private String sha;
+
+    @Column(name = "date")
+    private Date date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -24,22 +31,9 @@ public class Commit {
     @ManyToOne(fetch = FetchType.LAZY)
     private PullRequest pullRequest;
 
-    private int additions;
-
-    private int deletions;
-
-    private Instant created_at;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Commit)) return false;
-        return id != null && id.equals(((Commit) o).getId());
+    @JsonProperty("commit")
+    private void unpackDateFromNestedObject(Map<String, Object> commitJson) {
+        Map<String, Object> committer = (Map<String, Object>)commitJson.get("committer");
+        this.date = Date.from(Instant.parse(committer.get("date").toString()));
     }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
-
 }
