@@ -7,7 +7,7 @@ import io.pakland.mdas.githubstats.domain.repository.UserExternalRepository;
 import java.util.List;
 
 public class FetchUsersFromTeam {
-    private UserExternalRepository userExternalRepository;
+    private final UserExternalRepository userExternalRepository;
 
 
     public FetchUsersFromTeam(UserExternalRepository userExternalRepository) {
