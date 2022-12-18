@@ -129,6 +129,9 @@ databaseChangeLog:
               - column:
                   name: repository_id
                   type: INT
+              - column:
+                  name: user_id
+                  type: INT
             tableName: pull_request
   - changeSet:
       id: 1669767244074-6
@@ -367,4 +370,18 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: organization
             validate: true
-
+  - changeSet:
+      id: 1669767244074-20
+      author: Paco Lozano
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: pull_request
+            constraintName: user_id_fk
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: user
+            validate: true

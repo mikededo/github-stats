@@ -36,6 +36,20 @@ public class PullRequest {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @OneToMany(
+            mappedBy = "pullRequest",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Commit> commits = new ArrayList<>();
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "pullRequest",
+            orphanRemoval = true
+    )
+    private List<UserReview> userReviews = new ArrayList<>();
+
     public List<Commit> getCommitsByUser(User user) {
       return commits
           .stream()
@@ -58,10 +72,4 @@ public class PullRequest {
           .toList();
     }
 
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            mappedBy = "pullRequest",
-            orphanRemoval = true
-    )
-    private List<UserReview> userReviews = new ArrayList<>();
 }
