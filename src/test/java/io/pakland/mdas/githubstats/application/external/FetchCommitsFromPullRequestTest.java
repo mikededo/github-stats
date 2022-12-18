@@ -1,6 +1,7 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.application.external;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.application.external.FetchCommitsFromPullRequest;
 import io.pakland.mdas.githubstats.domain.entity.Commit;
 import io.pakland.mdas.githubstats.domain.repository.CommitExternalRepository;
 import io.pakland.mdas.githubstats.domain.repository.CommitExternalRepository.FetchCommitsFromPullRequestRequest;

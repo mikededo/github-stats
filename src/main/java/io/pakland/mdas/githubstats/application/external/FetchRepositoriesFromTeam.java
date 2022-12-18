@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.application.external;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.entity.Repository;

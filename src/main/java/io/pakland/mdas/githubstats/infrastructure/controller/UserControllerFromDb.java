@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.infrastructure.controller;
 
-import io.pakland.mdas.githubstats.application.FetchAvailableOrganizations;
+import io.pakland.mdas.githubstats.application.external.FetchAvailableOrganizations;
 import io.pakland.mdas.githubstats.application.internal.GetUserByLogin;
 import io.pakland.mdas.githubstats.application.internal.OrchestrateAggregators;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
