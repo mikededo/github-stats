@@ -1,6 +1,7 @@
 package io.pakland.mdas.githubstats.application;
 
 import io.pakland.mdas.githubstats.application.exceptions.TeamNotFound;
+import io.pakland.mdas.githubstats.application.unnused.GetOrganizationFromTeamName;
 import io.pakland.mdas.githubstats.domain.Organization;
 import io.pakland.mdas.githubstats.domain.Team;
 import io.pakland.mdas.githubstats.domain.repository.TeamRepository;

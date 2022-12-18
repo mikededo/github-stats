@@ -29,28 +29,39 @@ public class PullRequest {
     @JsonProperty("state")
     private PullRequestState state;
 
-    @Column(name = "additions")
-    @JsonProperty("additions")
-    private Integer additions;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Repository repository;
 
-    @Column(name = "deletions")
-    @JsonProperty("deletions")
-    private Integer deletions;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+    public List<Commit> getCommitsByUser(User user) {
+      return commits
+          .stream()
+          .filter(commit -> commit.getUser().equals(user))
+          .toList();
+    }
+
+    public boolean isClosed() {
+      return state.equals(PullRequestState.CLOSED);
+    }
+
+    public boolean isCreatedByUser(User user) {
+      return this.user.equals(user);
+    }
+
+    public List<UserReview> getReviewsFromUser(User user) {
+      return userReviews
+          .stream()
+          .filter(x -> x.getUser().equals(user))
+          .toList();
+    }
 
     @OneToMany(
-            mappedBy = "pullRequest",
             cascade = CascadeType.ALL,
+            mappedBy = "pullRequest",
             orphanRemoval = true
     )
     private List<UserReview> userReviews = new ArrayList<>();
-
-    @OneToMany(
-            mappedBy = "pullRequest",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<Commit> commits = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Repository repository;
 }

@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.application.unnused;
 
 import io.pakland.mdas.githubstats.domain.Repository;
 import io.pakland.mdas.githubstats.domain.Team;

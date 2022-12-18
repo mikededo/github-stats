@@ -4,16 +4,18 @@ import java.util.List;
 
 public class UserReviewAggregation {
 
-    private int commentLengthSum;
+    private int commentLengthSum = 0;
+    private int commentCount = 0;
 
-    public static UserReviewAggregation aggregate(List<UserReview> userReviews) {
-        UserReviewAggregation userReviewAggregation = new UserReviewAggregation();
-        userReviewAggregation.commentLengthSum = userReviews.stream().mapToInt(UserReview::sumCommentLength).sum();
-        return userReviewAggregation;
+    public UserReviewAggregation aggregate(List<UserReview> userReviews) {
+        commentCount = userReviews.size();
+        commentLengthSum = userReviews.stream().mapToInt(UserReview::sumCommentLength).sum();
+        return this;
     }
 
-    public int getCommentLengthSum() {
-        return commentLengthSum;
+    public float getCommentLengthAvg() {
+        if(commentCount == 0) return 0;
+        return (float) commentLengthSum / commentCount;
     }
 
 }

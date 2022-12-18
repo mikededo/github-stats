@@ -67,9 +67,9 @@ class UserGitHubRepositoryTest {
 
         List<User> response = userGitHubRepository.fetchUsersFromTeam(this.organizationName, this.teamName);
         List<User> expected = new ArrayList<>();
-        expected.add(0, new User(33031570, "manerow", null, new ArrayList<>(), new ArrayList<>()));
-        expected.add(1, new User(48334745, "mikededo", null, new ArrayList<>(), new ArrayList<>()));
-        expected.add(2, new User(54351560, "sdomingobasora", null, new ArrayList<>(), new ArrayList<>()));
+        expected.add(0, new User(33031570, "manerow", null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        expected.add(1, new User(48334745, "mikededo", null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        expected.add(2, new User(54351560, "sdomingobasora", null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
 
         assertEquals(3, response.size());
         assertArrayEquals(response.toArray(), expected.toArray());
