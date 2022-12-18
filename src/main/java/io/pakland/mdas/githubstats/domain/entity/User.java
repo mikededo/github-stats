@@ -18,11 +18,9 @@ public class User {
 
   @Id
   @Column(updatable = false, nullable = false)
-  @JsonProperty("id")
   private Integer id;
 
   @Column(name = "login")
-  @JsonProperty("login")
   private String login;
 
   @ManyToOne(fetch = FetchType.LAZY)
