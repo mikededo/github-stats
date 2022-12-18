@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.application;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.domain.User;
+import io.pakland.mdas.githubstats.domain.entity.User;
 import io.pakland.mdas.githubstats.domain.repository.UserExternalRepository;
 
 import java.util.List;

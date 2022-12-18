@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.application;
 
-import io.pakland.mdas.githubstats.domain.Commit;
-import io.pakland.mdas.githubstats.domain.CommitAggregation;
+import io.pakland.mdas.githubstats.domain.entity.Commit;
+import io.pakland.mdas.githubstats.domain.entity.CommitAggregation;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

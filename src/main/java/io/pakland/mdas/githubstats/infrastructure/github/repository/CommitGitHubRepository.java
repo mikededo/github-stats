@@ -2,8 +2,7 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.domain.Commit;
-import io.pakland.mdas.githubstats.domain.PullRequest;
+import io.pakland.mdas.githubstats.domain.entity.Commit;
 import io.pakland.mdas.githubstats.domain.repository.CommitExternalRepository;
 import lombok.Data;
 import org.slf4j.Logger;

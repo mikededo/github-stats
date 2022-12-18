@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.application;
 
-import io.pakland.mdas.githubstats.domain.*;
+import io.pakland.mdas.githubstats.domain.entity.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.domain;
+package io.pakland.mdas.githubstats.domain.entity;
 
 import java.util.Map;
 import javax.persistence.*;

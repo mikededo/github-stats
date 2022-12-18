@@ -1,8 +1,7 @@
 package io.pakland.mdas.githubstats.application;
 
-import io.pakland.mdas.githubstats.application.exceptions.OrganizationNotFound;
 import io.pakland.mdas.githubstats.application.exceptions.UserLoginNotFound;
-import io.pakland.mdas.githubstats.domain.User;
+import io.pakland.mdas.githubstats.domain.entity.User;
 import io.pakland.mdas.githubstats.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

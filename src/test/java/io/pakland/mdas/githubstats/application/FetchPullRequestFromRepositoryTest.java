@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.domain.PullRequest;
-import io.pakland.mdas.githubstats.domain.PullRequestState;
+import io.pakland.mdas.githubstats.domain.entity.PullRequest;
+import io.pakland.mdas.githubstats.domain.entity.PullRequestState;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository.FetchPullRequestFromRepositoryRequest;
 import java.util.ArrayList;

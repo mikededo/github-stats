@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.domain;
+package io.pakland.mdas.githubstats.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.*;
