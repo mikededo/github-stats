@@ -14,8 +14,6 @@ import org.springframework.shell.standard.ShellOption;
 @ShellComponent
 public class UserOptionComponent {
 
-    private UserOptionRequest userOptionRequest;
-
     private boolean user(
         @ShellOption(value = {"n"}) String userName,
         @ShellOption(value = {"key"}) String apiKey,
@@ -34,8 +32,9 @@ public class UserOptionComponent {
             return false;
         }
 
+        UserOptionRequest userOptionRequest;
         try {
-            this.userOptionRequest = UserOptionRequest.builder()
+            userOptionRequest = UserOptionRequest.builder()
                 .userName(userName)
                 .apiKey(apiKey)
                 .from(new SimpleDateFormat("dd/MM/yy").parse("01/" + fromDate))
@@ -46,11 +45,11 @@ public class UserOptionComponent {
         }
 
         GitHubUserOptionController userControllerFromGithub = new GitHubUserOptionController(
-            GitHubUserOptionRequest.builder().userName(
-                    userOptionRequest.getUserName()).apiKey(userOptionRequest.getApiKey())
+            GitHubUserOptionRequest.builder()
+                .userName(userOptionRequest.getUserName()).apiKey(userOptionRequest.getApiKey())
                 .from(userOptionRequest.getFrom()).to(userOptionRequest.getTo()).build());
+
         userControllerFromGithub.execute();
-        // ... Perform request ...
 
         return true;
     }
