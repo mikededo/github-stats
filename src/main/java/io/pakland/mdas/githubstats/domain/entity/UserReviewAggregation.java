@@ -18,4 +18,16 @@ public class UserReviewAggregation {
         return (float) commentLengthSum / commentCount;
     }
 
+    public String toCSV() {
+        String sep = ",";
+        String lineSep = "\n";
+
+        List<String> metrics = List.of("commentLengthAvg");
+        List<Object> data = List.of(getCommentLengthAvg());
+
+        String header = String.join(sep, metrics);
+        String body = String.join(sep, data.stream().map(Object::toString).toList());
+
+        return header + lineSep + body;
+    }
 }
