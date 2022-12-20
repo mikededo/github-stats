@@ -51,9 +51,9 @@ public class UserControllerFromDb {
         CommitAggregation commitAggregation = new AggregateCommits().execute(commits);
         UserReviewAggregation userReviewAggregation = new AggregateUserReviews().execute(userReviews);
 
-        System.out.println(pullRequestAggregation.toCSV());
-        System.out.println(commitAggregation.toCSV());
-        System.out.println(userReviewAggregation.toCSV());
+        String pullRequestCSV = pullRequestAggregation.toCSV();
+        String commitCSV = commitAggregation.toCSV();
+        String userReviewCSV = userReviewAggregation.toCSV();
 
         // TODO: cache in Redis and/or print CSVs to file
     }

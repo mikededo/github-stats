@@ -2,7 +2,7 @@ package io.pakland.mdas.githubstats.domain.entity;
 
 import java.util.List;
 
-public class UserReviewAggregation {
+public class UserReviewAggregation implements CSVExportable {
 
     private int commentLengthSum = 0;
     private int commentCount = 0;
@@ -18,6 +18,7 @@ public class UserReviewAggregation {
         return (float) commentLengthSum / commentCount;
     }
 
+    @Override
     public String toCSV() {
         String sep = ",";
         String lineSep = "\n";
