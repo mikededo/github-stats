@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.configuration;
 
-import io.pakland.mdas.githubstats.infrastructure.shell.components.TeamComponent;
+import io.pakland.mdas.githubstats.infrastructure.shell.components.TeamOptionComponent;
 import io.pakland.mdas.githubstats.infrastructure.shell.components.UserOptionComponent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,13 +54,13 @@ public class CommandConfiguration {
 
     @Bean
     public CommandRegistration buildTeamCommand() {
-        TeamComponent teamComponent = new TeamComponent();
+        TeamOptionComponent teamOptionComponent = new TeamOptionComponent();
 
         return CommandRegistration.builder()
                 .command("team")
                 .description("Get data from a specified team and its sub teams.")
             .withTarget()
-                .method(teamComponent, "team")
+                .method(teamOptionComponent, "team")
                 .and()
             .withOption()
                 .shortNames('n')

@@ -46,8 +46,11 @@ public class UserOptionComponent {
 
         GitHubUserOptionController userControllerFromGithub = new GitHubUserOptionController(
             GitHubUserOptionRequest.builder()
-                .userName(userOptionRequest.getUserName()).apiKey(userOptionRequest.getApiKey())
-                .from(userOptionRequest.getFrom()).to(userOptionRequest.getTo()).build());
+                .userName(userOptionRequest.getUserName())
+                .apiKey(userOptionRequest.getApiKey())
+                .from(userOptionRequest.getFrom())
+                .to(userOptionRequest.getTo())
+            .build());
 
         userControllerFromGithub.execute();
 
