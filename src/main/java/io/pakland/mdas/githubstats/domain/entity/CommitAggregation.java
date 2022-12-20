@@ -2,7 +2,7 @@ package io.pakland.mdas.githubstats.domain.entity;
 
 import java.util.List;
 
-public class CommitAggregation {
+public class CommitAggregation implements CSVExportable {
 
     private int numCommits;
 
@@ -26,6 +26,7 @@ public class CommitAggregation {
 
     public int getLinesRemoved() { return linesRemoved; }
 
+    @Override
     public String toCSV() {
         String sep = ",";
         String lineSep = "\n";
