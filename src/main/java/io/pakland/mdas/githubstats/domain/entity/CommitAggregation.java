@@ -26,4 +26,16 @@ public class CommitAggregation {
 
     public int getLinesRemoved() { return linesRemoved; }
 
+    public String toCSV() {
+        String sep = ",";
+        String lineSep = "\n";
+
+        List<String> metrics = List.of("numCommits", "linesAdded", "linesRemoved");
+        List<Object> data = List.of(numCommits, linesAdded, linesRemoved);
+
+        String header = String.join(sep, metrics);
+        String body = String.join(sep, data.stream().map(Object::toString).toList());
+
+        return header + lineSep + body;
+    }
 }
