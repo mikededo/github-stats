@@ -8,7 +8,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class UserReviewAggregationTest {
+public class UserReviewAggregationTest extends CSVTest {
 
     @Test
     public void emptyAggregationToCSV_shouldGiveValidCSV() {
@@ -23,16 +23,4 @@ public class UserReviewAggregationTest {
         assertTrue(isValidCSV(userReviewAggregation.toCSV()));
     }
 
-    private boolean isValidCSV(String candidate) {
-        List<String> lines = List.of(candidate.split("\n"));
-        if (lines.size() < 1) return false;
-
-        String header = lines.get(0);
-        if (header.isBlank()) return false;
-        else if (lines.size() == 1) return true;
-
-        List<String> fields = List.of(header.split(","));
-        long invalidLines = lines.stream().filter(line -> line.split(",").length != fields.size()).count();
-        return invalidLines == 0;
-    }
 }
