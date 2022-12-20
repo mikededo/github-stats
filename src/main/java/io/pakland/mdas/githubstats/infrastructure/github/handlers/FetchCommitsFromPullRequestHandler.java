@@ -24,8 +24,9 @@ public class FetchCommitsFromPullRequestHandler implements RequestHandler {
     }
 
     @Override
-    public void addNext(RequestHandler handler) {
+    public FetchCommitsFromPullRequestHandler addNext(RequestHandler handler) {
         // As of now, we do not need to run any handler
+        return this;
     }
 
     @Override

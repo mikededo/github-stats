@@ -24,8 +24,9 @@ public class FetchTeamFromOrganizationHandler implements RequestHandler {
     }
 
     @Override
-    public void addNext(RequestHandler handler) {
+    public FetchTeamFromOrganizationHandler addNext(RequestHandler handler) {
         this.next.add(handler);
+        return this;
     }
 
     @Override

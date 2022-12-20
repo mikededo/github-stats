@@ -26,8 +26,9 @@ public class FetchRepositoriesFromTeamHandler implements RequestHandler {
     }
 
     @Override
-    public void addNext(RequestHandler handler) {
+    public FetchRepositoriesFromTeamHandler addNext(RequestHandler handler) {
         this.next.add(handler);
+        return this;
     }
 
     @Override

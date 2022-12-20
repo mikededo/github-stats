@@ -21,8 +21,9 @@ public class FetchUsersFromTeamHandler implements RequestHandler {
     }
 
     @Override
-    public void addNext(RequestHandler handler) {
+    public FetchUsersFromTeamHandler addNext(RequestHandler handler) {
         // As of now, we do not need to run any handler
+        return this;
     }
 
     @Override

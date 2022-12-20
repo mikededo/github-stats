@@ -23,8 +23,9 @@ public class FetchOrganizationHandler implements RequestHandler {
     }
 
     @Override
-    public void addNext(RequestHandler handler) {
+    public FetchOrganizationHandler addNext(RequestHandler handler) {
         this.next.add(handler);
+        return this;
     }
 
     @Override

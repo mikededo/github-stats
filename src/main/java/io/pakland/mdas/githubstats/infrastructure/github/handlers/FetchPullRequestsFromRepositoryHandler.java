@@ -24,8 +24,9 @@ public class FetchPullRequestsFromRepositoryHandler implements RequestHandler {
     }
 
     @Override
-    public void addNext(RequestHandler handler) {
+    public FetchPullRequestsFromRepositoryHandler addNext(RequestHandler handler) {
         this.next.add(handler);
+        return this;
     }
 
     @Override
