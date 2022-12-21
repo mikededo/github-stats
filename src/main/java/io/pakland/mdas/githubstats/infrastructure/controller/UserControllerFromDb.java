@@ -1,13 +1,13 @@
 package io.pakland.mdas.githubstats.infrastructure.controller;
 
 import io.pakland.mdas.githubstats.application.external.FetchAvailableOrganizations;
+import io.pakland.mdas.githubstats.application.internal.AggregateCommits;
+import io.pakland.mdas.githubstats.application.internal.AggregatePullRequests;
+import io.pakland.mdas.githubstats.application.internal.AggregateUserReviews;
 import io.pakland.mdas.githubstats.application.internal.GetUserByLogin;
-import io.pakland.mdas.githubstats.application.internal.OrchestrateAggregators;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.exceptions.UserLoginNotFound;
-import io.pakland.mdas.githubstats.domain.entity.Organization;
-import io.pakland.mdas.githubstats.domain.entity.PullRequest;
-import io.pakland.mdas.githubstats.domain.entity.User;
+import io.pakland.mdas.githubstats.domain.entity.*;
 import io.pakland.mdas.githubstats.domain.repository.OrganizationExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.OrganizationGitHubRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.WebClientConfiguration;
@@ -43,15 +43,40 @@ public class UserControllerFromDb {
 
         User user = getUserByLogin.execute(userOptionRequest.getUserName());
 
-        List<PullRequest> pullRequests = orgs.stream()
+        List<PullRequest> pullRequests = getPullRequestsByUser(orgs, user);
+        List<Commit> commits = getCommitsByUser(pullRequests, user);
+        List<UserReview> userReviews = getUserReviewsByUser(pullRequests, user);
+
+        PullRequestAggregation pullRequestAggregation = new AggregatePullRequests().execute(pullRequests);
+        CommitAggregation commitAggregation = new AggregateCommits().execute(commits);
+        UserReviewAggregation userReviewAggregation = new AggregateUserReviews().execute(userReviews);
+
+        String pullRequestCSV = pullRequestAggregation.toCSV();
+        String commitCSV = commitAggregation.toCSV();
+        String userReviewCSV = userReviewAggregation.toCSV();
+
+        // TODO: cache in Redis and/or print CSVs to file
+    }
+
+    private List<PullRequest> getPullRequestsByUser(List<Organization> orgs, User user) {
+        return orgs.stream()
             .flatMap(org -> org.getTeams().stream())
             .flatMap(team -> team.getRepositories().stream())
             .flatMap(repo -> repo.getPullRequests().stream())
             .filter(pull -> pull.isClosed() && pull.isCreatedByUser(user))
             .toList();
-
-        // TODO: we could have a chain of responsibility instead of a use case orchestrator
-        OrchestrateAggregators orchestrator = new OrchestrateAggregators();
-        orchestrator.execute(user, pullRequests);
     }
+
+    private List<UserReview> getUserReviewsByUser(List<PullRequest> pullRequests, User user) {
+        return pullRequests.stream()
+            .flatMap(pull -> pull.getReviewsFromUser(user).stream())
+            .toList();
+    }
+
+    private List<Commit> getCommitsByUser(List<PullRequest> pullRequests, User user) {
+        return pullRequests.stream()
+            .flatMap(pull -> pull.getCommitsByUser(user).stream())
+            .toList();
+    }
+
 }
