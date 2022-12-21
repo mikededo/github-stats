@@ -23,6 +23,7 @@ public class Commit {
     private String sha;
 
     @Column(name = "date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
     @ManyToOne(fetch = FetchType.LAZY)

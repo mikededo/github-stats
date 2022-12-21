@@ -1,131 +1,149 @@
 databaseChangeLog:
   - changeSet:
-      id: 1669767244074-1
-      author: Paco Lozano
+      id: 1
+      author: Paco_Lozano
       changes:
         - createTable:
+            tableName: organization
             columns:
               - column:
-                  autoIncrement: false
-                  constraints:
-                    nullable: false
-                    primaryKey: true
-                    primaryKeyName: comment_pkey
                   name: id
                   type: INT
-              - column:
+                  autoIncrement: true
                   constraints:
-                    nullable: false
-                  name: length
-                  type: INTEGER
-              - column:
-                  name: user_review_id
-                  type: INT
-            tableName: comment
-  - changeSet:
-      id: 1669767244074-2
-      author: Paco Lozano
-      changes:
-        - createTable:
-            columns:
-              - column:
-                  autoIncrement: false
-                  constraints:
-                    nullable: false
                     primaryKey: true
-                    primaryKeyName: commit_pkey
-                  name: sha
-                  type: VARCHAR(255)
-              - column:
-                  name: date
-                  type: TIMESTAMP
-              - column:
-                  name: pull_request_id
-                  type: INT
-              - column:
-                  name: user_id
-                  type: INT
-              - column:
-                  name: additions
-                  type: INT
-              - column:
-                  name: deletions
-                  type: INT
-            tableName: commit
-  - changeSet:
-      id: 1669767244074-3
-      author: Paco Lozano
-      changes:
-        - createTable:
-            columns:
-              - column:
-                  autoIncrement: false
-                  constraints:
                     nullable: false
-                    primaryKey: true
-                    primaryKeyName: historic_queries_pkey
-                  name: id
-                  type: INT
-              - column:
-                  constraints:
-                    nullable: false
-                  name: from
-                  type: VARCHAR(255)
-              - column:
-                  constraints:
-                    nullable: false
-                  name: name
-                  type: VARCHAR(255)
-              - column:
-                  constraints:
-                    nullable: false
-                  name: to
-                  type: VARCHAR(255)
-              - column:
-                  name: team_id
-                  type: INT
-            tableName: historic_queries
-  - changeSet:
-      id: 1669767244074-4
-      author: Paco Lozano
-      changes:
-        - createTable:
-            columns:
-              - column:
-                  autoIncrement: false
-                  constraints:
-                    nullable: false
-                    primaryKey: true
-                    primaryKeyName: organization_pkey
-                  name: id
-                  type: INT
+                    primaryKeyName: pk_organization
               - column:
                   name: login
                   type: VARCHAR(255)
               - column:
                   name: organization_url
                   type: VARCHAR(255)
-            tableName: organization
-  - changeSet:
-      id: 1669767244074-5
-      author: Paco Lozano
-      changes:
         - createTable:
+            tableName: team
             columns:
               - column:
-                  autoIncrement: false
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_team
+              - column:
+                  name: organization_id
+                  type: INT
                   constraints:
                     nullable: false
-                    primaryKey: true
-                    primaryKeyName: pull_request_pkey
+                    foreignKeyName: fk_team_organization
+                    references: organization(id)
+              - column:
+                  name: slug
+                  type: VARCHAR(255)
+        - createTable:
+            tableName: repository
+            columns:
+              - column:
                   name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_repository
+              - column:
+                  name: team_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_repository_team
+                    references: team(id)
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: owner_login
+                  type: VARCHAR(255)
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_user
+              - column:
+                  name: team_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_team
+                    references: team(id)
+              - column:
+                  name: login
+                  type: VARCHAR(255)
+        - createTable:
+            tableName: pull_request
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_pull_request
+              - column:
+                  name: user_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_pullrequest_user
+                    references: user(id)
+              - column:
+                  name: repository_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_pullrequest_repository
+                    references: repository(id)
+              - column:
+                  name: state
                   type: INT
               - column:
                   name: number
                   type: INT
+        - createTable:
+            tableName: commit
+            columns:
               - column:
-                  name: state
+                  name: sha
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_commit
+              - column:
+                  name: user_id
                   type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_commit_user
+                    references: user(id)
+              - column:
+                  name: pull_request_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_commit_pullrequest
+                    references: pull_request(id)
+              - column:
+                  name: date
+                  type: DATETIME
               - column:
                   name: additions
                   type: INT
@@ -133,261 +151,78 @@ databaseChangeLog:
                   name: deletions
                   type: INT
               - column:
-                  name: repository_id
+                  name: created_at
+                  type: DATETIME
+        - createTable:
+            tableName: user_review
+            columns:
+              - column:
+                  name: id
                   type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_user_review
               - column:
                   name: user_id
                   type: INT
-            tableName: pull_request
-  - changeSet:
-      id: 1669767244074-6
-      author: Paco Lozano
-      changes:
-        - createTable:
-            columns:
-              - column:
-                  autoIncrement: false
                   constraints:
                     nullable: false
-                    primaryKey: true
-                    primaryKeyName: repository_pkey
+                    foreignKeyName: fk_userreview_user
+                    references: user(id)
+              - column:
+                  name: pull_request_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_userreview_pullrequest
+                    references: pull_request(id)
+        - createTable:
+            tableName: comment
+            columns:
+              - column:
                   name: id
                   type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_comment
+              - column:
+                  name: user_review_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_comment_userreview
+                    references: user_review(id)
+              - column:
+                  name: length
+                  type: INT
+        - createTable:
+            tableName: historic_queries
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    primaryKeyName: pk_historicqueries
+              - column:
+                  name: team_id
+                  type: INT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_historicqueries_team
+                    references: team(id)
               - column:
                   name: name
                   type: VARCHAR(255)
               - column:
-                  name: owner_login
+                  name: from
                   type: VARCHAR(255)
               - column:
-                  name: team_id
-                  type: INT
-            tableName: repository
-  - changeSet:
-      id: 1669767244074-7
-      author: Paco Lozano
-      changes:
-        - createTable:
-            columns:
-              - column:
-                  autoIncrement: false
-                  constraints:
-                    nullable: false
-                    primaryKey: true
-                    primaryKeyName: team_pkey
-                  name: id
-                  type: INT
-              - column:
-                  name: slug
+                  name: to
                   type: VARCHAR(255)
-              - column:
-                  name: organization_id
-                  type: INT
-            tableName: team
-  - changeSet:
-      id: 1669767244074-8
-      author: Paco Lozano
-      changes:
-        - createTable:
-            columns:
-              - column:
-                  autoIncrement: false
-                  constraints:
-                    nullable: false
-                    primaryKey: true
-                    primaryKeyName: user_pkey
-                  name: id
-                  type: INT
-              - column:
-                  name: login
-                  type: VARCHAR(255)
-              - column:
-                  name: team_id
-                  type: INT
-            tableName: user
-  - changeSet:
-      id: 1669767244074-9
-      author: Paco Lozano
-      changes:
-        - createTable:
-            columns:
-              - column:
-                  autoIncrement: false
-                  constraints:
-                    nullable: false
-                    primaryKey: true
-                    primaryKeyName: user_review_pkey
-                  name: id
-                  type: INT
-              - column:
-                  name: pull_request_id
-                  type: INT
-              - column:
-                  name: user_id
-                  type: INT
-            tableName: user_review
-  - changeSet:
-      id: 1669767244074-10
-      author: Paco Lozano
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: user_review_id
-            baseTableName: comment
-            constraintName: fk8s2cpckjmj44ngrn9md8sxwyp
-            deferrable: false
-            initiallyDeferred: false
-            onDelete: NO ACTION
-            onUpdate: NO ACTION
-            referencedColumnNames: id
-            referencedTableName: user_review
-            validate: true
-  - changeSet:
-      id: 1669767244074-11
-      author: Paco Lozano
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: pull_request_id
-            baseTableName: user_review
-            constraintName: fkeqpkkltl0ltj61js2acoaitpi
-            deferrable: false
-            initiallyDeferred: false
-            onDelete: NO ACTION
-            onUpdate: NO ACTION
-            referencedColumnNames: id
-            referencedTableName: pull_request
-            validate: true
-  - changeSet:
-      id: 1669767244074-12
-      author: Paco Lozano
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: user_id
-            baseTableName: commit
-            constraintName: fkf2u03vla3r16vjhvuk7i089wc
-            deferrable: false
-            initiallyDeferred: false
-            onDelete: NO ACTION
-            onUpdate: NO ACTION
-            referencedColumnNames: id
-            referencedTableName: user
-            validate: true
-  - changeSet:
-      id: 1669767244074-13
-      author: Paco Lozano
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: pull_request_id
-            baseTableName: commit
-            constraintName: fkiip0bvo92fj8nylct2gggo0js
-            deferrable: false
-            initiallyDeferred: false
-            onDelete: NO ACTION
-            onUpdate: NO ACTION
-            referencedColumnNames: id
-            referencedTableName: pull_request
-            validate: true
-  - changeSet:
-      id: 1669767244074-14
-      author: Paco Lozano
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: user_id
-            baseTableName: user_review
-            constraintName: fknd27adjba2cprm0uxexficol7
-            deferrable: false
-            initiallyDeferred: false
-            onDelete: NO ACTION
-            onUpdate: NO ACTION
-            referencedColumnNames: id
-            referencedTableName: user
-            validate: true
-  - changeSet:
-      id: 1669767244074-15
-      author: Paco Lozano
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: repository_id
-            baseTableName: pull_request
-            constraintName: fko0xkv3or7y7dpnr62ytul9kca
-            deferrable: false
-            initiallyDeferred: false
-            onDelete: NO ACTION
-            onUpdate: NO ACTION
-            referencedColumnNames: id
-            referencedTableName: repository
-            validate: true
-  - changeSet:
-      id: 1669767244074-16
-      author: Paco Lozano
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: team_id
-            baseTableName: user
-            constraintName: fkoog08jgyx3j3mxu9dxgohg39w
-            deferrable: false
-            initiallyDeferred: false
-            onDelete: NO ACTION
-            onUpdate: NO ACTION
-            referencedColumnNames: id
-            referencedTableName: team
-            validate: true
-  - changeSet:
-      id: 1669767244074-17
-      author: Paco Lozano
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: team_id
-            baseTableName: repository
-            constraintName: fkpa55jqergf2krgr03kyv6g55m
-            deferrable: false
-            initiallyDeferred: false
-            onDelete: NO ACTION
-            onUpdate: NO ACTION
-            referencedColumnNames: id
-            referencedTableName: team
-            validate: true
-  - changeSet:
-      id: 1669767244074-18
-      author: Paco Lozano
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: team_id
-            baseTableName: historic_queries
-            constraintName: fkt1xkfefkor7uasbn5abhhmj3v
-            deferrable: false
-            initiallyDeferred: false
-            onDelete: NO ACTION
-            onUpdate: NO ACTION
-            referencedColumnNames: id
-            referencedTableName: team
-            validate: true
-  - changeSet:
-      id: 1669767244074-19
-      author: Paco Lozano
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: organization_id
-            baseTableName: team
-            constraintName: fkt2rwhhxcjdmje0gqqybiyjdpn
-            deferrable: false
-            initiallyDeferred: false
-            onDelete: NO ACTION
-            onUpdate: NO ACTION
-            referencedColumnNames: id
-            referencedTableName: organization
-            validate: true
-  - changeSet:
-      id: 1669767244074-20
-      author: Paco Lozano
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: user_id
-            baseTableName: pull_request
-            constraintName: user_id_fk
-            deferrable: false
-            initiallyDeferred: false
-            onDelete: NO ACTION
-            onUpdate: NO ACTION
-            referencedColumnNames: id
-            referencedTableName: user
-            validate: true

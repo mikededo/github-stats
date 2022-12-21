@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.ToString;
 
 @Data
@@ -54,7 +56,7 @@ public class PullRequest {
       return commits
           .stream()
           .filter(commit -> commit.getUser().equals(user))
-          .toList();
+          .collect(Collectors.toList());
     }
 
     public boolean isClosed() {
@@ -69,7 +71,7 @@ public class PullRequest {
       return userReviews
           .stream()
           .filter(x -> x.getUser().equals(user))
-          .toList();
+          .collect(Collectors.toList());
     }
 
 }
