@@ -1,37 +1,26 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
-import javax.persistence.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
+import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
-@ToString
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "comment")
 public class Comment {
 
-  @Id
-  @Column(updatable = false, nullable = false)
-  private Integer id;
+    @Id
+    @Column(updatable = false, nullable = false)
+    private Integer id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  private UserReview userReview;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private UserReview userReview;
 
-  private int length;
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Comment )) return false;
-    return id != null && id.equals(((Comment) o).getId());
-  }
-
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
-  }
-
+    private int length;
 }
