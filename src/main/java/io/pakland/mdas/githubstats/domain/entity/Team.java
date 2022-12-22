@@ -15,11 +15,9 @@ public class Team {
 
     @Id
     @Column(updatable = false, nullable = false)
-    @JsonProperty("id")
     private Integer id;
 
     @Column(name = "slug")
-    @JsonProperty("slug")
     private String slug;
 
     @ManyToOne(fetch = FetchType.LAZY)
