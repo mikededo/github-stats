@@ -1,8 +1,10 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.application.mappers.RepositoryMapper;
 import io.pakland.mdas.githubstats.domain.entity.Repository;
 import io.pakland.mdas.githubstats.domain.repository.RepositoryExternalRepository;
+import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubRepositoryDTO;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +25,11 @@ public class RepositoryGitHubRepository implements RepositoryExternalRepository 
         try {
             return this.webClientConfiguration.getWebClient().get()
                 .uri(String.format("/orgs/%s/teams/%s/repos", organizationLogin, teamSlug))
-                    .retrieve()
-                    .bodyToFlux(Repository.class)
-                    .collectList()
-                    .block();
+                .retrieve()
+                .bodyToFlux(GitHubRepositoryDTO.class)
+                .map(RepositoryMapper::dtoToEntity)
+                .collectList()
+                .block();
         } catch (WebClientResponseException ex) {
             logger.error(ex.toString());
             throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
