@@ -2,6 +2,7 @@ package io.pakland.mdas.githubstats.infrastructure.github.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.pakland.mdas.githubstats.application.dto.PullRequestDTO;
+import io.pakland.mdas.githubstats.application.dto.PullRequestStateDTO;
 import io.pakland.mdas.githubstats.domain.entity.PullRequestState;
 
 public class GitHubPullRequestDTO implements PullRequestDTO {
@@ -13,7 +14,7 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
     private Integer number;
 
     @JsonProperty("state")
-    private PullRequestState state;
+    private PullRequestStateDTO state;
 
     @Override
     public Integer getId() {
@@ -27,7 +28,7 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
 
     @Override
     public PullRequestState getState() {
-        return this.state;
+        return this.state.getValue();
     }
 
 }
