@@ -1,10 +1,10 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
-import io.pakland.mdas.githubstats.application.dto.TeamDTO;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.TeamMapper;
 import io.pakland.mdas.githubstats.domain.entity.Team;
 import io.pakland.mdas.githubstats.domain.repository.TeamExternalRepository;
+import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubTeamDTO;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class TeamGitHubRepository implements TeamExternalRepository {
             return this.webClientConfiguration.getWebClient().get()
                 .uri(String.format("/orgs/%s/teams", organizationName))
                 .retrieve()
-                .bodyToFlux(TeamDTO.class)
+                .bodyToFlux(GitHubTeamDTO.class)
                 .map(TeamMapper::dtoToEntity)
                 .collectList()
                 .block();
