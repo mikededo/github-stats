@@ -18,12 +18,10 @@ public class Organization {
 
     @Id
     @Column(updatable = false, nullable = false)
-    @JsonProperty("id")
     @NotNull
     private Integer id;
 
     @Column
-    @JsonProperty("login")
     private String login;
 
     @OneToMany(
