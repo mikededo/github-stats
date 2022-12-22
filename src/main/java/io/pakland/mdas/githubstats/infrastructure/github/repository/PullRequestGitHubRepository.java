@@ -1,8 +1,10 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.application.mappers.PullRequestMapper;
 import io.pakland.mdas.githubstats.domain.entity.PullRequest;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository;
+import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPullRequestDTO;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +27,8 @@ public class PullRequestGitHubRepository implements PullRequestExternalRepositor
                 .uri(String.format("/repos/%s/%s/pulls?%s", request.getRepositoryOwner(),
                     request.getRepository(), getRequestParams(request)))
                 .retrieve()
-                .bodyToFlux(PullRequest.class)
+                .bodyToFlux(GitHubPullRequestDTO.class)
+                .map(PullRequestMapper::dtoToEntity)
                 .collectList()
                 .block();
         } catch (WebClientResponseException ex) {
