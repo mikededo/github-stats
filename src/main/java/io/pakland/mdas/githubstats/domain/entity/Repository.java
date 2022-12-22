@@ -23,11 +23,9 @@ public class Repository {
 
   @Id
   @Column(updatable = false, nullable = false)
-  @JsonProperty("id")
   private Integer id;
 
   @Column(name = "name")
-  @JsonProperty("name")
   private String name;
 
   @Column(name = "owner_login")
@@ -43,11 +41,6 @@ public class Repository {
     orphanRemoval = true
   )
   private List<PullRequest> pullRequests = new ArrayList<>();
-
-  @JsonProperty("owner")
-  private void unpackNameFromNestedObject(Map<String, String> owner) {
-    this.ownerLogin = owner.get("login");
-  }
 
   @Override
   public boolean equals(Object o) {
