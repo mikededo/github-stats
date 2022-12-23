@@ -7,7 +7,7 @@ public class CommentMapper {
     public static Comment dtoToEntity(CommentDTO dto) {
         return Comment.builder()
                 .id(dto.getId())
-                .length(dto.getLength())
+                .body(dto.getBody())
                 .build();
     }
 }

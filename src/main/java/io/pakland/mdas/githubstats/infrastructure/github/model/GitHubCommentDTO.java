@@ -22,7 +22,7 @@ public class GitHubCommentDTO implements CommentDTO {
     }
 
     @Override
-    public Integer getLength() {
-        return this.body.length();
+    public String getBody() {
+        return this.body;
     }
 }
