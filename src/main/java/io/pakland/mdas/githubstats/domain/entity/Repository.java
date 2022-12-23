@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
-import java.util.Map;
+import java.util.*;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,9 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -40,7 +37,18 @@ public class Repository {
     cascade = CascadeType.ALL,
     orphanRemoval = true
   )
-  private List<PullRequest> pullRequests = new ArrayList<>();
+  private Set<PullRequest> pullRequests = new HashSet<>();
+
+  public void addPullRequests(Collection<PullRequest> pullRequests) {
+    if (this.pullRequests == null) {
+      this.pullRequests = new HashSet<>();
+    }
+
+    pullRequests.forEach(pr -> {
+      pr.setRepository(this);
+      this.pullRequests.add(pr);
+    });
+  }
 
   @Override
   public boolean equals(Object o) {

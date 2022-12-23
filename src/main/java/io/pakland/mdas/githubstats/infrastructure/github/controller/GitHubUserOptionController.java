@@ -70,9 +70,7 @@ public class GitHubUserOptionController {
             List<Repository> repositoryList = new FetchRepositoriesFromTeam(
                 repositoryExternalRepository).execute(team);
             // Add the team to the repository
-            repositoryList.forEach(repository -> {
-                this.fetchPullRequestsFromRepository(team, repository);
-            });
+            repositoryList.forEach(this::fetchPullRequestsFromRepository);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
@@ -90,17 +88,15 @@ public class GitHubUserOptionController {
         }
     }
 
-    private void fetchPullRequestsFromRepository(Team team, Repository repository) {
-        team.addRepository(repository);
+    private void fetchPullRequestsFromRepository(Repository repository) {
         try {
             // Fetch pull requests from each team.
             List<PullRequest> pullRequestList = new FetchPullRequestsFromRepository(
                 pullRequestExternalRepository)
-                .execute(repository.getOwnerLogin(), repository.getName());
+                .execute(repository);
 
             pullRequestList.forEach(
                 pullRequest -> this.fetchCommitsFromPullRequest(repository, pullRequest));
-            repository.setPullRequests(pullRequestList);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
