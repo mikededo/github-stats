@@ -17,7 +17,7 @@ public class FetchRepositoriesFromTeam {
     public List<Repository> execute(Team team) throws HttpException {
         List<Repository> repositories = this.repositoryExternalRepository.fetchTeamRepositories(
             team.getOrganization().getLogin(), team.getSlug());
-        repositories.forEach(repository -> repository.setTeam(team));
+        team.addRepositories(repositories);
         return repositories;
     }
 }

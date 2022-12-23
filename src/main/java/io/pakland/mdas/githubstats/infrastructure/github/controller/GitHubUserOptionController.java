@@ -79,10 +79,7 @@ public class GitHubUserOptionController {
     private void fetchUsersFromTeam(Team team) {
         try {
             // Fetch the members of each team.
-            List<User> userList = new FetchUsersFromTeam(userExternalRepository)
-                .execute(team.getOrganization().getLogin(), team.getSlug());
-
-            team.setUsers(userList);
+           new FetchUsersFromTeam(userExternalRepository).execute(team);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }

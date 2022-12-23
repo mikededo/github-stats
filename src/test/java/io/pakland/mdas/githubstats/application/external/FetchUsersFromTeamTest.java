@@ -6,9 +6,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.entity.Organization;
-import io.pakland.mdas.githubstats.domain.entity.Repository;
 import io.pakland.mdas.githubstats.domain.entity.Team;
-import io.pakland.mdas.githubstats.domain.repository.RepositoryExternalRepository;
+import io.pakland.mdas.githubstats.domain.entity.User;
+import io.pakland.mdas.githubstats.domain.repository.UserExternalRepository;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class FetchRepositoriesFromTeamTest {
+public class FetchUsersFromTeamTest {
 
     private final Team team = Team.builder().id(1).slug("gs-internal").build();
     private final Organization organization = Organization.builder().teams(Set.of(team))
@@ -24,36 +24,35 @@ public class FetchRepositoriesFromTeamTest {
 
     @BeforeEach
     public void init() {
-        team.setRepositories(new HashSet<>());
+        team.setUsers(new HashSet<>());
         team.setOrganization(organization);
     }
 
     @Test
-    public void shouldFetchTheRepositories_givenATeam() throws HttpException {
-        Repository repoOne = Repository.builder().id(1).name("github-stats").build();
-        Repository repoTwo = Repository.builder().id(2).name("empty-repository").build();
-        RepositoryExternalRepository repository = Mockito.mock(RepositoryExternalRepository.class);
-        Mockito.when(repository.fetchTeamRepositories(anyString(), anyString())).thenReturn(
-            List.of(repoOne, repoTwo));
+    public void shouldFetchUsers_givenATeam() throws HttpException {
+        User userOne = User.builder().id(1).login("mikededo").build();
+        User userTwo = User.builder().id(2).login("manerow").build();
+        UserExternalRepository repository = Mockito.mock(UserExternalRepository.class);
+        Mockito.when(repository.fetchUsersFromTeam(anyString(), anyString()))
+            .thenReturn(List.of(userOne, userTwo));
 
-        List<Repository> result = new FetchRepositoriesFromTeam(repository).execute(team);
+        List<User> result = new FetchUsersFromTeam(repository).execute(team);
 
         assertEquals(result.size(), 2);
         assertEquals(result.get(0).getId(), 1);
         assertEquals(result.get(1).getId(), 2);
         assertEquals(result.get(0).getTeam(), team);
         assertEquals(result.get(1).getTeam(), team);
-        assertEquals(team.getRepositories().size(), 2);
+        assertEquals(team.getUsers().size(), 2);
     }
 
     @Test
     public void shouldThrowAnException_whenRepositoryThrows() throws HttpException {
-        RepositoryExternalRepository repository = Mockito.mock(RepositoryExternalRepository.class);
-        Mockito.when(repository.fetchTeamRepositories(anyString(), anyString()))
+        UserExternalRepository repository = Mockito.mock(UserExternalRepository.class);
+        Mockito.when(repository.fetchUsersFromTeam(anyString(), anyString()))
             .thenThrow(HttpException.class);
 
-        assertThrows(HttpException.class,
-            () -> new FetchRepositoriesFromTeam(repository).execute(team));
+        assertThrows(HttpException.class, () ->
+            new FetchUsersFromTeam(repository).execute(team));
     }
-
 }
