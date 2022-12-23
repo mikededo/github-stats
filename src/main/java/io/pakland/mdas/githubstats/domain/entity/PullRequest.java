@@ -3,7 +3,6 @@ package io.pakland.mdas.githubstats.domain.entity;
 import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 import lombok.*;
 
 @Data
