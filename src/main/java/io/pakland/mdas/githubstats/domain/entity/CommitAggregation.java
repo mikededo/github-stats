@@ -6,9 +6,6 @@ public class CommitAggregation implements CSVExportable {
 
     private int numCommits;
 
-    private int linesAdded;
-
-    private int linesRemoved;
 
     public static CommitAggregation aggregate(List<Commit> commits) {
         CommitAggregation commitAggregation = new CommitAggregation();
@@ -20,21 +17,13 @@ public class CommitAggregation implements CSVExportable {
         return numCommits;
     }
 
-    public int getLinesAdded() {
-        return linesAdded;
-    }
-
-    public int getLinesRemoved() {
-        return linesRemoved;
-    }
-
     @Override
     public String toCSV() {
         String sep = ",";
         String lineSep = "\n";
 
-        List<String> metrics = List.of("numCommits", "linesAdded", "linesRemoved");
-        List<Object> data = List.of(numCommits, linesAdded, linesRemoved);
+        List<String> metrics = List.of("numCommits");
+        List<Object> data = List.of(numCommits);
 
         String header = String.join(sep, metrics);
         String body = String.join(sep, data.stream().map(Object::toString).toList());
