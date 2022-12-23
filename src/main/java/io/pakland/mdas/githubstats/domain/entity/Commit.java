@@ -1,6 +1,7 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -27,9 +28,11 @@ public class Commit {
     private Date date;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private PullRequest pullRequest;
 
     private int additions;
@@ -46,5 +49,16 @@ public class Commit {
     private void setAdditionDeletionsLines(Map<String, Object> stats) {
         additions = Integer.parseInt(stats.get("additions").toString());
         deletions = Integer.parseInt(stats.get("deletions").toString());
+    }
+
+    // The hashcde must be overridden otherwise it causes a stakoverflow issue
+    // when adding a commit to a set like structure
+    @Override
+    public int hashCode() {
+        int result = sha.hashCode();
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + additions;
+        result = 31 * result + deletions;
+        return result;
     }
 }

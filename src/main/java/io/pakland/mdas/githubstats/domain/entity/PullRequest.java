@@ -1,7 +1,6 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.*;
 import lombok.*;
@@ -36,7 +35,7 @@ public class PullRequest {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    private List<Commit> commits = new ArrayList<>();
+    private Set<Commit> commits = new HashSet<>();
 
     @OneToMany(
         cascade = CascadeType.ALL,
@@ -45,6 +44,16 @@ public class PullRequest {
     )
     private List<UserReview> userReviews = new ArrayList<>();
 
+    public void addCommits(Collection<Commit> commits) {
+        if (this.commits == null) {
+            this.commits = new HashSet<>();
+        }
+
+        commits.forEach(commit -> {
+            commit.setPullRequest(this);
+            this.commits.add(commit);
+        });
+    }
     public List<Commit> getCommitsByUser(User user) {
         return commits
             .stream()

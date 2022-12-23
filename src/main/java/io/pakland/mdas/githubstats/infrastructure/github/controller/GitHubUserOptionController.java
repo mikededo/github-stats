@@ -79,7 +79,7 @@ public class GitHubUserOptionController {
     private void fetchUsersFromTeam(Team team) {
         try {
             // Fetch the members of each team.
-           new FetchUsersFromTeam(userExternalRepository).execute(team);
+            new FetchUsersFromTeam(userExternalRepository).execute(team);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
@@ -92,17 +92,14 @@ public class GitHubUserOptionController {
                 pullRequestExternalRepository)
                 .execute(repository);
 
-            pullRequestList.forEach(
-                pullRequest -> this.fetchCommitsFromPullRequest(repository, pullRequest));
+            pullRequestList.forEach(this::fetchCommitsFromPullRequest);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
     }
 
 
-    private void fetchCommitsFromPullRequest(Repository repository, PullRequest pullRequest) {
-        // Add the repository to the pull request
-        pullRequest.setRepository(repository);
+    private void fetchCommitsFromPullRequest(PullRequest pullRequest) {
         /*
         TODO: if the user of the PR belongs to the team, increment the prs executed inside the team
         TODO: else increment the prs executed outside the team
@@ -111,9 +108,7 @@ public class GitHubUserOptionController {
         //
         try {
             List<Commit> commitList = new FetchCommitsFromPullRequest(
-                commitExternalRepository)
-                .execute(repository.getOwnerLogin(), repository.getName(),
-                    pullRequest.getNumber());
+                commitExternalRepository).execute(pullRequest);
             for (Commit commit : commitList) {
                 // TODO: Fetch PR reviews.
 
