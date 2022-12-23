@@ -1,22 +1,15 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.application.mappers.CommitMapper;
 import io.pakland.mdas.githubstats.domain.entity.Commit;
 import io.pakland.mdas.githubstats.domain.repository.CommitExternalRepository;
-import lombok.Data;
+import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubCommitDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import java.util.ArrayList;
 import java.util.List;
-
-@Data
-class CommitSha {
-    @JsonProperty("sha")
-    private String sha;
-}
 
 public class CommitGitHubRepository implements CommitExternalRepository {
     private final WebClientConfiguration webClientConfiguration;
@@ -31,29 +24,14 @@ public class CommitGitHubRepository implements CommitExternalRepository {
 
         try {
 
-            List<CommitSha> commitsSha = this.webClientConfiguration.getWebClient().get()
+            return this.webClientConfiguration.getWebClient().get()
                     .uri(String.format("/repos/%s/%s/pulls/%s/commits?%s", request.getRepositoryOwner(),
                             request.getRepositoryName(), request.getPullRequestNumber(), getRequestParams(request)))
                     .retrieve()
-                    .bodyToFlux(CommitSha.class)
+                    .bodyToFlux(GitHubCommitDTO.class)
+                    .map(CommitMapper::dtoToEntity)
                     .collectList()
                     .block();
-
-            List<Commit> commits = new ArrayList<>();
-            if (commitsSha != null) {
-                for (CommitSha commitSha : commitsSha) {
-                    commits.add(
-                            (Commit) this.webClientConfiguration.getWebClient().get()
-                                    .uri(String.format("/repos/%s/%s/commits/%s", request.getRepositoryOwner(),
-                                            request.getRepositoryName(), commitSha.getSha()))
-                                    .retrieve()
-                                    .bodyToMono(Commit.class)
-                                    .block()
-                    );
-                }
-            }
-
-            return commits;
 
         } catch (WebClientResponseException ex) {
             logger.error(ex.toString());

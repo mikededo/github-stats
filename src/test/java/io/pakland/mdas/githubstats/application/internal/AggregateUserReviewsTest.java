@@ -1,16 +1,15 @@
 package io.pakland.mdas.githubstats.application.internal;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import io.pakland.mdas.githubstats.domain.entity.Comment;
 import io.pakland.mdas.githubstats.domain.entity.UserReview;
 import io.pakland.mdas.githubstats.domain.entity.UserReviewAggregation;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class AggregateUserReviewsTest {
 
@@ -26,7 +25,7 @@ public class AggregateUserReviewsTest {
             for (int j = 0; j < 10; j++) {
                 Comment comment = Mockito.mock(Comment.class);
                 int randomLength = random.nextInt(10);
-                comment.setLength(randomLength);
+                comment.setBody(" ".repeat(randomLength));
                 comments.add(comment);
                 sum += comment.getLength();  // accumulate comment length to assert at the end
             }
