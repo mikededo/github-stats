@@ -53,10 +53,10 @@ public class GitHubUserOptionController {
     private void fetchTeamsFromOrganization(Organization organization) {
         try {
             List<Team> teamList = new FetchTeamsFromOrganization(teamExternalRepository)
-                .execute(organization.getLogin());
+                .execute(organization);
             teamList.forEach(team -> {
-                this.fetchRepositoriesFromTeam(organization, team);
-                this.fetchUsersFromTeam(organization, team);
+                this.fetchRepositoriesFromTeam(team);
+                this.fetchUsersFromTeam(team);
             });
         } catch (HttpException e) {
             throw new RuntimeException(e);
@@ -64,16 +64,13 @@ public class GitHubUserOptionController {
 
     }
 
-    private void fetchRepositoriesFromTeam(Organization organization, Team team) {
-        organization.addTeam(team);
+    private void fetchRepositoriesFromTeam(Team team) {
         try {
             // Fetch the repositories for each team.
             List<Repository> repositoryList = new FetchRepositoriesFromTeam(
-                repositoryExternalRepository)
-                .execute(organization.getLogin(), team.getSlug());
+                repositoryExternalRepository).execute(team);
             // Add the team to the repository
             repositoryList.forEach(repository -> {
-                repository.setTeam(team);
                 this.fetchPullRequestsFromRepository(team, repository);
             });
         } catch (HttpException e) {
@@ -81,11 +78,11 @@ public class GitHubUserOptionController {
         }
     }
 
-    private void fetchUsersFromTeam(Organization organization, Team team) {
+    private void fetchUsersFromTeam(Team team) {
         try {
             // Fetch the members of each team.
             List<User> userList = new FetchUsersFromTeam(userExternalRepository)
-                .execute(organization.getLogin(), team.getSlug());
+                .execute(team.getOrganization().getLogin(), team.getSlug());
 
             team.setUsers(userList);
         } catch (HttpException e) {
@@ -101,7 +98,8 @@ public class GitHubUserOptionController {
                 pullRequestExternalRepository)
                 .execute(repository.getOwnerLogin(), repository.getName());
 
-            pullRequestList.forEach(pullRequest -> this.fetchCommitsFromPullRequest(repository, pullRequest));
+            pullRequestList.forEach(
+                pullRequest -> this.fetchCommitsFromPullRequest(repository, pullRequest));
             repository.setPullRequests(pullRequestList);
         } catch (HttpException e) {
             throw new RuntimeException(e);
