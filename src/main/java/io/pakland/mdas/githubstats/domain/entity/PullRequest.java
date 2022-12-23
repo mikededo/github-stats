@@ -1,9 +1,9 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
+import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
 import lombok.*;
 
 @Data
@@ -17,6 +17,12 @@ public class PullRequest {
     private Integer number;
 
     private PullRequestState state;
+
+    private Instant closedAt;
+
+    private Integer additions;
+
+    private Integer deletions;
 
     @ToString.Exclude
     private Repository repository;
@@ -37,26 +43,4 @@ public class PullRequest {
             this.commits.add(commit);
         });
     }
-    public List<Commit> getCommitsByUser(User user) {
-        return commits
-            .stream()
-            .filter(commit -> commit.getUser().equals(user))
-            .collect(Collectors.toList());
-    }
-
-    public boolean isClosed() {
-        return state.equals(PullRequestState.CLOSED);
-    }
-
-    public boolean isCreatedByUser(User user) {
-        return this.user.equals(user);
-    }
-
-    public List<UserReview> getReviewsFromUser(User user) {
-        return userReviews
-            .stream()
-            .filter(x -> x.getUser().equals(user))
-            .collect(Collectors.toList());
-    }
-
 }

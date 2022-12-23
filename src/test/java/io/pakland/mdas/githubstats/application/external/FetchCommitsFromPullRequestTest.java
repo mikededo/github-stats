@@ -30,19 +30,19 @@ public class FetchCommitsFromPullRequestTest {
     @Test
     public void whenValidRepository_shouldReturnTheListOfCommits()
         throws HttpException {
-        Commit commit = new Commit();
-        commit.setSha("a0b3ed9d5f1356575f2b16ab8ef5d93c5ce77575");
-        commit.setDate(new Date());
-        Commit commit1 = new Commit();
-        commit1.setSha("f16b593d35d6e66dc7e1c8727d4eaa829d3973ed");
-        commit1.setDate(new Date());
+        Commit commitOne = Commit.builder().sha(
+            "a0b3ed9d5f1356575f2b16ab8ef5d93c5ce77575"
+        ).date(new Date()).additions(250).deletions(125).build();
+        Commit commitTwo = Commit.builder().sha(
+            "f16b593d35d6e66dc7e1c8727d4eaa829d3973ed"
+        ).date(new Date()).additions(250).deletions(125).build();
 
         CommitExternalRepository repository = Mockito.mock(
             CommitExternalRepository.class);
 
         Mockito.when(repository.fetchCommitsFromPullRequest(Mockito.any(
                 FetchCommitsFromPullRequestRequest.class)))
-            .thenReturn(new ArrayList<>(Arrays.asList(commit, commit1)))
+            .thenReturn(new ArrayList<>(Arrays.asList(commitOne, commitTwo)))
             .thenReturn(new ArrayList<>());
 
         List<Commit> response = new FetchCommitsFromPullRequest(repository).execute(
@@ -56,8 +56,8 @@ public class FetchCommitsFromPullRequestTest {
         assertEquals(2, captor.getValue().getPage());
         assertEquals(100, captor.getValue().getPerPage());
         assertEquals(2, response.size());
-        assertEquals(commit.getSha(), response.get(0).getSha());
-        assertEquals(commit1.getSha(), response.get(1).getSha());
+        assertEquals(commitOne.getSha(), response.get(0).getSha());
+        assertEquals(commitTwo.getSha(), response.get(1).getSha());
     }
 
     @Test
