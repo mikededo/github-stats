@@ -5,6 +5,8 @@ import io.pakland.mdas.githubstats.application.dto.PullRequestDTO;
 import io.pakland.mdas.githubstats.application.dto.PullRequestStateDTO;
 import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
 
+import java.time.Instant;
+
 public class GitHubPullRequestDTO implements PullRequestDTO {
 
     @JsonProperty("id")
@@ -15,6 +17,15 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
 
     @JsonProperty("state")
     private PullRequestStateDTO state;
+
+    @JsonProperty("closed_at")
+    private Instant closedAt;
+
+    @JsonProperty("additions")
+    private Integer additions;
+
+    @JsonProperty("deletions")
+    private Integer deletions;
 
     @Override
     public Integer getId() {
@@ -31,4 +42,18 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
         return this.state.getValue();
     }
 
+    @Override
+    public Instant getClosedAt() {
+        return this.closedAt;
+    }
+
+    @Override
+    public Integer getAdditions() {
+        return this.additions;
+    }
+
+    @Override
+    public Integer getDeletions() {
+        return this.deletions;
+    }
 }
