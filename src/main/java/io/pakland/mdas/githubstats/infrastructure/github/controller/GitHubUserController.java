@@ -6,12 +6,11 @@ import io.pakland.mdas.githubstats.domain.entity.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
+import java.util.List;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @NoArgsConstructor
@@ -24,18 +23,29 @@ public class GitHubUserController {
     private RepositoryExternalRepository repositoryExternalRepository;
     private PullRequestExternalRepository pullRequestExternalRepository;
     private CommitExternalRepository commitExternalRepository;
+    private CommentExternalRepository commentExternalRepository;
+
 
     public GitHubUserController(GitHubUserOptionRequest userOptionRequest) {
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(
-                "https://api.github.com", userOptionRequest.getApiKey());
+            "https://api.github.com", userOptionRequest.getApiKey());
         this.organizationExternalRepository = new OrganizationGitHubRepository(
-                webClientConfiguration);
+            webClientConfiguration);
         this.teamExternalRepository = new TeamGitHubRepository(webClientConfiguration);
         this.userExternalRepository = new UserGitHubRepository(webClientConfiguration);
         this.repositoryExternalRepository = new RepositoryGitHubRepository(webClientConfiguration);
         this.pullRequestExternalRepository = new PullRequestGitHubRepository(
-                webClientConfiguration);
+            webClientConfiguration);
+        this.organizationExternalRepository = new OrganizationGitHubRepository(
+            webClientConfiguration);
+        this.teamExternalRepository = new TeamGitHubRepository(webClientConfiguration);
+        this.userExternalRepository = new UserGitHubRepository(webClientConfiguration);
+        this.repositoryExternalRepository = new RepositoryGitHubRepository(webClientConfiguration);
+        this.pullRequestExternalRepository = new PullRequestGitHubRepository(
+            webClientConfiguration);
         this.commitExternalRepository = new CommitGitHubRepository(webClientConfiguration);
+        this.commentExternalRepository = new CommentGitHubRepository(webClientConfiguration);
+
     }
 
     public void execute() {
@@ -43,8 +53,8 @@ public class GitHubUserController {
             // TODO: If the execution succeeds, we should make an entry to the historic_queries table.
             // Fetch the API key's available organizations.
             List<Organization> organizationList = new FetchAvailableOrganizations(
-                    this.organizationExternalRepository)
-                    .execute();
+                this.organizationExternalRepository)
+                .execute();
             organizationList.forEach(this::fetchTeamsFromOrganization);
         } catch (HttpException e) {
             throw new RuntimeException(e);
@@ -54,7 +64,7 @@ public class GitHubUserController {
     private void fetchTeamsFromOrganization(Organization organization) {
         try {
             List<Team> teamList = new FetchTeamsFromOrganization(teamExternalRepository)
-                    .execute(organization);
+                .execute(organization);
             teamList.forEach(team -> {
                 this.fetchRepositoriesFromTeam(team);
                 this.fetchUsersFromTeam(team);
@@ -68,7 +78,7 @@ public class GitHubUserController {
         try {
             // Fetch the repositories for each team.
             List<Repository> repositoryList = new FetchRepositoriesFromTeam(
-                    repositoryExternalRepository).execute(team);
+                repositoryExternalRepository).execute(team);
             // Add the team to the repository
             repositoryList.forEach(this::fetchPullRequestsFromRepository);
         } catch (HttpException e) {
@@ -89,8 +99,8 @@ public class GitHubUserController {
         try {
             // Fetch pull requests from each team.
             List<PullRequest> pullRequestList = new FetchPullRequestsFromRepository(
-                    pullRequestExternalRepository)
-                    .execute(repository);
+                pullRequestExternalRepository)
+                .execute(repository);
 
             pullRequestList.forEach(this::fetchCommitsFromPullRequest);
         } catch (HttpException e) {
@@ -107,11 +117,15 @@ public class GitHubUserController {
         //
         try {
             List<Commit> commitList = new FetchCommitsFromPullRequest(
-                    commitExternalRepository).execute(pullRequest);
-            for (Commit commit : commitList) {
-                // TODO: Fetch PR reviews.
+                commitExternalRepository)
+                .execute(pullRequest);
+            //TODO: Fetch PR Reviews.
 
-            }
+            Repository repository = pullRequest.getRepository();
+            List<Comment> commentList = new FetchCommentsFromPullRequest(
+                commentExternalRepository).execute(repository.getOwnerLogin(), repository.getName(),
+                pullRequest.getNumber());
+
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }

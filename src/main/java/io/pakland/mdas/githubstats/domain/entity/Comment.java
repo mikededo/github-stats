@@ -12,10 +12,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 public class Comment {
-
     private Integer id;
 
     private UserReview userReview;
 
-    private int length;
+    private String body;
+
+    public Integer getBodyLength() {
+        return this.body.length();
+    }
 }
