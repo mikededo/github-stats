@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HistoricQueriesRepository extends JpaRepository<HistoricQueries, Integer> {
+public interface MetricRepository extends JpaRepository<HistoricQueries, Integer> {
 }
