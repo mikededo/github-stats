@@ -13,20 +13,13 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-                    primaryKeyName: pk_historicqueries
+                    primaryKeyName: historic_queries_pk
               - column:
-                  name: team_id
-                  type: INT
-                  constraints:
-                    nullable: false
-                    foreignKeyName: fk_historicqueries_team
-                    references: team(id)
-              - column:
-                  name: name
-                  type: VARCHAR(255)
+                  name: entity_type
+                  type: VARCHAR(16)
               - column:
                   name: from
-                  type: VARCHAR(255)
+                  type: date
               - column:
                   name: to
-                  type: VARCHAR(255)
+                  type: date
