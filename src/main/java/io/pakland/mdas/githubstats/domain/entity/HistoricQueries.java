@@ -1,31 +1,32 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
+import io.pakland.mdas.githubstats.domain.EntityType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
+@Entity
 @Data
 @NoArgsConstructor
-@Entity
 @Table(name = "historic_queries")
 public class HistoricQueries {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Team team;
+    @Column(name="entity_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EntityType entityType;
 
     @Column(nullable = false)
-    private String name;
+    private LocalDate from;
 
-    @Column(name="from", nullable = false)
-    private String from;
-
-    @Column(name="to", nullable = false)
-    private String to;
+    @Column(nullable = false)
+    private LocalDate to;
 
     @Override
     public boolean equals(Object o) {
