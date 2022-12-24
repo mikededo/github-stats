@@ -12,11 +12,11 @@ public class PostgresMiddleware extends Middleware {
 
     @Override
     public String execute() {
-        if( super.request.getEntityType().equals(EntityType.USER) &&
-                super.request.getName().equals("plozanol")) {
+        if (super.request.getEntityType().equals(EntityType.USER) &&
+            super.request.getName().equals("plozanol")) {
             return "csv from db";
         }
+       
         return super.checkNext();
-
     }
 }

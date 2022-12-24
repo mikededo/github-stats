@@ -14,13 +14,13 @@ public class GitHubUserMiddleware extends Middleware {
 
     @Override
     public String execute() {
-        GitHubUserController userControllerFromGithub = new GitHubUserController(
+        GitHubUserController gitHubUserController = new GitHubUserController(
                 GitHubUserOptionRequest.builder()
                         .userName(super.request.getName())
                         .apiKey(super.request.getApiKey())
                         .from(super.request.getFrom())
                         .to(super.request.getTo()).build());
-        userControllerFromGithub.execute();
+        gitHubUserController.execute();
 
         return "csv from github";
     }
