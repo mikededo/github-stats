@@ -23,6 +23,9 @@ public class HistoricQueries {
     private EntityType entityType;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private LocalDate from;
 
     @Column(nullable = false)

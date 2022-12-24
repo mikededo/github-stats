@@ -18,6 +18,9 @@ databaseChangeLog:
                   name: entity_type
                   type: VARCHAR(16)
               - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
                   name: from
                   type: date
               - column:
