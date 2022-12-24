@@ -23,6 +23,9 @@ public class PullRequestGitHubRepository implements PullRequestExternalRepositor
     public List<PullRequest> fetchPullRequestsFromRepository(
         FetchPullRequestFromRepositoryRequest request) throws HttpException {
         try {
+            logger.info(
+                " - Fetching pull requests from repository: " + request.getRepositoryOwner() + "/"
+                    + request.getRepository());
             return this.webClientConfiguration.getWebClient().get()
                 .uri(String.format("/repos/%s/%s/pulls?%s", request.getRepositoryOwner(),
                     request.getRepository(), getRequestParams(request)))

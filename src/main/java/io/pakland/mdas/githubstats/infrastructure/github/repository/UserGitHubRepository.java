@@ -25,6 +25,7 @@ public class UserGitHubRepository implements UserExternalRepository {
     public List<User> fetchUsersFromTeam(String organizationName, String teamName)
         throws HttpException {
         try {
+            logger.info(" - Fetching users from team: " + organizationName + "/" + teamName);
             return this.webClientConfiguration.getWebClient().get()
                 .uri(String.format("/orgs/%s/teams/%s/members", organizationName, teamName))
                 .retrieve()

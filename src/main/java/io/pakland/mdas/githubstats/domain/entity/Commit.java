@@ -26,10 +26,6 @@ public class Commit {
     // when adding a commit to a set like structure
     @Override
     public int hashCode() {
-        int result = sha.hashCode();
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + additions;
-        result = 31 * result + deletions;
-        return result;
+        return sha.hashCode();
     }
 }
