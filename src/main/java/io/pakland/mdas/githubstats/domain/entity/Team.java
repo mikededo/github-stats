@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.*;
 import javax.persistence.*;
 import lombok.*;
+import org.springframework.web.reactive.result.HandlerResultHandlerSupport;
 
 @Data
 @NoArgsConstructor
@@ -28,7 +29,7 @@ public class Team {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
 
     @OneToMany(
         mappedBy = "team",
@@ -36,6 +37,21 @@ public class Team {
         orphanRemoval = true
     )
     private Set<Repository> repositories = new HashSet<>();
+
+    public void addUsers(Collection<User> users) {
+        if (this.users == null) {
+            this.users = new HashSet<>();
+        }
+
+        users.forEach(user -> {
+            user.setTeam(this);
+            this.users.add(user);
+        });
+    }
+
+    public void addRepositories(Collection<Repository> repositories) {
+       repositories.forEach(this::addRepository);
+    }
 
     public void addRepository(Repository repository) {
         if (repositories == null) {

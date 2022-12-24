@@ -3,6 +3,7 @@ package io.pakland.mdas.githubstats.application.external;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.entity.PullRequest;
 import io.pakland.mdas.githubstats.domain.entity.PullRequestState;
+import io.pakland.mdas.githubstats.domain.entity.Repository;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository.FetchPullRequestFromRepositoryRequest;
 
@@ -18,15 +19,15 @@ public class FetchPullRequestsFromRepository {
         this.pullRequestExternalRepository = pullRequestExternalRepository;
     }
 
-    public List<PullRequest> execute(String repositoryOwnerLogin, String repositoryName)
+    public List<PullRequest> execute(Repository repository)
             throws HttpException {
         int page = 1;
         List<PullRequest> pullRequestList = new ArrayList<>();
         int responseResults;
         do {
             FetchPullRequestFromRepositoryRequest request = FetchPullRequestFromRepositoryRequest.builder()
-                    .repositoryOwner(repositoryOwnerLogin)
-                    .repository(repositoryName)
+                    .repositoryOwner(repository.getOwnerLogin())
+                    .repository(repository.getName())
                     .page(page)
                     .perPage(100)
                     .state(PullRequestState.ALL)
@@ -35,6 +36,7 @@ public class FetchPullRequestsFromRepository {
                     request);
 
             pullRequestList.addAll(apiResults);
+            repository.addPullRequests(pullRequestList);
             responseResults = apiResults.size();
             page++;
         } while (responseResults == 25);

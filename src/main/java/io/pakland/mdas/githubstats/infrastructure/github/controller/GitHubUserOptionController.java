@@ -53,10 +53,10 @@ public class GitHubUserOptionController {
     private void fetchTeamsFromOrganization(Organization organization) {
         try {
             List<Team> teamList = new FetchTeamsFromOrganization(teamExternalRepository)
-                .execute(organization.getLogin());
+                .execute(organization);
             teamList.forEach(team -> {
-                this.fetchRepositoriesFromTeam(organization, team);
-                this.fetchUsersFromTeam(organization, team);
+                this.fetchRepositoriesFromTeam(team);
+                this.fetchUsersFromTeam(team);
             });
         } catch (HttpException e) {
             throw new RuntimeException(e);
@@ -64,54 +64,42 @@ public class GitHubUserOptionController {
 
     }
 
-    private void fetchRepositoriesFromTeam(Organization organization, Team team) {
-        organization.addTeam(team);
+    private void fetchRepositoriesFromTeam(Team team) {
         try {
             // Fetch the repositories for each team.
             List<Repository> repositoryList = new FetchRepositoriesFromTeam(
-                repositoryExternalRepository)
-                .execute(organization.getLogin(), team.getSlug());
+                repositoryExternalRepository).execute(team);
             // Add the team to the repository
-            repositoryList.forEach(repository -> {
-                repository.setTeam(team);
-                this.fetchPullRequestsFromRepository(team, repository);
-            });
+            repositoryList.forEach(this::fetchPullRequestsFromRepository);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void fetchUsersFromTeam(Organization organization, Team team) {
+    private void fetchUsersFromTeam(Team team) {
         try {
             // Fetch the members of each team.
-            List<User> userList = new FetchUsersFromTeam(userExternalRepository)
-                .execute(organization.getLogin(), team.getSlug());
-
-            team.setUsers(userList);
+            new FetchUsersFromTeam(userExternalRepository).execute(team);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void fetchPullRequestsFromRepository(Team team, Repository repository) {
-        team.addRepository(repository);
+    private void fetchPullRequestsFromRepository(Repository repository) {
         try {
             // Fetch pull requests from each team.
             List<PullRequest> pullRequestList = new FetchPullRequestsFromRepository(
                 pullRequestExternalRepository)
-                .execute(repository.getOwnerLogin(), repository.getName());
+                .execute(repository);
 
-            pullRequestList.forEach(pullRequest -> this.fetchCommitsFromPullRequest(repository, pullRequest));
-            repository.setPullRequests(pullRequestList);
+            pullRequestList.forEach(this::fetchCommitsFromPullRequest);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
     }
 
 
-    private void fetchCommitsFromPullRequest(Repository repository, PullRequest pullRequest) {
-        // Add the repository to the pull request
-        pullRequest.setRepository(repository);
+    private void fetchCommitsFromPullRequest(PullRequest pullRequest) {
         /*
         TODO: if the user of the PR belongs to the team, increment the prs executed inside the team
         TODO: else increment the prs executed outside the team
@@ -120,9 +108,7 @@ public class GitHubUserOptionController {
         //
         try {
             List<Commit> commitList = new FetchCommitsFromPullRequest(
-                commitExternalRepository)
-                .execute(repository.getOwnerLogin(), repository.getName(),
-                    pullRequest.getNumber());
+                commitExternalRepository).execute(pullRequest);
             for (Commit commit : commitList) {
                 // TODO: Fetch PR reviews.
 

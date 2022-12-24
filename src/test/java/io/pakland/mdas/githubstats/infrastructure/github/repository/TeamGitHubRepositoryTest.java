@@ -68,7 +68,7 @@ class TeamGitHubRepositoryTest {
             this.organizationName);
         List<Team> expected = new ArrayList<>();
         expected.add(0,
-            new Team(7098104, teamName, null, new ArrayList<>(), new HashSet<>()));
+            new Team(7098104, teamName, null, new HashSet<>(), new HashSet<>()));
 
         assertEquals(1, response.size());
         assertArrayEquals(response.toArray(), expected.toArray());
