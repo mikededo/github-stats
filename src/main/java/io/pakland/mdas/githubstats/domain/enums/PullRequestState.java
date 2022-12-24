@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.domain.entity;
+package io.pakland.mdas.githubstats.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
