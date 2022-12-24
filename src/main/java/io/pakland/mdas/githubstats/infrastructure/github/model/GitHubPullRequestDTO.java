@@ -3,7 +3,7 @@ package io.pakland.mdas.githubstats.infrastructure.github.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.pakland.mdas.githubstats.application.dto.PullRequestDTO;
 import io.pakland.mdas.githubstats.application.dto.PullRequestStateDTO;
-import io.pakland.mdas.githubstats.domain.entity.PullRequestState;
+import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
 
 public class GitHubPullRequestDTO implements PullRequestDTO {
 

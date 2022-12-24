@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.pakland.mdas.githubstats.application.dto.PullRequestDTO;
 import io.pakland.mdas.githubstats.domain.entity.PullRequest;
-import io.pakland.mdas.githubstats.domain.entity.PullRequestState;
+import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

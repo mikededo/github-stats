@@ -2,7 +2,8 @@ package io.pakland.mdas.githubstats.domain.entity;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.persistence.*;
+
+import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
 import lombok.*;
 
 @Data

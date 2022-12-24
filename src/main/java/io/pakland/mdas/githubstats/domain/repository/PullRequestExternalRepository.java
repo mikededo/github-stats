@@ -2,7 +2,7 @@ package io.pakland.mdas.githubstats.domain.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.entity.PullRequest;
-import io.pakland.mdas.githubstats.domain.entity.PullRequestState;
+import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
