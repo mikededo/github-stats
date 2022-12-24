@@ -7,11 +7,14 @@ import lombok.Getter;
 import java.util.Date;
 
 @Data
-@Getter
 @Builder
 public class UserOptionRequest {
+
     private String userName;
+
     private String apiKey;
+
     private Date from;
+
     private Date to;
 }
