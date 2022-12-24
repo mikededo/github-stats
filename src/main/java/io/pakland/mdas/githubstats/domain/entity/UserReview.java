@@ -1,25 +1,26 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-@ToString
+@AllArgsConstructor
+@Builder
 public class UserReview {
 
-  private Integer id;
+    private Integer id;
 
-  private User user;
+    private User user;
 
-  private PullRequest pullRequest;
+    private PullRequest pullRequest;
 
-  private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
     public int sumCommentLength() {
         return comments.stream().mapToInt(Comment::getLength).sum();
