@@ -9,33 +9,17 @@ import org.springframework.web.reactive.result.HandlerResultHandlerSupport;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Builder
-@Table(name = "team")
 public class Team {
 
-    @Id
-    @Column(updatable = false, nullable = false)
     private Integer id;
 
-    @Column(name = "slug")
     private String slug;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     private Organization organization;
 
-    @OneToMany(
-        mappedBy = "team",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
     private Set<User> users = new HashSet<>();
 
-    @OneToMany(
-        mappedBy = "team",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
     private Set<Repository> repositories = new HashSet<>();
 
     public void addUsers(Collection<User> users) {

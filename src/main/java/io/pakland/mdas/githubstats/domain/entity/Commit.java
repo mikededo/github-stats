@@ -14,25 +14,15 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @ToString
-@Entity
-@Table(name = "commit")
 public class Commit {
 
-    @Id
-    @Column(updatable = false, nullable = false)
     @JsonProperty("sha")
     private String sha;
 
-    @Column(name = "date")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
     private PullRequest pullRequest;
 
     private int additions;

@@ -8,40 +8,22 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Builder
-@Table(name = "pull_request")
 public class PullRequest {
 
-    @Id
-    @Column(updatable = false, nullable = false)
     private Integer id;
 
-    @Column(name = "number")
     private Integer number;
 
-    @Column(name = "state")
     private PullRequestState state;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private Repository repository;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToMany(
-        mappedBy = "pullRequest",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
     private Set<Commit> commits = new HashSet<>();
 
-    @OneToMany(
-        cascade = CascadeType.ALL,
-        mappedBy = "pullRequest",
-        orphanRemoval = true
-    )
     private List<UserReview> userReviews = new ArrayList<>();
 
     public void addCommits(Collection<Commit> commits) {

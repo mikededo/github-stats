@@ -1,34 +1,26 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Builder
-@Table(name = "organization")
 public class Organization {
 
-    @Id
-    @Column(updatable = false, nullable = false)
     @NotNull
     private Integer id;
 
-    @Column
     private String login;
 
-    @OneToMany(
-        mappedBy = "organization",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
     private Set<Team> teams = new HashSet<>();
 
     public void addTeam(Team team) {
