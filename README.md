@@ -47,3 +47,36 @@ team help ...
 # run jar
 java -jar target/github-stats-*.jar
 ```
+
+## CheckStyle
+
+```sh
+# compile the code
+mvn clean site
+
+# file configuration
+checkStyle.xml
+
+# file route
+\target\site\checkstyle.html
+```
+
+## Sonar
+
+```sh
+
+# execute docker 
+docker run -d --name sonarqube -p 9000:9000 sonarqube
+
+# first time
+- crear un usuario
+- registrar el proyecto en sonar 
+- seleccionar maven
+- copiar codigo de git con credenciales
+
+# example 
+mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=github-stats \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=sqp_3767710a555637629d9c6281fbf1bdf5fe87a942
+```
