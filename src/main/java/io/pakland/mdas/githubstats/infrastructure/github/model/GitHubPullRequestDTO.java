@@ -16,7 +16,7 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
     private Integer number;
 
     @JsonProperty("state")
-    private PullRequestStateDTO state;
+    private GitHubPullRequestStateDTO state;
 
     @JsonProperty("closed_at")
     private Instant closedAt;

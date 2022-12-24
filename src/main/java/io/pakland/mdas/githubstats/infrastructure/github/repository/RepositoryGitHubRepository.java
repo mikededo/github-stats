@@ -23,6 +23,7 @@ public class RepositoryGitHubRepository implements RepositoryExternalRepository 
     public List<Repository> fetchTeamRepositories(String organizationLogin, String teamSlug)
         throws HttpException {
         try {
+            logger.info(" - Fetching repositories for team: " + organizationLogin + "/" + teamSlug);
             return this.webClientConfiguration.getWebClient().get()
                 .uri(String.format("/orgs/%s/teams/%s/repos", organizationLogin, teamSlug))
                 .retrieve()
