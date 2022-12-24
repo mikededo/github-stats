@@ -6,17 +6,18 @@ import io.pakland.mdas.githubstats.domain.entity.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
-import java.util.List;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @NoArgsConstructor
-public class GitHubUserOptionController {
+public class GitHubUserController {
 
-    Logger logger = LoggerFactory.getLogger(GitHubUserOptionController.class);
+    Logger logger = LoggerFactory.getLogger(GitHubUserController.class);
     private OrganizationExternalRepository organizationExternalRepository;
     private TeamExternalRepository teamExternalRepository;
     private UserExternalRepository userExternalRepository;
@@ -24,16 +25,16 @@ public class GitHubUserOptionController {
     private PullRequestExternalRepository pullRequestExternalRepository;
     private CommitExternalRepository commitExternalRepository;
 
-    public GitHubUserOptionController(GitHubUserOptionRequest userOptionRequest) {
+    public GitHubUserController(GitHubUserOptionRequest userOptionRequest) {
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(
-            "https://api.github.com", userOptionRequest.getApiKey());
+                "https://api.github.com", userOptionRequest.getApiKey());
         this.organizationExternalRepository = new OrganizationGitHubRepository(
-            webClientConfiguration);
+                webClientConfiguration);
         this.teamExternalRepository = new TeamGitHubRepository(webClientConfiguration);
         this.userExternalRepository = new UserGitHubRepository(webClientConfiguration);
         this.repositoryExternalRepository = new RepositoryGitHubRepository(webClientConfiguration);
         this.pullRequestExternalRepository = new PullRequestGitHubRepository(
-            webClientConfiguration);
+                webClientConfiguration);
         this.commitExternalRepository = new CommitGitHubRepository(webClientConfiguration);
     }
 
@@ -42,8 +43,8 @@ public class GitHubUserOptionController {
             // TODO: If the execution succeeds, we should make an entry to the historic_queries table.
             // Fetch the API key's available organizations.
             List<Organization> organizationList = new FetchAvailableOrganizations(
-                this.organizationExternalRepository)
-                .execute();
+                    this.organizationExternalRepository)
+                    .execute();
             organizationList.forEach(this::fetchTeamsFromOrganization);
         } catch (HttpException e) {
             throw new RuntimeException(e);
@@ -53,7 +54,7 @@ public class GitHubUserOptionController {
     private void fetchTeamsFromOrganization(Organization organization) {
         try {
             List<Team> teamList = new FetchTeamsFromOrganization(teamExternalRepository)
-                .execute(organization);
+                    .execute(organization);
             teamList.forEach(team -> {
                 this.fetchRepositoriesFromTeam(team);
                 this.fetchUsersFromTeam(team);
@@ -61,14 +62,13 @@ public class GitHubUserOptionController {
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private void fetchRepositoriesFromTeam(Team team) {
         try {
             // Fetch the repositories for each team.
             List<Repository> repositoryList = new FetchRepositoriesFromTeam(
-                repositoryExternalRepository).execute(team);
+                    repositoryExternalRepository).execute(team);
             // Add the team to the repository
             repositoryList.forEach(this::fetchPullRequestsFromRepository);
         } catch (HttpException e) {
@@ -89,8 +89,8 @@ public class GitHubUserOptionController {
         try {
             // Fetch pull requests from each team.
             List<PullRequest> pullRequestList = new FetchPullRequestsFromRepository(
-                pullRequestExternalRepository)
-                .execute(repository);
+                    pullRequestExternalRepository)
+                    .execute(repository);
 
             pullRequestList.forEach(this::fetchCommitsFromPullRequest);
         } catch (HttpException e) {
@@ -98,17 +98,16 @@ public class GitHubUserOptionController {
         }
     }
 
-
     private void fetchCommitsFromPullRequest(PullRequest pullRequest) {
-        /*
-        TODO: if the user of the PR belongs to the team, increment the prs executed inside the team
-        TODO: else increment the prs executed outside the team
-        TODO: Save for later calculate the additions, deletions and commit num. from PR aggregation
-        */
+    /*
+    TODO: if the user of the PR belongs to the team, increment the prs executed inside the team
+    TODO: else increment the prs executed outside the team
+    TODO: Save for later calculate the additions, deletions and commit num. from PR aggregation
+    */
         //
         try {
             List<Commit> commitList = new FetchCommitsFromPullRequest(
-                commitExternalRepository).execute(pullRequest);
+                    commitExternalRepository).execute(pullRequest);
             for (Commit commit : commitList) {
                 // TODO: Fetch PR reviews.
 

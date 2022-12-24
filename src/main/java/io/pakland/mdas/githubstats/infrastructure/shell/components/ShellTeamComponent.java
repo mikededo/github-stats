@@ -6,7 +6,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellOption;
 
 @ShellComponent
-public class TeamComponent {
+public class ShellTeamComponent {
 
     private boolean team(
             @ShellOption(value = {"n"}) String teamName,

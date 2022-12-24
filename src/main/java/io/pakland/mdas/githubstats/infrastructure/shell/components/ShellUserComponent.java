@@ -1,20 +1,21 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.components;
 
 
-import io.pakland.mdas.githubstats.infrastructure.github.controller.GitHubUserOptionController;
-import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
-import io.pakland.mdas.githubstats.infrastructure.shell.model.UserOptionRequest;
+import io.pakland.mdas.githubstats.domain.enums.EntityType;
+import io.pakland.mdas.githubstats.infrastructure.controller.MainController;
+import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.DateValidator;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.UserNameValidator;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellOption;
 
-@ShellComponent
-public class UserOptionComponent {
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
-    private UserOptionRequest userOptionRequest;
+@ShellComponent
+public class ShellUserComponent {
+
+    private ShellRequest shellRequest;
 
     private boolean user(
         @ShellOption(value = {"n"}) String userName,
@@ -35,8 +36,9 @@ public class UserOptionComponent {
         }
 
         try {
-            this.userOptionRequest = UserOptionRequest.builder()
-                .userName(userName)
+            this.shellRequest = ShellRequest.builder()
+                .entityType(EntityType.USER)
+                .name(userName)
                 .apiKey(apiKey)
                 .from(new SimpleDateFormat("dd/MM/yy").parse("01/" + fromDate))
                 .to(new SimpleDateFormat("dd/MM/yy").parse("01/" + toDate))
@@ -45,13 +47,11 @@ public class UserOptionComponent {
             throw new RuntimeException(e);
         }
 
-        GitHubUserOptionController userControllerFromGithub = new GitHubUserOptionController(
-            GitHubUserOptionRequest.builder().userName(
-                    userOptionRequest.getUserName()).apiKey(userOptionRequest.getApiKey())
-                .from(userOptionRequest.getFrom()).to(userOptionRequest.getTo()).build());
-        userControllerFromGithub.execute();
-        // ... Perform request ...
+        MainController main = new MainController(shellRequest);
+        String serializedOutput = main.execute();
+        System.out.println(serializedOutput);
 
+        // TODO : return console / file / etc.. output
         return true;
     }
 
