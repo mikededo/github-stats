@@ -2,6 +2,8 @@ package io.pakland.mdas.githubstats.application.external;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.entity.Comment;
+import io.pakland.mdas.githubstats.domain.entity.PullRequest;
+import io.pakland.mdas.githubstats.domain.entity.Repository;
 import io.pakland.mdas.githubstats.domain.repository.CommentExternalRepository;
 
 import java.util.ArrayList;
@@ -14,16 +16,20 @@ public class FetchCommentsFromPullRequest {
         this.commentExternalRepository = commentExternalRepository;
     }
 
-    public List<Comment> execute(
-            String repositoryOwner, String repositoryName, Integer pullRequestNumber)
-            throws HttpException {
-        int page = 1;
+    public List<Comment> execute(PullRequest pullRequest) throws HttpException {
+        Integer page = 1;
         List<Comment> commentList = new ArrayList<>();
-        int responseResults;
+        Integer responseResults;
+        Repository repository = pullRequest.getRepository();
         do {
-            List<Comment> apiResults = this.commentExternalRepository.fetchCommentsFromPullRequest(
-                    repositoryOwner, repositoryName, pullRequestNumber, page, 100
-            );
+            CommentExternalRepository.FetchCommentsFromPullRequestRequest request = CommentExternalRepository.FetchCommentsFromPullRequestRequest.builder()
+                    .repositoryOwner(repository.getOwnerLogin())
+                    .repositoryName(repository.getName())
+                    .pullRequestNumber(pullRequest.getNumber())
+                    .page(page)
+                    .perPage(100)
+                    .build();
+            List<Comment> apiResults = this.commentExternalRepository.fetchCommentsFromPullRequest(request);
             commentList.addAll(apiResults);
             responseResults = apiResults.size();
             page++;

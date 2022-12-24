@@ -6,7 +6,7 @@ import io.pakland.mdas.githubstats.domain.entity.Comment;
 import io.pakland.mdas.githubstats.domain.lib.InternalCaching;
 import io.pakland.mdas.githubstats.domain.repository.CommentExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubCommentDTO;
-import java.util.*;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -23,19 +23,18 @@ public class CommentGitHubRepository implements CommentExternalRepository {
     }
 
     @Override
-    public List<Comment> fetchCommentsFromPullRequest(
-        String repositoryOwner, String repositoryName, Integer pullRequestNumber, Integer page,
-        Integer perPage)
+    public List<Comment> fetchCommentsFromPullRequest(FetchCommentsFromPullRequestRequest request)
         throws HttpException {
-        String query = String.format("/repos/%s/%s/pulls/%s/comments?%s", repositoryOwner,
-            repositoryName, pullRequestNumber, getRequestParams(page, perPage));
-        List<Comment> maybeResult = cache.get(query);
-        if (maybeResult != null) {
-            return maybeResult;
-        }
+        String query = String.format("/repos/%s/%s/pulls/%s/comments?%s",
+            request.getRepositoryOwner(),
+            request.getRepositoryName(),
+            request.getPullRequestNumber(),
+            getRequestParams(request.getPage(), request.getPerPage())
+        );
 
         try {
-            logger.info(" - Fetching comments from pull request: " + pullRequestNumber);
+            logger.info(
+                " - Fetching comments from pull request: " + request.getPullRequestNumber());
             List<Comment> result = this.webClientConfiguration.getWebClient().get()
                 .uri(query)
                 .retrieve()
