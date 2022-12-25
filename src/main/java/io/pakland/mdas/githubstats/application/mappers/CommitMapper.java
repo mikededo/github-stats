@@ -8,7 +8,7 @@ public class CommitMapper {
     public static Commit dtoToEntity(CommitDTO dto) {
         return Commit.builder()
             .sha(dto.getSha())
-            .user(dto.getUser())
+            .user(UserMapper.dtoToEntity(dto.getUser()))
             .additions(dto.getAdditions())
             .deletions(dto.getDeletions())
             .date(dto.getDate())
