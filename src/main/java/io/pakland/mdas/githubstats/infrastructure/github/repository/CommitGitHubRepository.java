@@ -41,7 +41,9 @@ public class CommitGitHubRepository implements CommitExternalRepository {
                 .uri(query)
                 .retrieve()
                 .bodyToFlux(GitHubCommitDTO.class)
+                .parallel()
                 .map(CommitMapper::dtoToEntity)
+                .sequential()
                 .collectList()
                 .block();
             cache.add(query, result);

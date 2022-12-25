@@ -6,6 +6,7 @@ import io.pakland.mdas.githubstats.domain.entity.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
+import java.util.concurrent.*;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +68,7 @@ public class GitHubUserController {
         try {
             List<Team> teamList = new FetchTeamsFromOrganization(teamExternalRepository)
                     .execute(organization);
-            teamList.forEach(team -> {
+            teamList.parallelStream().forEach(team -> {
                 this.fetchRepositoriesFromTeam(team);
                 this.fetchUsersFromTeam(team);
             });
@@ -82,7 +83,7 @@ public class GitHubUserController {
             List<Repository> repositoryList = new FetchRepositoriesFromTeam(
                     repositoryExternalRepository).execute(team);
             // Add the team to the repository
-            repositoryList.forEach(this::fetchPullRequestsFromRepository);
+            repositoryList.parallelStream().forEach(this::fetchPullRequestsFromRepository);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
@@ -104,10 +105,19 @@ public class GitHubUserController {
                     pullRequestExternalRepository)
                     .execute(repository);
 
-            pullRequestList.forEach(pullRequest -> {
-                this.fetchCommitsFromPullRequest(pullRequest);
-                this.fetchReviewsFromPullRequest(pullRequest);
-                this.fetchCommentsFromPullRequest(pullRequest);
+            ExecutorService executor = Executors.newFixedThreadPool(3);
+            pullRequestList.parallelStream().forEach(pullRequest -> {
+                Future<?> future1 = executor.submit(() -> this.fetchCommitsFromPullRequest(pullRequest));
+                Future<?> future2 = executor.submit(() -> this.fetchReviewsFromPullRequest(pullRequest));
+                Future<?> future3 = executor.submit(() -> this.fetchCommentsFromPullRequest(pullRequest));
+
+                try {
+                    future1.get();
+                    future2.get();
+                    future3.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
             });
         } catch (HttpException e) {
             throw new RuntimeException(e);

@@ -31,6 +31,10 @@ public class CommentGitHubRepository implements CommentExternalRepository {
             request.getPullRequestNumber(),
             getRequestParams(request.getPage(), request.getPerPage())
         );
+        List<Comment> maybeResult = cache.get(query);
+        if (maybeResult != null) {
+            return maybeResult;
+        }
 
         try {
             logger.info(
@@ -39,7 +43,9 @@ public class CommentGitHubRepository implements CommentExternalRepository {
                 .uri(query)
                 .retrieve()
                 .bodyToFlux(GitHubCommentDTO.class)
+                .parallel()
                 .map(CommentMapper::dtoToEntity)
+                .sequential()
                 .collectList()
                 .block();
             cache.add(query, result);

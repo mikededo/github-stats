@@ -42,7 +42,9 @@ public class ReviewGitHubRepository implements ReviewExternalRepository {
                 .uri(query)
                 .retrieve()
                 .bodyToFlux(GitHubReviewDTO.class)
+                .parallel()
                 .map(ReviewMapper::dtoToEntity)
+                .sequential()
                 .collectList()
                 .block();
             cache.add(query, result);
