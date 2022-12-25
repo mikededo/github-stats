@@ -3,6 +3,7 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.CommentMapper;
 import io.pakland.mdas.githubstats.domain.entity.Comment;
+import io.pakland.mdas.githubstats.domain.lib.InternalCaching;
 import io.pakland.mdas.githubstats.domain.repository.CommentExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubCommentDTO;
 import java.util.*;
@@ -15,8 +16,7 @@ public class CommentGitHubRepository implements CommentExternalRepository {
     private final WebClientConfiguration webClientConfiguration;
     private final Logger logger = LoggerFactory.getLogger(CommentGitHubRepository.class);
 
-    private final Map<Integer, Integer> internalQueryCache = new HashMap<>();
-    private final List<List<Comment>> commentStore = new ArrayList<>();
+    private final InternalCaching<String, List<Comment>> cache = new InternalCaching<>();
 
     public CommentGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
@@ -29,9 +29,9 @@ public class CommentGitHubRepository implements CommentExternalRepository {
         throws HttpException {
         String query = String.format("/repos/%s/%s/pulls/%s/comments?%s", repositoryOwner,
             repositoryName, pullRequestNumber, getRequestParams(page, perPage));
-        Integer dataPosition = internalQueryCache.get(query.hashCode());
-        if (dataPosition != null) {
-            return commentStore.get(dataPosition);
+        List<Comment> maybeResult = cache.get(query);
+        if (maybeResult != null) {
+            return maybeResult;
         }
 
         try {
@@ -43,8 +43,7 @@ public class CommentGitHubRepository implements CommentExternalRepository {
                 .map(CommentMapper::dtoToEntity)
                 .collectList()
                 .block();
-            commentStore.add(result);
-            internalQueryCache.put(query.hashCode(), commentStore.size() - 1);
+            cache.add(query, result);
 
             return result;
 

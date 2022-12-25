@@ -3,9 +3,10 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.CommitMapper;
 import io.pakland.mdas.githubstats.domain.entity.Commit;
+import io.pakland.mdas.githubstats.domain.lib.InternalCaching;
 import io.pakland.mdas.githubstats.domain.repository.CommitExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubCommitDTO;
-import java.util.*;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -15,8 +16,7 @@ public class CommitGitHubRepository implements CommitExternalRepository {
     private final WebClientConfiguration webClientConfiguration;
     private final Logger logger = LoggerFactory.getLogger(CommitGitHubRepository.class);
 
-    private final Map<Integer, Integer> internalQueryCache = new HashMap<>();
-    private final List<List<Commit>> commitStore = new ArrayList<>();
+    private final InternalCaching<String, List<Commit>> cache = new InternalCaching<>();
 
     public CommitGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
@@ -29,9 +29,9 @@ public class CommitGitHubRepository implements CommitExternalRepository {
             request.getRepositoryOwner(),
             request.getRepositoryName(), request.getPullRequestNumber(),
             getRequestParams(request));
-        Integer resultPosition = internalQueryCache.get(query.hashCode());
-        if (resultPosition != null) {
-            return commitStore.get(resultPosition);
+        List<Commit> maybeResult = cache.get(query);
+        if (maybeResult != null) {
+            return maybeResult;
         }
 
         try {
@@ -44,8 +44,7 @@ public class CommitGitHubRepository implements CommitExternalRepository {
                 .map(CommitMapper::dtoToEntity)
                 .collectList()
                 .block();
-            commitStore.add(result);
-            internalQueryCache.put(query.hashCode(), commitStore.size() - 1);
+            cache.add(query, result);
 
             return result;
         } catch (WebClientResponseException ex) {
