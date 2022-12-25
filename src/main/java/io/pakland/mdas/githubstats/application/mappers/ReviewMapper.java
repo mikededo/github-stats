@@ -4,9 +4,11 @@ import io.pakland.mdas.githubstats.application.dto.UserReviewDTO;
 import io.pakland.mdas.githubstats.domain.entity.UserReview;
 
 public class ReviewMapper {
+
     public static UserReview dtoToEntity(UserReviewDTO dto) {
         return UserReview.builder()
-                .id(dto.getId())
-                .build();
+            .id(dto.getId())
+            .user(UserMapper.dtoToEntity(dto.getUser()))
+            .build();
     }
 }

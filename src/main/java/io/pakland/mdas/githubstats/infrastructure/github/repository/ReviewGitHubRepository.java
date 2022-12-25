@@ -7,6 +7,7 @@ import io.pakland.mdas.githubstats.domain.lib.InternalCaching;
 import io.pakland.mdas.githubstats.domain.repository.ReviewExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubReviewDTO;
 import java.util.List;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -43,6 +44,7 @@ public class ReviewGitHubRepository implements ReviewExternalRepository {
                 .retrieve()
                 .bodyToFlux(GitHubReviewDTO.class)
                 .parallel()
+                .filter(review -> Objects.nonNull(review.getUser()))
                 .map(ReviewMapper::dtoToEntity)
                 .sequential()
                 .collectList()
