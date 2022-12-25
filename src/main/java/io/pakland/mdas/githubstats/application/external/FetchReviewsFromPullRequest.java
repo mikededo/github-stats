@@ -18,10 +18,10 @@ public class FetchReviewsFromPullRequest {
 
     public List<UserReview> execute(PullRequest pullRequest)
             throws HttpException {
-        int page = 1;
+        int page = 1, responseResults = 0;
         List<UserReview> reviewList = new ArrayList<>();
-        int responseResults;
         Repository repository = pullRequest.getRepository();
+
         do {
             ReviewExternalRepository.FetchReviewsFromPullRequestRequest request = ReviewExternalRepository.FetchReviewsFromPullRequestRequest.builder()
                     .repositoryOwner(repository.getOwnerLogin())

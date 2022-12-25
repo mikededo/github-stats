@@ -21,9 +21,9 @@ public class FetchPullRequestsFromRepository {
 
     public List<PullRequest> execute(Repository repository)
             throws HttpException {
-        int page = 1;
+        int page = 1, responseResults = 0;
         List<PullRequest> pullRequestList = new ArrayList<>();
-        int responseResults;
+
         do {
             FetchPullRequestFromRepositoryRequest request = FetchPullRequestFromRepositoryRequest.builder()
                     .repositoryOwner(repository.getOwnerLogin())

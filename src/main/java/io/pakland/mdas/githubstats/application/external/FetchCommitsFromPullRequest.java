@@ -17,9 +17,9 @@ public class FetchCommitsFromPullRequest {
     }
 
     public List<Commit> execute(PullRequest pullRequest) throws HttpException {
-        int page = 1;
+        int page = 1, responseResults = 0;
         List<Commit> commitList = new ArrayList<>();
-        int responseResults;
+
         do {
             Repository repository = pullRequest.getRepository();
             CommitExternalRepository.FetchCommitsFromPullRequestRequest request = CommitExternalRepository.FetchCommitsFromPullRequestRequest.builder()
