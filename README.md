@@ -48,31 +48,25 @@ team help ...
 java -jar target/github-stats-*.jar
 ```
 
-## CheckStyle
+### CheckStyle
 
 ```sh
 # compile the code
 mvn clean site
-
-# file configuration
-checkStyle.xml
-
-# file route
-\target\site\checkstyle.html
 ```
 
-## Sonar
+### Sonar
+
+Before running sonar:
+
+- Create a user
+- Register the project in sonar
+- Choose maven
+- Copy git code with credentials
 
 ```sh
-
-# execute docker 
+# run in docker 
 docker run -d --name sonarqube -p 9000:9000 sonarqube
-
-# first time
-- crear un usuario
-- registrar el proyecto en sonar 
-- seleccionar maven
-- copiar codigo de git con credenciales
 
 # example 
 mvn clean verify sonar:sonar \
