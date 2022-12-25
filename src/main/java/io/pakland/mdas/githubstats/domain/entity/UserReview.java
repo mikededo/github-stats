@@ -30,4 +30,9 @@ public class UserReview {
         return pullRequest.getRepository().getTeam().equals(team);
     }
 
+    public boolean isInternal() {
+        return getPullRequest().getRepository().getTeam()
+                .equals(getUser().getTeam());
+    }
+
 }
