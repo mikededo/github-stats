@@ -1,7 +1,5 @@
-package io.pakland.mdas.githubstats.domain;
+package io.pakland.mdas.githubstats.domain.entity;
 
-import io.pakland.mdas.githubstats.domain.entity.PullRequest;
-import io.pakland.mdas.githubstats.domain.entity.PullRequestAggregation;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

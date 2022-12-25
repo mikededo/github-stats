@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.domain.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.domain.entity.Comment;
+import io.pakland.mdas.githubstats.domain.entity.UserReview;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-public interface CommentExternalRepository {
+public interface ReviewExternalRepository {
 
-    public List<Comment> fetchCommentsFromPullRequest(FetchCommentsFromPullRequestRequest request) throws HttpException;
+    public List<UserReview> fetchReviewsFromPullRequest(FetchReviewsFromPullRequestRequest request) throws HttpException;
 
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
     @Getter
-    public static class FetchCommentsFromPullRequestRequest {
+    public static class FetchReviewsFromPullRequestRequest {
         private String repositoryOwner;
         private String repositoryName;
         private Integer pullRequestNumber;
