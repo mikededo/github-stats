@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.infrastructure.controller;
 
-import io.pakland.mdas.githubstats.infrastructure.github.controller.GitHubUserMiddleware;
+import io.pakland.mdas.githubstats.infrastructure.github.controller.GitHubMiddleware;
 import io.pakland.mdas.githubstats.infrastructure.postgres.PostgresMiddleware;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 
@@ -11,7 +11,7 @@ public class MainController {
     public MainController(ShellRequest request) {
         middleware = Middleware.link(
             new PostgresMiddleware(request),
-            new GitHubUserMiddleware(request)
+            new GitHubMiddleware(request)
         );
     }
 

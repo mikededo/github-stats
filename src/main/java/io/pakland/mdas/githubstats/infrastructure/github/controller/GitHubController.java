@@ -16,9 +16,9 @@ import java.util.List;
 
 @Component
 @NoArgsConstructor
-public class GitHubUserController {
+public class GitHubController {
 
-    Logger logger = LoggerFactory.getLogger(GitHubUserController.class);
+    Logger logger = LoggerFactory.getLogger(GitHubController.class);
     private OrganizationExternalRepository organizationExternalRepository;
     private TeamExternalRepository teamExternalRepository;
     private UserExternalRepository userExternalRepository;
@@ -29,7 +29,7 @@ public class GitHubUserController {
     private CommentExternalRepository commentExternalRepository;
 
 
-    public GitHubUserController(GitHubUserOptionRequest userOptionRequest) {
+    public GitHubController(GitHubUserOptionRequest userOptionRequest) {
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(
                 "https://api.github.com", userOptionRequest.getApiKey());
         this.organizationExternalRepository = new OrganizationGitHubRepository(
