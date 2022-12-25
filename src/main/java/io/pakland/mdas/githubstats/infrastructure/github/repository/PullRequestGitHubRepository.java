@@ -6,6 +6,7 @@ import io.pakland.mdas.githubstats.domain.entity.PullRequest;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPullRequestDTO;
 import java.util.List;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -32,6 +33,7 @@ public class PullRequestGitHubRepository implements PullRequestExternalRepositor
                 .retrieve()
                 .bodyToFlux(GitHubPullRequestDTO.class)
                 .parallel()
+                .filter(pr -> Objects.nonNull(pr.getUser()))
                 .map(PullRequestMapper::dtoToEntity)
                 .sequential()
                 .collectList()
