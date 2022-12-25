@@ -1,13 +1,10 @@
-package io.pakland.mdas.githubstats.domain;
-
-import io.pakland.mdas.githubstats.domain.entity.Commit;
-import io.pakland.mdas.githubstats.domain.entity.CommitAggregation;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
+package io.pakland.mdas.githubstats.domain.entity;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+
+import java.util.List;
+import org.junit.jupiter.api.Test;
 
 public class CommitAggregationTest extends CSVTest {
 

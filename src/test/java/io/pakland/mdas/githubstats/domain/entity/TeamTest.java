@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.domain;
+package io.pakland.mdas.githubstats.domain.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
