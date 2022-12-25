@@ -15,8 +15,7 @@ public class FetchTeamsFromOrganization {
     }
 
     public List<Team> execute(Organization organization) throws HttpException {
-        List<Team> teams = teamExternalRepository.fetchTeamsFromOrganization(
-            organization.getLogin());
+        List<Team> teams = teamExternalRepository.fetchTeamsFromOrganization(organization);
         teams.forEach(team -> team.setOrganization(organization));
         return teams;
     }
