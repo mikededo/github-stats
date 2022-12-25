@@ -31,7 +31,9 @@ public class PullRequestGitHubRepository implements PullRequestExternalRepositor
                     request.getRepository(), getRequestParams(request)))
                 .retrieve()
                 .bodyToFlux(GitHubPullRequestDTO.class)
+                .parallel()
                 .map(PullRequestMapper::dtoToEntity)
+                .sequential()
                 .collectList()
                 .block();
         } catch (WebClientResponseException ex) {
