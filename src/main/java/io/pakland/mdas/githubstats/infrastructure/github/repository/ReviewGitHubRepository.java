@@ -2,7 +2,7 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.ReviewMapper;
-import io.pakland.mdas.githubstats.domain.entity.UserReview;
+import io.pakland.mdas.githubstats.domain.entity.Review;
 import io.pakland.mdas.githubstats.domain.lib.InternalCaching;
 import io.pakland.mdas.githubstats.domain.repository.ReviewExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubReviewDTO;
@@ -17,14 +17,14 @@ public class ReviewGitHubRepository implements ReviewExternalRepository {
     private final WebClientConfiguration webClientConfiguration;
     private final Logger logger = LoggerFactory.getLogger(ReviewGitHubRepository.class);
 
-    private final InternalCaching<String, List<UserReview>> cache = new InternalCaching<>();
+    private final InternalCaching<String, List<Review>> cache = new InternalCaching<>();
 
     public ReviewGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
     }
 
     @Override
-    public List<UserReview> fetchReviewsFromPullRequest(FetchReviewsFromPullRequestRequest request)
+    public List<Review> fetchReviewsFromPullRequest(FetchReviewsFromPullRequestRequest request)
         throws HttpException {
         String query = String.format("/repos/%s/%s/pulls/%s/reviews?%s",
             request.getRepositoryOwner(),
@@ -32,14 +32,14 @@ public class ReviewGitHubRepository implements ReviewExternalRepository {
             request.getPullRequestNumber(),
             getRequestParams(request.getPage(), request.getPerPage())
         );
-        List<UserReview> maybeResult = cache.get(query);
+        List<Review> maybeResult = cache.get(query);
         if (maybeResult != null) {
             return maybeResult;
         }
 
         try {
 
-            List<UserReview> result = this.webClientConfiguration.getWebClient().get()
+            List<Review> result = this.webClientConfiguration.getWebClient().get()
                 .uri(query)
                 .retrieve()
                 .bodyToFlux(GitHubReviewDTO.class)

@@ -10,7 +10,7 @@ public class Comment {
 
     private Integer id;
 
-    private UserReview userReview;
+    private Review review;
 
     private String body;
 

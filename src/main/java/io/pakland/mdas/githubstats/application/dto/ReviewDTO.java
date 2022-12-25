@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.application.dto;
 
-public interface UserReviewDTO {
+public interface ReviewDTO {
 
     Integer getId();
 

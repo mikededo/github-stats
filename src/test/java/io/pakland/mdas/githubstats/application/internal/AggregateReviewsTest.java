@@ -3,20 +3,20 @@ package io.pakland.mdas.githubstats.application.internal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.pakland.mdas.githubstats.domain.entity.Comment;
-import io.pakland.mdas.githubstats.domain.entity.UserReview;
-import io.pakland.mdas.githubstats.domain.entity.UserReviewAggregation;
+import io.pakland.mdas.githubstats.domain.entity.Review;
+import io.pakland.mdas.githubstats.domain.entity.ReviewAggregation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class AggregateUserReviewsTest {
+public class AggregateReviewsTest {
 
     @Test
     public void aggregatingReviews_shouldGiveValidCommentLengthAvg() {
         int sum = 0;
-        List<UserReview> reviews = new ArrayList<>();
+        List<Review> reviews = new ArrayList<>();
         Random random = new Random();
 
         // Generate 10 User reviews, each with random comments
@@ -29,14 +29,14 @@ public class AggregateUserReviewsTest {
                 comments.add(comment);
                 sum += comment.getLength();  // accumulate comment length to assert at the end
             }
-            UserReview userReview = Mockito.mock(UserReview.class);
-            userReview.setComments(comments);
-            reviews.add(userReview);
+            Review review = Mockito.mock(Review.class);
+            review.setComments(comments);
+            reviews.add(review);
         }
         float avg = sum / 10f;
 
-        UserReviewAggregation userReviewAggregation = new UserReviewAggregation();
-        float commentLengthAvg = userReviewAggregation.aggregate(reviews).getCommentLengthAvg();
+        ReviewAggregation reviewAggregation = new ReviewAggregation();
+        float commentLengthAvg = reviewAggregation.aggregate(reviews).getCommentLengthAvg();
         assertEquals(avg, commentLengthAvg);
     }
 }
