@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.domain.entity.Organization;
 import io.pakland.mdas.githubstats.domain.entity.Team;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -51,7 +52,8 @@ class TeamGitHubRepositoryTest {
             .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        teamGitHubRepository.fetchTeamsFromOrganization(this.organizationName);
+        teamGitHubRepository.fetchTeamsFromOrganization(
+            Organization.builder().login(this.organizationName).build());
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals(String.format("/orgs/%s/teams", this.organizationName), request.getPath());
@@ -65,7 +67,7 @@ class TeamGitHubRepositoryTest {
         mockWebServer.enqueue(mockResponse);
 
         List<Team> response = teamGitHubRepository.fetchTeamsFromOrganization(
-            this.organizationName);
+            Organization.builder().login(this.organizationName).build());
         List<Team> expected = new ArrayList<>();
         expected.add(0,
             new Team(7098104, teamName, null, new HashSet<>(), new HashSet<>()));

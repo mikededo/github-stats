@@ -2,7 +2,7 @@ package io.pakland.mdas.githubstats.application.external;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.entity.Organization;
@@ -29,7 +29,7 @@ public class FetchTeamsFromOrganizationTest {
         Team teamOne = Team.builder().id(1).slug("gs-internal").build();
         Team teamTwo = Team.builder().id(2).slug("gs-external").build();
         TeamExternalRepository repository = Mockito.mock(TeamExternalRepository.class);
-        Mockito.when(repository.fetchTeamsFromOrganization(anyString()))
+        Mockito.when(repository.fetchTeamsFromOrganization(any(Organization.class)))
             .thenReturn(List.of(teamOne, teamTwo));
 
         List<Team> result = new FetchTeamsFromOrganization(repository).execute(organization);
@@ -44,7 +44,7 @@ public class FetchTeamsFromOrganizationTest {
     @Test
     public void shouldThrowAnException_whenRepositoryThrows() throws HttpException {
         TeamExternalRepository repository = Mockito.mock(TeamExternalRepository.class);
-        Mockito.when(repository.fetchTeamsFromOrganization(anyString()))
+        Mockito.when(repository.fetchTeamsFromOrganization(any(Organization.class)))
             .thenThrow(HttpException.class);
 
         assertThrows(HttpException.class,
