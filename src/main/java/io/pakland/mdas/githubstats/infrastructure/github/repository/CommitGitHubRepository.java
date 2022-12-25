@@ -7,6 +7,7 @@ import io.pakland.mdas.githubstats.domain.lib.InternalCaching;
 import io.pakland.mdas.githubstats.domain.repository.CommitExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubCommitDTO;
 import java.util.List;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -42,6 +43,7 @@ public class CommitGitHubRepository implements CommitExternalRepository {
                 .retrieve()
                 .bodyToFlux(GitHubCommitDTO.class)
                 .parallel()
+                .filter(dto -> Objects.nonNull(dto.getUser()))
                 .map(CommitMapper::dtoToEntity)
                 .sequential()
                 .collectList()
