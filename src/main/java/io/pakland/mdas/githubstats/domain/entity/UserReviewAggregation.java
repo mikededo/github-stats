@@ -1,6 +1,5 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserReviewAggregation implements CSVExportable {
@@ -11,25 +10,26 @@ public class UserReviewAggregation implements CSVExportable {
     private int externalCommentCount = 0;
 
     public UserReviewAggregation aggregate(List<UserReview> userReviews) {
-        List<UserReview> internalReviews = new ArrayList<>();
-        List<UserReview> externalReviews = new ArrayList<>();
+        resetMetrics();
 
         userReviews.forEach(userReview -> {
             if (userReview.isInternal()) {
-                internalReviews.add(userReview);
+                internalCommentLengthSum += userReview.sumCommentLength();
+                internalCommentCount++;
             } else {
-                externalReviews.add(userReview);
+                externalCommentLengthSum += userReview.sumCommentLength();
+                externalCommentCount++;
             }
         });
 
-        internalCommentCount = internalReviews.size();
-        externalCommentCount = externalReviews.size();
-        internalCommentLengthSum = internalReviews.stream()
-            .mapToInt(UserReview::sumCommentLength).sum();
-        externalCommentLengthSum = externalReviews.stream()
-            .mapToInt(UserReview::sumCommentLength).sum();
-
         return this;
+    }
+
+    private void resetMetrics() {
+        internalCommentLengthSum = 0;
+        externalCommentLengthSum = 0;
+        internalCommentCount = 0;
+        externalCommentCount = 0;
     }
 
     public float getInternalCommentLengthAvg() {
