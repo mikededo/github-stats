@@ -11,15 +11,15 @@ public class ReviewAggregationTest extends CSVTest {
 
     @Test
     public void emptyAggregationToCSV_shouldGiveValidCSV() {
-        UserReviewAggregation userReviewAggregation = new UserReviewAggregation();
-        assertTrue(isValidCSV(userReviewAggregation.toCSV()));
+        ReviewAggregation reviewAggregation = new ReviewAggregation();
+        assertTrue(isValidCSV(reviewAggregation.toCSV()));
     }
 
     @Test
     public void nonEmptyAggregationToCSV_shouldGiveValidCSV() {
         List<Review> reviews = List.of(mock(Review.class), mock(Review.class), mock(Review.class));
-        UserReviewAggregation userReviewAggregation = new UserReviewAggregation().aggregate(reviews);
-        assertTrue(isValidCSV(userReviewAggregation.toCSV()));
+        ReviewAggregation reviewAggregation = new ReviewAggregation().aggregate(reviews);
+        assertTrue(isValidCSV(reviewAggregation.toCSV()));
     }
 
 }

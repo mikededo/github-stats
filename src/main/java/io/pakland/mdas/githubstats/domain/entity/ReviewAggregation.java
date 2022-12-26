@@ -2,7 +2,7 @@ package io.pakland.mdas.githubstats.domain.entity;
 
 import java.util.List;
 
-public class UserReviewAggregation implements CSVExportable {
+public class ReviewAggregation implements CSVExportable {
 
     private int internalCommentLengthSum = 0;
     private int externalCommentLengthSum = 0;
@@ -22,6 +22,9 @@ public class UserReviewAggregation implements CSVExportable {
             }
         });
 
+    public ReviewAggregation aggregate(List<Review> reviews) {
+        commentCount = reviews.size();
+        commentLengthSum = reviews.stream().mapToInt(Review::sumCommentLength).sum();
         return this;
     }
 

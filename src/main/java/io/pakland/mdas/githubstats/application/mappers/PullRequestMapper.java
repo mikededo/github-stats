@@ -10,6 +10,7 @@ public class PullRequestMapper {
             .id(dto.getId())
             .number(dto.getNumber())
             .state(dto.getState())
+            .user(UserMapper.dtoToEntity(dto.getUser()))
             .build();
     }
 

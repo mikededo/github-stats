@@ -1,9 +1,7 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
+import java.util.Objects;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -11,15 +9,26 @@ import java.util.List;
 @Builder
 public class User {
 
-  private Integer id;
+    private Integer id;
 
-  private String login;
+    private String login;
 
-  private Team team;
+    private Team team;
 
-  private List<Review> reviews = new ArrayList<>();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User user)) {
+            return false;
+        }
 
-  private List<Commit> commits = new ArrayList<>();
+        return Objects.equals(login, user.login);
+    }
 
-  private List<PullRequest> pullRequests = new ArrayList<>();
+    @Override
+    public int hashCode() {
+        return login != null ? login.hashCode() : 0;
+    }
 }

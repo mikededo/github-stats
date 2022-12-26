@@ -2,8 +2,9 @@ package io.pakland.mdas.githubstats.application.internal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import io.pakland.mdas.githubstats.domain.entity.*;
-
+import io.pakland.mdas.githubstats.domain.entity.Comment;
+import io.pakland.mdas.githubstats.domain.entity.Review;
+import io.pakland.mdas.githubstats.domain.entity.ReviewAggregation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -40,14 +41,14 @@ public class AggregateReviewsTest {
                 comments.add(comment);
                 sum += comment.getLength();  // accumulate comment length to assert at the end
             }
+            Review review = Mockito.mock(Review.class);
             review.setComments(comments);
             reviews.add(review);
         }
         float avg = sum / 10f;
 
-        UserReviewAggregation userReviewAggregation = new UserReviewAggregation().aggregate(reviews);
-        float totalCommentLengthAvg = userReviewAggregation.getTotalCommentLengthAvg();
-
-        assertEquals(avg, totalCommentLengthAvg);
+        ReviewAggregation reviewAggregation = new ReviewAggregation();
+        float commentLengthAvg = reviewAggregation.aggregate(reviews).getCommentLengthAvg();
+        assertEquals(avg, commentLengthAvg);
     }
 }
