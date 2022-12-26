@@ -12,7 +12,7 @@ public class Commit {
 
     private String sha;
 
-    private String user;
+    private User user;
 
     private Integer additions;
 

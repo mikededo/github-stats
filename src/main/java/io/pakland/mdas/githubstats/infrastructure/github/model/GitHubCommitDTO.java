@@ -2,6 +2,9 @@ package io.pakland.mdas.githubstats.infrastructure.github.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.pakland.mdas.githubstats.application.dto.CommitDTO;
+import io.pakland.mdas.githubstats.application.dto.UserDTO;
+import io.pakland.mdas.githubstats.application.mappers.UserMapper;
+import io.pakland.mdas.githubstats.domain.entity.User;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
@@ -18,8 +21,8 @@ public class GitHubCommitDTO implements CommitDTO {
     @JsonProperty("sha")
     private String sha;
 
-    @JsonProperty("user")
-    private String user;
+    @JsonProperty("author")
+    private GitHubUserDTO user;
 
     private Integer additions;
 
@@ -45,7 +48,7 @@ public class GitHubCommitDTO implements CommitDTO {
     }
 
     @Override
-    public String getUser() {
+    public UserDTO getUser() {
         return this.user;
     }
 

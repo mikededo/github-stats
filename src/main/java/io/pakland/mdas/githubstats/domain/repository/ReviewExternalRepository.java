@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.domain.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.domain.entity.UserReview;
+import io.pakland.mdas.githubstats.domain.entity.Review;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ReviewExternalRepository {
 
-    public List<UserReview> fetchReviewsFromPullRequest(FetchReviewsFromPullRequestRequest request) throws HttpException;
+    public List<Review> fetchReviewsFromPullRequest(FetchReviewsFromPullRequestRequest request) throws HttpException;
 
     @NoArgsConstructor
     @AllArgsConstructor

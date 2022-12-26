@@ -9,9 +9,6 @@ public class UserMapper {
         return User.builder()
             .id(dto.getId())
             .login(dto.getLogin())
-            .userReviews(new ArrayList<>())
-            .commits(new ArrayList<>())
-            .pullRequests(new ArrayList<>())
             .build();
     }
 }

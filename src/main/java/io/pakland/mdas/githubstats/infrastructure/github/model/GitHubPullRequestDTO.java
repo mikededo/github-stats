@@ -3,6 +3,7 @@ package io.pakland.mdas.githubstats.infrastructure.github.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.pakland.mdas.githubstats.application.dto.PullRequestDTO;
 import io.pakland.mdas.githubstats.application.dto.PullRequestStateDTO;
+import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
 
 import java.time.Instant;
@@ -26,6 +27,9 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
 
     @JsonProperty("deletions")
     private Integer deletions;
+
+    @JsonProperty("user")
+    private GitHubUserDTO user;
 
     @Override
     public Integer getId() {
@@ -55,5 +59,10 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
     @Override
     public Integer getDeletions() {
         return this.deletions;
+    }
+
+    @Override
+    public UserDTO getUser() {
+        return this.user;
     }
 }

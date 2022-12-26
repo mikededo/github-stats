@@ -16,4 +16,6 @@ public interface PullRequestDTO {
     Integer getAdditions();
 
     Integer getDeletions();
+
+    UserDTO getUser();
 }

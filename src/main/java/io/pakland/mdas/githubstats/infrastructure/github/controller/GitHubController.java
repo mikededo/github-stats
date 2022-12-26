@@ -137,7 +137,7 @@ public class GitHubController {
     private void fetchReviewsFromPullRequest(PullRequest pullRequest) {
         try {
             // Fetch Reviews from each Pull Request.
-            List<UserReview> reviewList = new FetchReviewsFromPullRequest(reviewExternalRepository)
+            List<Review> reviewList = new FetchReviewsFromPullRequest(reviewExternalRepository)
                     .execute(pullRequest);
         } catch (HttpException e) {
             throw new RuntimeException(e);
