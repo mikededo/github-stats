@@ -1,20 +1,20 @@
 package io.pakland.mdas.githubstats.application.external;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.entity.Organization;
 import io.pakland.mdas.githubstats.domain.entity.Team;
 import io.pakland.mdas.githubstats.domain.entity.User;
 import io.pakland.mdas.githubstats.domain.repository.UserExternalRepository;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FetchUsersFromTeamTest {
 
@@ -33,7 +33,7 @@ public class FetchUsersFromTeamTest {
         User userOne = User.builder().id(1).login("mikededo").build();
         User userTwo = User.builder().id(2).login("manerow").build();
         UserExternalRepository repository = Mockito.mock(UserExternalRepository.class);
-        Mockito.when(repository.fetchUsersFromTeam(anyString(), anyString()))
+        Mockito.when(repository.fetchUsersFromTeam(this.team))
             .thenReturn(List.of(userOne, userTwo));
 
         List<User> result = new FetchUsersFromTeam(repository).execute(team);
@@ -43,13 +43,12 @@ public class FetchUsersFromTeamTest {
         assertEquals(result.get(1).getId(), 2);
         assertEquals(result.get(0).getTeam(), team);
         assertEquals(result.get(1).getTeam(), team);
-        assertEquals(team.getUsers().size(), 2);
     }
 
     @Test
     public void shouldThrowAnException_whenRepositoryThrows() throws HttpException {
         UserExternalRepository repository = Mockito.mock(UserExternalRepository.class);
-        Mockito.when(repository.fetchUsersFromTeam(anyString(), anyString()))
+        Mockito.when(repository.fetchUsersFromTeam(this.team))
             .thenThrow(HttpException.class);
 
         assertThrows(HttpException.class, () ->
