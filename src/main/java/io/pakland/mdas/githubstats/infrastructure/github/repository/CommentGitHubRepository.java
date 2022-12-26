@@ -3,13 +3,16 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.CommentMapper;
 import io.pakland.mdas.githubstats.domain.entity.Comment;
+import io.pakland.mdas.githubstats.domain.entity.PullRequest;
 import io.pakland.mdas.githubstats.domain.lib.InternalCaching;
 import io.pakland.mdas.githubstats.domain.repository.CommentExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubCommentDTO;
-import java.util.List;
+import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPageableRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.util.List;
 
 public class CommentGitHubRepository implements CommentExternalRepository {
 
@@ -23,24 +26,22 @@ public class CommentGitHubRepository implements CommentExternalRepository {
     }
 
     @Override
-    public List<Comment> fetchCommentsFromPullRequest(FetchCommentsFromPullRequestRequest request)
-        throws HttpException {
-        String query = String.format("/repos/%s/%s/pulls/%s/comments?%s",
-            request.getRepositoryOwner(),
-            request.getRepositoryName(),
-            request.getPullRequestNumber(),
-            getRequestParams(request.getPage(), request.getPerPage())
+    public List<Comment> fetchCommentsFromPullRequestByPage(PullRequest pullRequest, Integer page) throws HttpException {
+        final String uri = String.format("/repos/%s/%s/pulls/%s/reviews?%s",
+            pullRequest.getRepository().getOwnerLogin(),
+            pullRequest.getRepository().getName(),
+            pullRequest.getNumber(),
+            new GitHubPageableRequest(page, 100).getRequestUriWithParameters()
         );
-        List<Comment> maybeResult = cache.get(query);
+        List<Comment> maybeResult = cache.get(uri);
         if (maybeResult != null) {
             return maybeResult;
         }
 
         try {
-            logger.info(
-                " - Fetching comments from pull request: " + request.getPullRequestNumber());
+            logger.info(" - Fetching comments from pull request: " + pullRequest.getNumber());
             List<Comment> result = this.webClientConfiguration.getWebClient().get()
-                .uri(query)
+                .uri(uri)
                 .retrieve()
                 .bodyToFlux(GitHubCommentDTO.class)
                 .parallel()
@@ -48,7 +49,7 @@ public class CommentGitHubRepository implements CommentExternalRepository {
                 .sequential()
                 .collectList()
                 .block();
-            cache.add(query, result);
+            cache.add(uri, result);
 
             return result;
 
@@ -57,9 +58,4 @@ public class CommentGitHubRepository implements CommentExternalRepository {
             throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
         }
     }
-
-    private String getRequestParams(Integer page, Integer perPage) {
-        return String.format("per_page=%d&page=%d", perPage, page < 0 ? 1 : page);
-    }
-
 }
