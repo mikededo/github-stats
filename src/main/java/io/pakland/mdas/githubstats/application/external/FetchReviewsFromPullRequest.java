@@ -2,7 +2,6 @@ package io.pakland.mdas.githubstats.application.external;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.entity.PullRequest;
-import io.pakland.mdas.githubstats.domain.entity.Repository;
 import io.pakland.mdas.githubstats.domain.entity.Review;
 import io.pakland.mdas.githubstats.domain.repository.ReviewExternalRepository;
 
@@ -17,20 +16,12 @@ public class FetchReviewsFromPullRequest {
     }
 
     public List<Review> execute(PullRequest pullRequest)
-            throws HttpException {
-        int page = 1, responseResults = 0;
+        throws HttpException {
+        int page = 1;
         List<Review> reviewList = new ArrayList<>();
-        Repository repository = pullRequest.getRepository();
-
+        int responseResults;
         do {
-            ReviewExternalRepository.FetchReviewsFromPullRequestRequest request = ReviewExternalRepository.FetchReviewsFromPullRequestRequest.builder()
-                    .repositoryOwner(repository.getOwnerLogin())
-                    .repositoryName(repository.getName())
-                    .pullRequestNumber(pullRequest.getNumber())
-                    .page(page)
-                    .perPage(100)
-                    .build();
-            List<Review> apiResults = this.reviewExternalRepository.fetchReviewsFromPullRequest(request);
+            List<Review> apiResults = this.reviewExternalRepository.fetchReviewsFromPullRequestByPage(pullRequest, page);
             reviewList.addAll(apiResults);
             responseResults = apiResults.size();
             page++;
