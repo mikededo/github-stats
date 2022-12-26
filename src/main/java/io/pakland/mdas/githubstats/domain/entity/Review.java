@@ -26,6 +26,11 @@ public class Review {
         return comments.stream().mapToInt(Comment::getLength).sum();
     }
 
+    public boolean isInternal() {
+        return getPullRequest().getRepository().getTeam()
+                .equals(getUser().getTeam());
+    }
+
     public boolean isReviewFromTeam(Team team) {
         return pullRequest.getRepository().getTeam().equals(team);
     }
