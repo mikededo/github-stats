@@ -30,7 +30,7 @@ public class PullRequest {
 
     private Set<Commit> commits = new HashSet<>();
 
-    private List<UserReview> userReviews = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 
     public void addCommits(Collection<Commit> commits) {
         if (this.commits == null) {

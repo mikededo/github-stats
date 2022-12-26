@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.application.internal;
 
-import io.pakland.mdas.githubstats.domain.entity.UserReview;
+import io.pakland.mdas.githubstats.domain.entity.Review;
 import io.pakland.mdas.githubstats.domain.entity.UserReviewAggregation;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +12,8 @@ public class AggregateUserReviews {
     UserReviewAggregation userReviewAggregation = new UserReviewAggregation();
     public AggregateUserReviews() {}
 
-    public UserReviewAggregation execute(List<UserReview> userReviews) {
-        return userReviewAggregation.aggregate(userReviews);
+    public UserReviewAggregation execute(List<Review> reviews) {
+        return userReviewAggregation.aggregate(reviews);
     }
 
 }

@@ -9,10 +9,10 @@ public class UserReviewAggregation implements CSVExportable {
     private int internalCommentCount = 0;
     private int externalCommentCount = 0;
 
-    public UserReviewAggregation aggregate(List<UserReview> userReviews) {
+    public UserReviewAggregation aggregate(List<Review> reviews) {
         resetMetrics();
 
-        userReviews.forEach(userReview -> {
+        reviews.forEach(userReview -> {
             if (userReview.isInternal()) {
                 internalCommentLengthSum += userReview.sumCommentLength();
                 internalCommentCount++;

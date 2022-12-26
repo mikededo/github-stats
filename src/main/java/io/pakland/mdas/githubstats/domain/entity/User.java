@@ -1,9 +1,7 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +17,7 @@ public class User {
 
   private Team team;
 
-  private List<UserReview> userReviews = new ArrayList<>();
+  private List<Review> reviews = new ArrayList<>();
 
   private List<Commit> commits = new ArrayList<>();
 

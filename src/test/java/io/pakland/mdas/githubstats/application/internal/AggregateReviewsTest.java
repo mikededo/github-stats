@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
 
-public class AggregateUserReviewsTest {
+public class AggregateReviewsTest {
 
     @Test
     public void aggregatingReviews_shouldGiveValidCommentLengthAvg() {
         int sum = 0;
-        List<UserReview> reviews = new ArrayList<>();
+        List<Review> reviews = new ArrayList<>();
         Random random = new Random();
 
         // Generate 10 User reviews, each with random comments
@@ -25,23 +25,23 @@ public class AggregateUserReviewsTest {
             User user = new User();
             Repository repo = new Repository();
             PullRequest pr = new PullRequest();
-            UserReview userReview = new UserReview();
+            Review review = new Review();
             repo.setTeam(team);
             user.setTeam(team);
             pr.setRepository(repo);
-            userReview.setPullRequest(pr);
-            userReview.setUser(user);
+            review.setPullRequest(pr);
+            review.setUser(user);
 
             for (int j = 0; j < 10; j++) {
                 Comment comment = new Comment();
-                comment.setUserReview(userReview);
+                comment.setReview(review);
                 int randomLength = random.nextInt(10);
                 comment.setBody(" ".repeat(randomLength));
                 comments.add(comment);
                 sum += comment.getLength();  // accumulate comment length to assert at the end
             }
-            userReview.setComments(comments);
-            reviews.add(userReview);
+            review.setComments(comments);
+            reviews.add(review);
         }
         float avg = sum / 10f;
 

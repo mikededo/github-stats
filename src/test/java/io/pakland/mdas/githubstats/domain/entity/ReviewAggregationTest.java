@@ -7,7 +7,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class UserReviewAggregationTest extends CSVTest {
+public class ReviewAggregationTest extends CSVTest {
 
     @Test
     public void emptyAggregationToCSV_shouldGiveValidCSV() {
@@ -17,8 +17,8 @@ public class UserReviewAggregationTest extends CSVTest {
 
     @Test
     public void nonEmptyAggregationToCSV_shouldGiveValidCSV() {
-        List<UserReview> userReviews = List.of(mock(UserReview.class), mock(UserReview.class), mock(UserReview.class));
-        UserReviewAggregation userReviewAggregation = new UserReviewAggregation().aggregate(userReviews);
+        List<Review> reviews = List.of(mock(Review.class), mock(Review.class), mock(Review.class));
+        UserReviewAggregation userReviewAggregation = new UserReviewAggregation().aggregate(reviews);
         assertTrue(isValidCSV(userReviewAggregation.toCSV()));
     }
 

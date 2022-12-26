@@ -3,7 +3,7 @@ package io.pakland.mdas.githubstats.application.external;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.entity.PullRequest;
 import io.pakland.mdas.githubstats.domain.entity.Repository;
-import io.pakland.mdas.githubstats.domain.entity.UserReview;
+import io.pakland.mdas.githubstats.domain.entity.Review;
 import io.pakland.mdas.githubstats.domain.repository.ReviewExternalRepository;
 
 import java.util.ArrayList;
@@ -16,10 +16,10 @@ public class FetchReviewsFromPullRequest {
         this.reviewExternalRepository = reviewExternalRepository;
     }
 
-    public List<UserReview> execute(PullRequest pullRequest)
+    public List<Review> execute(PullRequest pullRequest)
             throws HttpException {
         int page = 1, responseResults = 0;
-        List<UserReview> reviewList = new ArrayList<>();
+        List<Review> reviewList = new ArrayList<>();
         Repository repository = pullRequest.getRepository();
 
         do {
@@ -30,7 +30,7 @@ public class FetchReviewsFromPullRequest {
                     .page(page)
                     .perPage(100)
                     .build();
-            List<UserReview> apiResults = this.reviewExternalRepository.fetchReviewsFromPullRequest(request);
+            List<Review> apiResults = this.reviewExternalRepository.fetchReviewsFromPullRequest(request);
             reviewList.addAll(apiResults);
             responseResults = apiResults.size();
             page++;
