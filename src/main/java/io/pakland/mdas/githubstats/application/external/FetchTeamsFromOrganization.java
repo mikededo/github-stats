@@ -4,6 +4,7 @@ import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.entity.Organization;
 import io.pakland.mdas.githubstats.domain.entity.Team;
 import io.pakland.mdas.githubstats.domain.repository.TeamExternalRepository;
+
 import java.util.List;
 
 public class FetchTeamsFromOrganization {
