@@ -3,13 +3,18 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.PullRequestMapper;
 import io.pakland.mdas.githubstats.domain.entity.PullRequest;
+import io.pakland.mdas.githubstats.domain.entity.Repository;
+import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository;
+import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPageablePullRequestRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPullRequestDTO;
-import java.util.List;
-import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 public class PullRequestGitHubRepository implements PullRequestExternalRepository {
 
@@ -21,15 +26,19 @@ public class PullRequestGitHubRepository implements PullRequestExternalRepositor
     }
 
     @Override
-    public List<PullRequest> fetchPullRequestsFromRepository(
-        FetchPullRequestFromRepositoryRequest request) throws HttpException {
+    public List<PullRequest> fetchPullRequestsFromRepositoryByPeriodAndPage(
+        Repository repository, Date from, Date to, Integer page) throws HttpException {
         try {
-            logger.info(
-                " - Fetching pull requests from repository: " + request.getRepositoryOwner() + "/"
-                    + request.getRepository());
+            final String uri = String.format("/repos/%s/%s/pulls?%s",
+                repository.getOwnerLogin(),
+                repository.getName(),
+                new GitHubPageablePullRequestRequest(PullRequestState.ALL, page, 100)
+                    .getRequestUriWithParameters()
+            );
+            
+            // TODO: Pending to implement the fetch by period. Currently is fetching everything.
             return this.webClientConfiguration.getWebClient().get()
-                .uri(String.format("/repos/%s/%s/pulls?%s", request.getRepositoryOwner(),
-                    request.getRepository(), getRequestParams(request)))
+                .uri(uri)
                 .retrieve()
                 .bodyToFlux(GitHubPullRequestDTO.class)
                 .parallel()
@@ -42,12 +51,5 @@ public class PullRequestGitHubRepository implements PullRequestExternalRepositor
             logger.error(ex.toString());
             throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
         }
-    }
-
-    private String getRequestParams(FetchPullRequestFromRepositoryRequest request) {
-        return String.format(
-            "state=%s&per_page=%d&page=%d", request.getState(), request.getPerPage(),
-            request.getPage() < 0 ? 1 : request.getPage()
-        );
     }
 }
