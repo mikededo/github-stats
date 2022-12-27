@@ -28,14 +28,14 @@ public class PullRequestGitHubRepository implements PullRequestExternalRepositor
     @Override
     public List<PullRequest> fetchPullRequestsFromRepositoryByPeriodAndPage(
         Repository repository, Date from, Date to, Integer page) throws HttpException {
+        final String uri = String.format("/repos/%s/%s/pulls?%s",
+            repository.getOwnerLogin(),
+            repository.getName(),
+            new GitHubPageablePullRequestRequest(PullRequestState.ALL, page, 100)
+                .getRequestUriWithParameters()
+        );
+
         try {
-            final String uri = String.format("/repos/%s/%s/pulls?%s",
-                repository.getOwnerLogin(),
-                repository.getName(),
-                new GitHubPageablePullRequestRequest(PullRequestState.ALL, page, 100)
-                    .getRequestUriWithParameters()
-            );
-            
             // TODO: Pending to implement the fetch by period. Currently is fetching everything.
             return this.webClientConfiguration.getWebClient().get()
                 .uri(uri)

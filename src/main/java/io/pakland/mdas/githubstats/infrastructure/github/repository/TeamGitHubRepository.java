@@ -23,8 +23,9 @@ public class TeamGitHubRepository implements TeamExternalRepository {
 
     @Override
     public List<Team> fetchTeamsFromOrganization(Organization organization) throws HttpException {
+        final String uri = String.format("/orgs/%s/teams", organization.getLogin());
+
         try {
-            final String uri = String.format("/orgs/%s/teams", organization.getLogin());
             logger.info(" - Fetching teams from organization: " + organization.getLogin());
             
             return this.webClientConfiguration.getWebClient().get()

@@ -29,19 +29,19 @@ public class CommitGitHubRepository implements CommitExternalRepository {
     @Override
     public List<Commit> fetchCommitsFromPullRequestByPage(PullRequest pullRequest, Integer page)
         throws HttpException {
+        final String uri = String.format("/repos/%s/%s/pulls/%s/reviews?%s",
+            pullRequest.getRepository().getOwnerLogin(),
+            pullRequest.getRepository().getName(),
+            pullRequest.getNumber(),
+            new GitHubPageableRequest(page, 100).getRequestUriWithParameters()
+        );
+
+        List<Commit> maybeResult = cache.get(uri);
+        if (maybeResult != null) {
+            return maybeResult;
+        }
+
         try {
-            final String uri = String.format("/repos/%s/%s/pulls/%s/reviews?%s",
-                pullRequest.getRepository().getOwnerLogin(),
-                pullRequest.getRepository().getName(),
-                pullRequest.getNumber(),
-                new GitHubPageableRequest(page, 100).getRequestUriWithParameters()
-            );
-
-            List<Commit> maybeResult = cache.get(uri);
-            if (maybeResult != null) {
-                return maybeResult;
-            }
-
             logger.info(" - Fetching commits for pull request: " + pullRequest.getNumber().toString());
             List<Commit> result = this.webClientConfiguration.getWebClient().get()
                 .uri(uri)

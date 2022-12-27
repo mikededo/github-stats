@@ -23,12 +23,12 @@ public class RepositoryGitHubRepository implements RepositoryExternalRepository 
 
     @Override
     public List<Repository> fetchRepositoriesFromTeam(Team team) throws HttpException {
-        try {
-            final String uri = String.format("/orgs/%s/teams/%s/repos",
-                team.getOrganization().getLogin(),
-                team.getSlug()
-            );
+        final String uri = String.format("/orgs/%s/teams/%s/repos",
+            team.getOrganization().getLogin(),
+            team.getSlug()
+        );
 
+        try {
             return this.webClientConfiguration.getWebClient().get()
                 .uri(uri)
                 .retrieve()

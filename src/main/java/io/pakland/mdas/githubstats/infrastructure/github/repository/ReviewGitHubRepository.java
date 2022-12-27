@@ -28,19 +28,19 @@ public class ReviewGitHubRepository implements ReviewExternalRepository {
 
     @Override
     public List<Review> fetchReviewsFromPullRequestByPage(PullRequest pullRequest, Integer page) throws HttpException {
+        final String uri = String.format("/repos/%s/%s/pulls/%s/reviews?%s",
+            pullRequest.getRepository().getOwnerLogin(),
+            pullRequest.getRepository().getName(),
+            pullRequest.getNumber(),
+            new GitHubPageableRequest(page, 100).getRequestUriWithParameters()
+        );
+
+        List<Review> maybeResult = cache.get(uri);
+        if (maybeResult != null) {
+            return maybeResult;
+        }
+
         try {
-            final String uri = String.format("/repos/%s/%s/pulls/%s/reviews?%s",
-                pullRequest.getRepository().getOwnerLogin(),
-                pullRequest.getRepository().getName(),
-                pullRequest.getNumber(),
-                new GitHubPageableRequest(page, 100).getRequestUriWithParameters()
-            );
-
-            List<Review> maybeResult = cache.get(uri);
-            if (maybeResult != null) {
-                return maybeResult;
-            }
-
             List<Review> result = this.webClientConfiguration.getWebClient().get()
                 .uri(uri)
                 .retrieve()
