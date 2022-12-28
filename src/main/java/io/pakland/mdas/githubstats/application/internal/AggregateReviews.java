@@ -1,21 +1,19 @@
 package io.pakland.mdas.githubstats.application.internal;
 
-import io.pakland.mdas.githubstats.domain.entity.Review;
-import io.pakland.mdas.githubstats.domain.entity.ReviewAggregation;
-import io.pakland.mdas.githubstats.domain.entity.Team;
-import io.pakland.mdas.githubstats.domain.entity.User;
-import org.springframework.stereotype.Service;
-
+import io.pakland.mdas.githubstats.domain.entity.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AggregateReviews {
 
     ReviewAggregation reviewAggregation = new ReviewAggregation();
-    public AggregateReviews() {}
+
+    public AggregateReviews() {
+    }
 
     public Map<Team, Map<User, ReviewAggregation>> execute(List<Review> reviews) {
         // {
@@ -28,7 +26,7 @@ public class AggregateReviews {
         // }
         Map<Team, Map<User, List<Review>>> groupedReviews = reviews.stream().collect(
             Collectors.groupingBy(review -> review.getUser().getTeam(),
-            Collectors.groupingBy(Review::getUser)));
+                Collectors.groupingBy(Review::getUser)));
 
         // {
         //   "userA": {
@@ -39,12 +37,11 @@ public class AggregateReviews {
         //   "userC": { "teamB": reviewAggregationUserCTeamB } ...
         // }
         Map<Team, Map<User, ReviewAggregation>> aggReviews = new HashMap<>();
-        groupedReviews.keySet().forEach(team -> {
+        groupedReviews.forEach((team, userReviewMap) -> {
             Map<User, ReviewAggregation> aggReviewsByUser = new HashMap<>();
-            groupedReviews.get(team).keySet().forEach(user -> {
-                List<Review> reviewsByUserByTeam = groupedReviews.get(team).get(user);
-                aggReviewsByUser.put(user, reviewAggregation.aggregate(reviewsByUserByTeam));
-            });
+            userReviewMap.forEach((user, reviewList) ->
+                aggReviewsByUser.put(user, reviewAggregation.aggregate(reviewList))
+            );
             aggReviews.put(team, aggReviewsByUser);
         });
 
