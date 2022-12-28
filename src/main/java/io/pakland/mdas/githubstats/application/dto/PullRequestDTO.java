@@ -13,6 +13,8 @@ public interface PullRequestDTO {
 
     Instant getClosedAt();
 
+    Instant getCreatedAt();
+
     Integer getAdditions();
 
     Integer getDeletions();

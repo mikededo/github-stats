@@ -2,13 +2,19 @@ package io.pakland.mdas.githubstats.infrastructure.github.controller;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.external.*;
+import io.pakland.mdas.githubstats.application.internal.AggregatePullRequests;
 import io.pakland.mdas.githubstats.domain.entity.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -93,7 +99,12 @@ public class GitHubController {
                     .execute(repository, userOptionRequest.getFrom(), userOptionRequest.getTo());
 
             ExecutorService executor = Executors.newFixedThreadPool(3);
+            List<PullRequest> prToAggregate = new ArrayList<>();
+            Logger l = LoggerFactory.getLogger(this.getClass());
             pullRequestList.parallelStream().forEach(pullRequest -> {
+                if (isBetweenRequestRange(pullRequest.getCreatedAt())) {
+                    prToAggregate.add(pullRequest);
+                }
                 Future<?> future1 = executor.submit(
                     () -> this.fetchCommitsFromPullRequest(pullRequest));
                 Future<?> future2 = executor.submit(
@@ -109,6 +120,12 @@ public class GitHubController {
                     throw new RuntimeException(e);
                 }
             });
+
+            Map<User, PullRequestAggregation> prAggregation = new AggregatePullRequests().execute(
+                prToAggregate);
+            prAggregation.forEach((key, value) -> l.info(
+                String.format("%s -> %d", key.getLogin(),
+                    value.getCreatedCount())));
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
@@ -142,5 +159,10 @@ public class GitHubController {
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean isBetweenRequestRange(Instant instant) {
+        return instant.isAfter(userOptionRequest.getFrom().toInstant()) && instant.isBefore(
+            userOptionRequest.getTo().toInstant());
     }
 }
