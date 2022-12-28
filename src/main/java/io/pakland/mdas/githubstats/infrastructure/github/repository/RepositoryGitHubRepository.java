@@ -6,10 +6,11 @@ import io.pakland.mdas.githubstats.domain.entity.Repository;
 import io.pakland.mdas.githubstats.domain.entity.Team;
 import io.pakland.mdas.githubstats.domain.repository.RepositoryExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubRepositoryDTO;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.util.List;
 
 public class RepositoryGitHubRepository implements RepositoryExternalRepository {
 
@@ -21,15 +22,15 @@ public class RepositoryGitHubRepository implements RepositoryExternalRepository 
     }
 
     @Override
-    public List<Repository> fetchTeamRepositories(Team team)
-        throws HttpException {
-        String organizationLogin = team.getOrganization().getLogin();
-        String teamSlug = team.getSlug();
+    public List<Repository> fetchRepositoriesFromTeam(Team team) throws HttpException {
+        final String uri = String.format("/orgs/%s/teams/%s/repos",
+            team.getOrganization().getLogin(),
+            team.getSlug()
+        );
 
         try {
-            logger.info(" - Fetching repositories for team: " + organizationLogin + "/" + teamSlug);
             return this.webClientConfiguration.getWebClient().get()
-                .uri(String.format("/orgs/%s/teams/%s/repos", organizationLogin, teamSlug))
+                .uri(uri)
                 .retrieve()
                 .bodyToFlux(GitHubRepositoryDTO.class)
                 .map(RepositoryMapper::dtoToEntity)

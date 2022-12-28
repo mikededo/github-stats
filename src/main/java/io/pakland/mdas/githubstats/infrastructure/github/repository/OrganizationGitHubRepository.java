@@ -21,10 +21,11 @@ public class OrganizationGitHubRepository implements OrganizationExternalReposit
 
     @Override
     public List<Organization> fetchAvailableOrganizations() throws HttpException {
+        final String uri = "/user/orgs";
+
         try {
-            logger.info(" - Fetching organizations");
             return this.webClientConfiguration.getWebClient().get()
-                .uri("/user/orgs")
+                .uri(uri)
                 .retrieve()
                 .bodyToFlux(GitHubOrganizationDTO.class)
                 .map(OrganizationMapper::dtoToEntity)

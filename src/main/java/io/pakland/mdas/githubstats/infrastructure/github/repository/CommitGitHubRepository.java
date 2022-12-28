@@ -3,14 +3,17 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.CommitMapper;
 import io.pakland.mdas.githubstats.domain.entity.Commit;
+import io.pakland.mdas.githubstats.domain.entity.PullRequest;
 import io.pakland.mdas.githubstats.domain.lib.InternalCaching;
 import io.pakland.mdas.githubstats.domain.repository.CommitExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubCommitDTO;
-import java.util.List;
-import java.util.Objects;
+import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPageableRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.util.List;
+import java.util.Objects;
 
 public class CommitGitHubRepository implements CommitExternalRepository {
 
@@ -24,22 +27,24 @@ public class CommitGitHubRepository implements CommitExternalRepository {
     }
 
     @Override
-    public List<Commit> fetchCommitsFromPullRequest(FetchCommitsFromPullRequestRequest request)
+    public List<Commit> fetchCommitsFromPullRequestByPage(PullRequest pullRequest, Integer page)
         throws HttpException {
-        String query = String.format("/repos/%s/%s/pulls/%s/commits?%s",
-            request.getRepositoryOwner(),
-            request.getRepositoryName(), request.getPullRequestNumber(),
-            getRequestParams(request));
-        List<Commit> maybeResult = cache.get(query);
+        final String uri = String.format("/repos/%s/%s/pulls/%s/reviews?%s",
+            pullRequest.getRepository().getOwnerLogin(),
+            pullRequest.getRepository().getName(),
+            pullRequest.getNumber(),
+            new GitHubPageableRequest(page, 100).getRequestUriWithParameters()
+        );
+
+        List<Commit> maybeResult = cache.get(uri);
         if (maybeResult != null) {
             return maybeResult;
         }
 
         try {
-            logger.info(" - Fetching commits for pull request: " + request.getPullRequestNumber()
-                .toString());
+            logger.info(" - Fetching commits for pull request: " + pullRequest.getNumber().toString());
             List<Commit> result = this.webClientConfiguration.getWebClient().get()
-                .uri(query)
+                .uri(uri)
                 .retrieve()
                 .bodyToFlux(GitHubCommitDTO.class)
                 .parallel()
@@ -48,17 +53,12 @@ public class CommitGitHubRepository implements CommitExternalRepository {
                 .sequential()
                 .collectList()
                 .block();
-            cache.add(query, result);
+            cache.add(uri, result);
 
             return result;
         } catch (WebClientResponseException ex) {
             logger.error(ex.toString());
             throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
         }
-    }
-
-    private String getRequestParams(FetchCommitsFromPullRequestRequest request) {
-        return String.format("per_page=%d&page=%d", request.getPerPage(),
-            request.getPage() < 0 ? 1 : request.getPage());
     }
 }
