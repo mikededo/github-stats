@@ -6,14 +6,10 @@ import io.pakland.mdas.githubstats.domain.entity.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
+import java.util.List;
+import java.util.concurrent.*;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 @Component
 @NoArgsConstructor
@@ -21,21 +17,34 @@ public class GitHubController {
 
     private WebClientConfiguration webClientConfiguration;
     private GitHubUserOptionRequest userOptionRequest;
+    private OrganizationExternalRepository organizationRepository;
+    private TeamExternalRepository teamRepository;
+    private RepositoryExternalRepository repositoryRepository;
+    private UserExternalRepository userRepository;
+    private PullRequestExternalRepository pullRequestRepository;
+    private CommitExternalRepository commitRepository;
+    private ReviewExternalRepository reviewRepository;
+    private CommentExternalRepository commentRepository;
 
     public GitHubController(GitHubUserOptionRequest userOptionRequest) {
         this.webClientConfiguration = new WebClientConfiguration(
             "https://api.github.com", userOptionRequest.getApiKey());
         this.userOptionRequest = userOptionRequest;
+        this.organizationRepository = new OrganizationGitHubRepository(this.webClientConfiguration);
+        this.teamRepository = new TeamGitHubRepository(this.webClientConfiguration);
+        this.repositoryRepository = new RepositoryGitHubRepository(this.webClientConfiguration);
+        this.userRepository = new UserGitHubRepository(this.webClientConfiguration);
+        this.pullRequestRepository = new PullRequestGitHubRepository(this.webClientConfiguration);
+        this.commitRepository = new CommitGitHubRepository(this.webClientConfiguration);
+        this.reviewRepository = new ReviewGitHubRepository(this.webClientConfiguration);
+        this.commentRepository = new CommentGitHubRepository(this.webClientConfiguration);
     }
 
     public void execute() {
         try {
             // Fetch the API key's available organizations.
-            OrganizationExternalRepository organizationExternalRepository =
-                new OrganizationGitHubRepository(this.webClientConfiguration);
             List<Organization> organizationList =
-                new FetchAvailableOrganizations(organizationExternalRepository)
-                    .execute();
+                new FetchAvailableOrganizations(organizationRepository).execute();
             organizationList.forEach(this::fetchTeamsFromOrganization);
         } catch (HttpException e) {
             throw new RuntimeException(e);
@@ -44,9 +53,7 @@ public class GitHubController {
 
     private void fetchTeamsFromOrganization(Organization organization) {
         try {
-            TeamExternalRepository teamExternalRepository =
-                new TeamGitHubRepository(this.webClientConfiguration);
-            List<Team> teamList = new FetchTeamsFromOrganization(teamExternalRepository)
+            List<Team> teamList = new FetchTeamsFromOrganization(teamRepository)
                 .execute(organization);
             teamList.parallelStream().forEach(team -> {
                 this.fetchRepositoriesFromTeam(team);
@@ -60,10 +67,8 @@ public class GitHubController {
     private void fetchRepositoriesFromTeam(Team team) {
         try {
             // Fetch the repositories for each team.
-            RepositoryExternalRepository repositoryExternalRepository =
-                new RepositoryGitHubRepository(this.webClientConfiguration);
             List<Repository> repositoryList = new FetchRepositoriesFromTeam(
-                repositoryExternalRepository).execute(team);
+                repositoryRepository).execute(team);
             // Add the team to the repository
             repositoryList.parallelStream().forEach(this::fetchPullRequestsFromRepository);
         } catch (HttpException e) {
@@ -74,9 +79,7 @@ public class GitHubController {
     private void fetchUsersFromTeam(Team team) {
         try {
             // Fetch the members of each team.
-            UserExternalRepository userExternalRepository =
-                new UserGitHubRepository(this.webClientConfiguration);
-            new FetchUsersFromTeam(userExternalRepository).execute(team);
+            new FetchUsersFromTeam(userRepository).execute(team);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
@@ -85,17 +88,18 @@ public class GitHubController {
     private void fetchPullRequestsFromRepository(Repository repository) {
         try {
             // Fetch pull requests from each team.
-            PullRequestExternalRepository pullRequestExternalRepository =
-                new PullRequestGitHubRepository(this.webClientConfiguration);
             List<PullRequest> pullRequestList =
-                new FetchPullRequestsInPeriodFromRepository(pullRequestExternalRepository)
+                new FetchPullRequestsInPeriodFromRepository(pullRequestRepository)
                     .execute(repository, userOptionRequest.getFrom(), userOptionRequest.getTo());
 
             ExecutorService executor = Executors.newFixedThreadPool(3);
             pullRequestList.parallelStream().forEach(pullRequest -> {
-                Future<?> future1 = executor.submit(() -> this.fetchCommitsFromPullRequest(pullRequest));
-                Future<?> future2 = executor.submit(() -> this.fetchReviewsFromPullRequest(pullRequest));
-                Future<?> future3 = executor.submit(() -> this.fetchCommentsFromPullRequest(pullRequest));
+                Future<?> future1 = executor.submit(
+                    () -> this.fetchCommitsFromPullRequest(pullRequest));
+                Future<?> future2 = executor.submit(
+                    () -> this.fetchReviewsFromPullRequest(pullRequest));
+                Future<?> future3 = executor.submit(
+                    () -> this.fetchCommentsFromPullRequest(pullRequest));
 
                 try {
                     future1.get();
@@ -113,9 +117,7 @@ public class GitHubController {
     private void fetchCommitsFromPullRequest(PullRequest pullRequest) {
         try {
             // Fetch Commits from each Pull Request.
-            CommitExternalRepository commitExternalRepository =
-                new CommitGitHubRepository(this.webClientConfiguration);
-            List<Commit> commitList = new FetchCommitsFromPullRequest(commitExternalRepository)
+            List<Commit> commitList = new FetchCommitsFromPullRequest(commitRepository)
                 .execute(pullRequest);
         } catch (HttpException e) {
             throw new RuntimeException(e);
@@ -125,9 +127,7 @@ public class GitHubController {
     private void fetchReviewsFromPullRequest(PullRequest pullRequest) {
         try {
             // Fetch Reviews from each Pull Request.
-            ReviewExternalRepository reviewExternalRepository =
-                new ReviewGitHubRepository(this.webClientConfiguration);
-            List<Review> reviewList = new FetchReviewsFromPullRequest(reviewExternalRepository)
+            List<Review> reviewList = new FetchReviewsFromPullRequest(reviewRepository)
                 .execute(pullRequest);
         } catch (HttpException e) {
             throw new RuntimeException(e);
@@ -137,9 +137,7 @@ public class GitHubController {
     private void fetchCommentsFromPullRequest(PullRequest pullRequest) {
         try {
             // Fetch Comments from each Pull Request.
-            CommentExternalRepository commentExternalRepository =
-                new CommentGitHubRepository(this.webClientConfiguration);
-            List<Comment> commentList = new FetchCommentsFromPullRequest(commentExternalRepository)
+            List<Comment> commentList = new FetchCommentsFromPullRequest(commentRepository)
                 .execute(pullRequest);
         } catch (HttpException e) {
             throw new RuntimeException(e);
