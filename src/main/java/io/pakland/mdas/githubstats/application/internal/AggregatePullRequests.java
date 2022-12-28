@@ -1,22 +1,48 @@
 package io.pakland.mdas.githubstats.application.internal;
 
-import io.pakland.mdas.githubstats.domain.entity.PullRequest;
-import io.pakland.mdas.githubstats.domain.entity.PullRequestAggregation;
-import io.pakland.mdas.githubstats.domain.entity.User;
+import io.pakland.mdas.githubstats.domain.entity.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AggregatePullRequests {
+    PullRequestAggregation pullRequestAggregation = new PullRequestAggregation();
 
-    public Map<User, PullRequestAggregation> execute(List<PullRequest> pullRequests) {
-        Map<User, PullRequestAggregation> groupedAggregations = new HashMap<>();
-        Map<User, List<PullRequest>> groupedPullRequests = pullRequests.parallelStream().collect(
-            Collectors.groupingBy(PullRequest::getUser));
-        groupedPullRequests.forEach((key, value) -> groupedAggregations.put(key,
-            new PullRequestAggregation().aggregate(value)));
-        return groupedAggregations;
+    public AggregatePullRequests() {
+    }
+
+    public Map<Team, Map<User, PullRequestAggregation>> execute(List<PullRequest> pullRequests) {
+        // {
+        //   "userA": {
+        //      "teamA": [prsFromUserAInTeamA],
+        //      "teamB": [prsFromUserAInTeamB]
+        //   },
+        //   "userB": { "teamA": [prsFromUserBInTeamA] },
+        //   "userC": { "teamB": [prsFromUserCInTeamB] } ...
+        // }
+        Map<Team, Map<User, List<PullRequest>>> groupedPullRequests = pullRequests.stream().collect(
+            Collectors.groupingBy(pr -> pr.getRepository().getTeam(),
+                Collectors.groupingBy(PullRequest::getUser)));
+
+        // {
+        //   "userA": {
+        //      "teamA": prAggregationUserATeamA
+        //      "teamB": prAggregationUserATeamB
+        //   },
+        //   "userB": { "teamA": prAggregationUserBTeamA },
+        //   "userC": { "teamB": prAggregationUserCTeamB } ...
+        // }
+        Map<Team, Map<User, PullRequestAggregation>> aggPullRequests = new HashMap<>();
+        groupedPullRequests.forEach((team, userPrMap) -> {
+            Map<User, PullRequestAggregation> aggPullRequestsByUser = new HashMap<>();
+            userPrMap.forEach((user, prList) -> aggPullRequestsByUser.put(user,
+                pullRequestAggregation.aggregate(prList)));
+            aggPullRequests.put(team, aggPullRequestsByUser);
+        });
+
+        return aggPullRequests;
     }
 
 }
