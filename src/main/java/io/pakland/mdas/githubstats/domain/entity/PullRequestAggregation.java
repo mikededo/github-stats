@@ -2,7 +2,7 @@ package io.pakland.mdas.githubstats.domain.entity;
 
 import java.util.List;
 
-public class PullRequestAggregation implements CSVExportable {
+public class PullRequestAggregation {
     private int linesAdded;
 
     private int linesRemoved;
@@ -18,12 +18,6 @@ public class PullRequestAggregation implements CSVExportable {
     public PullRequestAggregation aggregate(List<PullRequest> pullRequests) {
         // TODO
         return new PullRequestAggregation();
-    }
-
-    @Override
-    public String toCSV() {
-        // TODO
-        return "";
     }
 
 }
