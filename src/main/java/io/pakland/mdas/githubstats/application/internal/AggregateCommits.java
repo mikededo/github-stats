@@ -35,12 +35,11 @@ public class AggregateCommits {
         //   "userC": { "teamB": commitAggregationUserCTeamB } ...
         // }
         Map<Team, Map<User, CommitAggregation>> aggCommits = new HashMap<>();
-        groupedCommits.keySet().forEach(team -> {
+        groupedCommits.forEach((team, userCommitMap) -> {
             Map<User, CommitAggregation> aggCommitsByUser = new HashMap<>();
-            groupedCommits.get(team).keySet().forEach(user -> {
-                List<Commit> commitsByUserByTeam = groupedCommits.get(team).get(user);
-                aggCommitsByUser.put(user, CommitAggregation.aggregate(commitsByUserByTeam));
-            });
+            userCommitMap.forEach((user, commitList) ->
+                aggCommitsByUser.put(user, CommitAggregation.aggregate(commitList))
+            );
             aggCommits.put(team, aggCommitsByUser);
         });
 
