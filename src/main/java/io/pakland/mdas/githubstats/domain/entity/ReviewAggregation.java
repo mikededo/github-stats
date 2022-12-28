@@ -2,7 +2,7 @@ package io.pakland.mdas.githubstats.domain.entity;
 
 import java.util.List;
 
-public class ReviewAggregation implements CSVExportable {
+public class ReviewAggregation {
 
     private int internalCommentLengthSum = 0;
     private int externalCommentLengthSum = 0;
@@ -65,17 +65,4 @@ public class ReviewAggregation implements CSVExportable {
         return externalCommentCount;
     }
 
-    @Override
-    public String toCSV() {
-        String sep = ",";
-        String lineSep = "\n";
-
-        List<String> metrics = List.of("internalCommentLengthAvg", "externalCommentLengthAvg");
-        List<Object> data = List.of(getInternalCommentLengthAvg(), getExternalCommentLengthAvg());
-
-        String header = String.join(sep, metrics);
-        String body = String.join(sep, data.stream().map(Object::toString).toList());
-
-        return header + lineSep + body;
-    }
 }
