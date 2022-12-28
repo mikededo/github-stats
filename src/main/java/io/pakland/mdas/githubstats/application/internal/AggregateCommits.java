@@ -1,19 +1,19 @@
 package io.pakland.mdas.githubstats.application.internal;
 
 import io.pakland.mdas.githubstats.domain.entity.*;
-import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AggregateCommits {
 
-    public AggregateCommits() {}
+    public AggregateCommits() {
+    }
 
-    public Map<User, Map<Team, CommitAggregation>> execute(List<Commit> commits) {
+    public Map<Team, Map<User, CommitAggregation>> execute(List<Commit> commits) {
         // {
         //   "userA": {
         //      "teamA": [commitsFromUserAInTeamA],
@@ -22,11 +22,9 @@ public class AggregateCommits {
         //   "userB": { "teamA": [commitsFromUserBInTeamA] },
         //   "userC": { "teamB": [commitsFromUserCInTeamB] } ...
         // }
-        Map<User, Map<Team, List<Commit>>> groupedCommits = commits.stream().collect(
-                Collectors.groupingBy(Commit::getUser,
-                        Collectors.groupingBy(commit ->
-                                commit.getPullRequest().getRepository().getTeam()
-                        )));
+        Map<Team, Map<User, List<Commit>>> groupedCommits = commits.stream().collect(
+            Collectors.groupingBy(commit -> commit.getPullRequest().getRepository().getTeam(),
+                Collectors.groupingBy(Commit::getUser)));
 
         // {
         //   "userA": {
@@ -36,14 +34,14 @@ public class AggregateCommits {
         //   "userB": { "teamA": commitAggregationUserBTeamA },
         //   "userC": { "teamB": commitAggregationUserCTeamB } ...
         // }
-        Map<User, Map<Team, CommitAggregation>> aggCommits = new HashMap<>();
-        groupedCommits.keySet().forEach(user -> {
-            Map<Team, CommitAggregation> aggCommitsByUser = new HashMap<>();
-            groupedCommits.get(user).keySet().forEach(team -> {
-                List<Commit> commitsByUserByTeam = groupedCommits.get(user).get(team);
-                aggCommitsByUser.put(team, CommitAggregation.aggregate(commitsByUserByTeam));
+        Map<Team, Map<User, CommitAggregation>> aggCommits = new HashMap<>();
+        groupedCommits.keySet().forEach(team -> {
+            Map<User, CommitAggregation> aggCommitsByUser = new HashMap<>();
+            groupedCommits.get(team).keySet().forEach(user -> {
+                List<Commit> commitsByUserByTeam = groupedCommits.get(team).get(user);
+                aggCommitsByUser.put(user, CommitAggregation.aggregate(commitsByUserByTeam));
             });
-            aggCommits.put(user, aggCommitsByUser);
+            aggCommits.put(team, aggCommitsByUser);
         });
 
         return aggCommits;
