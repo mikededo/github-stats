@@ -1,6 +1,8 @@
 package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
+import io.pakland.mdas.githubstats.domain.entity.Organization;
+import io.pakland.mdas.githubstats.domain.entity.Team;
 import io.pakland.mdas.githubstats.domain.entity.User;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -27,8 +29,14 @@ class UserGitHubRepositoryTest {
     private UserGitHubRepository userGitHubRepository;
     private String teamMembersListResponse;
 
-    private final String organizationName = "github-stats-22";
-    private final String teamName = "gs-developers";
+    private Team team = Team.builder()
+        .id(1)
+        .slug("gs-developers")
+        .organization(
+            Organization.builder()
+                .id(1)
+                .login("github-stats-22").build())
+        .build();
 
     @BeforeAll
     void setup() throws IOException {
@@ -47,25 +55,29 @@ class UserGitHubRepositoryTest {
     @Test
     void givenValidTeamMembersRequest_shouldCallTeamMembersEndpoint() throws InterruptedException, HttpException {
         MockResponse mockResponse = new MockResponse()
-                .setBody(this.teamMembersListResponse)
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+            .setBody(this.teamMembersListResponse)
+            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        userGitHubRepository.fetchUsersFromTeam(this.organizationName, this.teamName);
+        userGitHubRepository.fetchUsersFromTeam(this.team);
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals(String.format("/orgs/%s/teams/%s/members", this.organizationName, this.teamName), request.getPath());
+        String expectedUri = String.format("/orgs/%s/teams/%s/members",
+            this.team.getOrganization().getLogin(),
+            this.team.getSlug());
+        assertEquals(expectedUri, request.getPath());
     }
 
     @Test
     void givenValidTeamId_shouldReturnTeamMembers() throws HttpException {
 
         MockResponse mockResponse = new MockResponse()
-                .setBody(this.teamMembersListResponse)
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+            .setBody(this.teamMembersListResponse)
+            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         mockWebServer.enqueue(mockResponse);
 
-        List<User> response = userGitHubRepository.fetchUsersFromTeam(this.organizationName, this.teamName);
+        List<User> response = userGitHubRepository.fetchUsersFromTeam(this.team);
+
         List<User> expected = new ArrayList<>();
         expected.add(0, new User(33031570, "manerow", null));
         expected.add(1, new User(48334745, "mikededo", null));

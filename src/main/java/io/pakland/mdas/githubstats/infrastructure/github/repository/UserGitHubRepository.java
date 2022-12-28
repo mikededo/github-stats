@@ -2,14 +2,16 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.UserMapper;
+import io.pakland.mdas.githubstats.domain.entity.Team;
 import io.pakland.mdas.githubstats.domain.entity.User;
 import io.pakland.mdas.githubstats.domain.repository.UserExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserDTO;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.util.List;
 
 @Repository
 public class UserGitHubRepository implements UserExternalRepository {
@@ -22,12 +24,17 @@ public class UserGitHubRepository implements UserExternalRepository {
     }
 
     @Override
-    public List<User> fetchUsersFromTeam(String organizationName, String teamName)
-        throws HttpException {
+    public List<User> fetchUsersFromTeam(Team team) throws HttpException {
+        final String uri = String.format("/orgs/%s/teams/%s/members",
+            team.getOrganization().getLogin(),
+            team.getSlug()
+        );
+
         try {
-            logger.info(" - Fetching users from team: " + organizationName + "/" + teamName);
+            logger.info(" - Fetching users from team: " + team.getOrganization().getLogin() + "/" + team.getSlug());
+
             return this.webClientConfiguration.getWebClient().get()
-                .uri(String.format("/orgs/%s/teams/%s/members", organizationName, teamName))
+                .uri(uri)
                 .retrieve()
                 .bodyToFlux(GitHubUserDTO.class)
                 .map(UserMapper::dtoToEntity)
