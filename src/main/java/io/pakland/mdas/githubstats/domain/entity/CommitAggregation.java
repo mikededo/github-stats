@@ -2,7 +2,7 @@ package io.pakland.mdas.githubstats.domain.entity;
 
 import java.util.List;
 
-public class CommitAggregation implements CSVExportable {
+public class CommitAggregation {
 
     private int numCommits;
 
@@ -17,17 +17,4 @@ public class CommitAggregation implements CSVExportable {
         return numCommits;
     }
 
-    @Override
-    public String toCSV() {
-        String sep = ",";
-        String lineSep = "\n";
-
-        List<String> metrics = List.of("numCommits");
-        List<Object> data = List.of(numCommits);
-
-        String header = String.join(sep, metrics);
-        String body = String.join(sep, data.stream().map(Object::toString).toList());
-
-        return header + lineSep + body;
-    }
 }
