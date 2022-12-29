@@ -28,8 +28,7 @@ public class Metric {
     @Column(nullable = false)
     private String organization;
 
-    @NaturalId
-    @Column(name = "team_slug", nullable = false)
+    @Column(name="team_slug", nullable = false)
     private String teamSlug;
 
     @Column(name = "user_name", nullable = false)
@@ -56,11 +55,8 @@ public class Metric {
     @Column(name = "lines_removed", nullable = false)
     private Integer linesRemoved;
 
-    @Column(nullable = false)
-    private LocalDate from;
-
-    @Column(nullable = false)
-    private LocalDate to;
+    @Column(name="date_month", nullable = false)
+    private LocalDate date_month;
 
     @Override
     public boolean equals(Object o) {
