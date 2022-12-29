@@ -11,7 +11,7 @@ public class CommitMapper {
             .user(UserMapper.dtoToEntity(dto.getUser()))
             .additions(dto.getAdditions())
             .deletions(dto.getDeletions())
-            .date(dto.getDate())
+            .committedAt(dto.getCommittedAt())
             .build();
     }
 }
