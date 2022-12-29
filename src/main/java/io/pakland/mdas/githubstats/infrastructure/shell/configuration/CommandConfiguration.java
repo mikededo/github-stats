@@ -9,9 +9,14 @@ import org.springframework.shell.command.CommandRegistration;
 @Configuration
 public class CommandConfiguration {
 
+    private final ShellUserComponent shellUserComponent;
+
+    public CommandConfiguration(ShellUserComponent shellUserComponent) {
+        this.shellUserComponent = shellUserComponent;
+    }
+
     @Bean
     public CommandRegistration buildUserCommand() {
-        ShellUserComponent shellUserComponent = new ShellUserComponent();
 
         return CommandRegistration.builder()
                 .command("user")
