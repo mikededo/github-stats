@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 import lombok.NoArgsConstructor;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
@@ -130,8 +129,14 @@ public class GitHubController {
     private void fetchCommitsFromPullRequest(PullRequest pullRequest) {
         try {
             // Fetch Commits from each Pull Request.
-            List<Commit> commitList = new FetchCommitsFromPullRequest(commitRepository)
-                .execute(pullRequest);
+            DateRange range = DateRange.builder()
+                .from(userOptionRequest.getFrom().toInstant())
+                .to(userOptionRequest.getTo().toInstant())
+                .build();
+            List<Commit> commitList = new FetchCommitsFromPullRequestInDateRange(commitRepository)
+                .execute(pullRequest, range);
+            LoggerFactory.getLogger(this.getClass()).info(
+                String.format("pr: %s, count: %s", pullRequest.getNumber(), (commitList.size())));
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
