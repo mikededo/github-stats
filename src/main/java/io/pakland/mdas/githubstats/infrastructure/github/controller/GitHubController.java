@@ -100,7 +100,6 @@ public class GitHubController {
 
             ExecutorService executor = Executors.newFixedThreadPool(3);
             List<PullRequest> prToAggregate = new ArrayList<>();
-            Logger l = LoggerFactory.getLogger(this.getClass());
             pullRequestList.parallelStream().forEach(pullRequest -> {
                 if (isBetweenRequestRange(pullRequest.getCreatedAt())) {
                     prToAggregate.add(pullRequest);
@@ -121,11 +120,8 @@ public class GitHubController {
                 }
             });
 
-            Map<User, PullRequestAggregation> prAggregation = new AggregatePullRequests().execute(
+            Map<Team, Map<User, PullRequestAggregation>> prAggregation = new AggregatePullRequests().execute(
                 prToAggregate);
-            prAggregation.forEach((key, value) -> l.info(
-                String.format("%s -> %d", key.getLogin(),
-                    value.getCreatedCount())));
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
