@@ -4,21 +4,19 @@ import io.pakland.mdas.githubstats.infrastructure.controller.Middleware;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
 
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class GitHubMiddleware extends Middleware {
 
-    public GitHubMiddleware(ShellRequest request) {
-        super(request);
-    }
-
     @Override
-    public String execute() {
+    public String execute(ShellRequest request) {
         GitHubController gitHubController = new GitHubController(
                 GitHubUserOptionRequest.builder()
-                        .userName(super.request.getName())
-                        .apiKey(super.request.getApiKey())
-                        .from(super.request.getFrom())
-                        .to(super.request.getTo()).build());
+                        .userName(request.getName())
+                        .apiKey(request.getApiKey())
+                        .from(request.getFrom())
+                        .to(request.getTo()).build());
         gitHubController.execute();
 
         return "csv from github";

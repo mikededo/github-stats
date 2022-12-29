@@ -4,13 +4,7 @@ import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 
 public abstract class Middleware {
 
-    protected final ShellRequest request;
-
     private Middleware next;
-
-    protected Middleware(ShellRequest request) {
-        this.request = request;
-    }
 
     public static Middleware link(Middleware first, Middleware... chain) {
         Middleware head = first;
@@ -21,12 +15,13 @@ public abstract class Middleware {
         return first;
     }
 
-    public abstract String execute();
+    public abstract String execute(ShellRequest request);
 
-    protected String checkNext() {
+    protected String checkNext(ShellRequest request) {
+
         if (next == null) {
             return "unknow middleware";
         }
-        return next.execute();
+        return next.execute(request);
     }
 }
