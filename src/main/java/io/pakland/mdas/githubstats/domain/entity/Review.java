@@ -1,5 +1,6 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,8 @@ public class Review {
     private Integer id;
 
     private User user;
+
+    private Date submittedAt;
 
     private PullRequest pullRequest;
 
