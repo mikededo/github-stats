@@ -2,7 +2,6 @@ package io.pakland.mdas.githubstats.infrastructure.github.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.pakland.mdas.githubstats.application.dto.PullRequestDTO;
-import io.pakland.mdas.githubstats.application.dto.PullRequestStateDTO;
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
 
@@ -24,6 +23,9 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
 
     @JsonProperty("closed_at")
     private Instant closedAt;
+
+    @JsonProperty("commits")
+    private Integer numCommits;
 
     @JsonProperty("additions")
     private Integer additions;
@@ -57,6 +59,11 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
     @Override
     public Instant getClosedAt() {
         return this.closedAt;
+    }
+
+    @Override
+    public Integer getNumCommits() {
+        return this.numCommits;
     }
 
     @Override

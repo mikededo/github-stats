@@ -5,6 +5,7 @@ import io.pakland.mdas.githubstats.domain.entity.Comment;
 import io.pakland.mdas.githubstats.domain.entity.DateRange;
 import io.pakland.mdas.githubstats.domain.entity.PullRequest;
 import io.pakland.mdas.githubstats.domain.repository.CommentExternalRepository;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,6 @@ public class FetchCommentsFromPullRequest {
         do {
             List<Comment> apiResults = this.commentExternalRepository
                 .fetchCommentsFromPullRequestByPage(pullRequest, page);
-
-            if (pullRequest.getNumber() == 24) {
-                System.out.println(apiResults.toString());
-            }
 
             if (apiResults.size() == 0) {
                 break;

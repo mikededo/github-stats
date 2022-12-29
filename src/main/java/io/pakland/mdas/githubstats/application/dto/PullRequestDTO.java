@@ -15,6 +15,8 @@ public interface PullRequestDTO {
 
     Instant getCreatedAt();
 
+    Integer getNumCommits();
+
     Integer getAdditions();
 
     Integer getDeletions();

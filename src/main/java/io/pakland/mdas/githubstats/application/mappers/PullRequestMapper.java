@@ -12,6 +12,9 @@ public class PullRequestMapper {
             .state(dto.getState())
             .createdAt(dto.getCreatedAt())
             .closedAt(dto.getClosedAt())
+            .numCommits(dto.getNumCommits())
+            .additions(dto.getAdditions())
+            .deletions(dto.getDeletions())
             .user(UserMapper.dtoToEntity(dto.getUser()))
             .build();
     }

@@ -1,9 +1,11 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
 import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
-import java.time.Instant;
-import java.util.*;
 import lombok.*;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,23 +23,16 @@ public class PullRequest {
 
     private Instant createdAt;
 
+    private Integer numCommits;
+
+    private Integer additions;
+
+    private Integer deletions;
+
     @ToString.Exclude
     private Repository repository;
 
     private User user;
 
-    private Set<Commit> commits = new HashSet<>();
-
     private List<Review> reviews = new ArrayList<>();
-
-    public void addCommits(Collection<Commit> commits) {
-        if (this.commits == null) {
-            this.commits = new HashSet<>();
-        }
-
-        commits.forEach(commit -> {
-            commit.setPullRequest(this);
-            this.commits.add(commit);
-        });
-    }
 }
