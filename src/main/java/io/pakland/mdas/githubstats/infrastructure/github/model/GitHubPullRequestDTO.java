@@ -19,6 +19,9 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
     @JsonProperty("state")
     private GitHubPullRequestStateDTO state;
 
+    @JsonProperty("created_at")
+    private Instant createdAt;
+
     @JsonProperty("closed_at")
     private Instant closedAt;
 
@@ -44,6 +47,11 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
     @Override
     public PullRequestState getState() {
         return this.state.getValue();
+    }
+
+    @Override
+    public Instant getCreatedAt() {
+        return this.createdAt;
     }
 
     @Override

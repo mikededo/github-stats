@@ -5,19 +5,14 @@ import java.util.List;
 public class PullRequestAggregation {
     private int linesAdded;
 
-    private int linesRemoved;
+    private int createdCount;
 
-    public int getLinesAdded() {
-        return linesAdded;
-    }
-
-    public int getLinesRemoved() {
-        return linesRemoved;
+    public int getCreatedCount() {
+        return createdCount;
     }
 
     public PullRequestAggregation aggregate(List<PullRequest> pullRequests) {
-        // TODO
-        return new PullRequestAggregation();
+        this.createdCount = pullRequests.size();
+        return this;
     }
-
 }

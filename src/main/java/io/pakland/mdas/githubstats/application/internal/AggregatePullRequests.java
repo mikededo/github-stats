@@ -1,13 +1,13 @@
 package io.pakland.mdas.githubstats.application.internal;
 
 import io.pakland.mdas.githubstats.domain.entity.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AggregatePullRequests {
-
     PullRequestAggregation pullRequestAggregation = new PullRequestAggregation();
 
     public AggregatePullRequests() {

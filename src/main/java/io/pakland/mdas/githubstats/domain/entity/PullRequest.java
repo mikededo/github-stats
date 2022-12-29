@@ -19,9 +19,7 @@ public class PullRequest {
 
     private Instant closedAt;
 
-    private Integer additions;
-
-    private Integer deletions;
+    private Instant createdAt;
 
     @ToString.Exclude
     private Repository repository;
