@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.infrastructure.postgres;
 
-import io.pakland.mdas.githubstats.domain.enums.EntityType;
+import io.pakland.mdas.githubstats.domain.EntityType;
 import io.pakland.mdas.githubstats.infrastructure.controller.Middleware;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 

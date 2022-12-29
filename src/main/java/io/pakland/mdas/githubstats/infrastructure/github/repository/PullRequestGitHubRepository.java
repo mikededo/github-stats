@@ -2,12 +2,12 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.PullRequestMapper;
-import io.pakland.mdas.githubstats.domain.entity.DateRange;
-import io.pakland.mdas.githubstats.domain.entity.PullRequest;
-import io.pakland.mdas.githubstats.domain.entity.Repository;
-import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
-import io.pakland.mdas.githubstats.domain.lib.InternalCaching;
+import io.pakland.mdas.githubstats.domain.DateRange;
+import io.pakland.mdas.githubstats.domain.PullRequest;
+import io.pakland.mdas.githubstats.domain.PullRequestState;
+import io.pakland.mdas.githubstats.domain.Repository;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository;
+import io.pakland.mdas.githubstats.domain.utils.InternalCaching;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPageablePullRequestRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPullRequestDTO;
 import org.slf4j.Logger;

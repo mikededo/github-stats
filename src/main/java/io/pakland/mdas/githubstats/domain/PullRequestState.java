@@ -1,6 +1,4 @@
-package io.pakland.mdas.githubstats.domain.enums;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package io.pakland.mdas.githubstats.domain;
 
 public enum PullRequestState {
     ALL {

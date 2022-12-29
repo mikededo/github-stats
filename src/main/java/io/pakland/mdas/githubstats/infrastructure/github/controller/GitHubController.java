@@ -1,9 +1,8 @@
 package io.pakland.mdas.githubstats.infrastructure.github.controller;
 
+import io.pakland.mdas.githubstats.application.*;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.application.external.*;
-import io.pakland.mdas.githubstats.application.internal.AggregatePullRequests;
-import io.pakland.mdas.githubstats.domain.entity.*;
+import io.pakland.mdas.githubstats.domain.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
@@ -101,14 +100,14 @@ public class GitHubController {
             ExecutorService executor = Executors.newFixedThreadPool(3);
             pullRequestList.parallelStream().forEach(pullRequest -> {
 
-                Future<?> future2 = executor.submit(
+                Future<?> reviewsFuture = executor.submit(
                     () -> this.fetchReviewsFromPullRequest(pullRequest));
-                Future<?> future3 = executor.submit(
+                Future<?> commentsFuture = executor.submit(
                     () -> this.fetchCommentsFromPullRequest(pullRequest));
 
                 try {
-                    future2.get();
-                    future3.get();
+                    reviewsFuture.get();
+                    commentsFuture.get();
                 } catch (InterruptedException | ExecutionException e) {
                     throw new RuntimeException(e);
                 }

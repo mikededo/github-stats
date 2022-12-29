@@ -1,6 +1,9 @@
-package io.pakland.mdas.githubstats.domain.lib;
+package io.pakland.mdas.githubstats.domain.utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InternalCaching<K, T> {
 

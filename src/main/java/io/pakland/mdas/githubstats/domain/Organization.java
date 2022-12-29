@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.domain.entity;
+package io.pakland.mdas.githubstats.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

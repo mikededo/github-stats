@@ -3,7 +3,7 @@ package io.pakland.mdas.githubstats.infrastructure.github.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.pakland.mdas.githubstats.application.dto.PullRequestDTO;
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
-import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
+import io.pakland.mdas.githubstats.domain.PullRequestState;
 
 import java.time.Instant;
 

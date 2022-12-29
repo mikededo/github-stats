@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.application.mappers;
 
 import io.pakland.mdas.githubstats.application.dto.PullRequestDTO;
-import io.pakland.mdas.githubstats.domain.entity.PullRequest;
+import io.pakland.mdas.githubstats.domain.PullRequest;
 
 public class PullRequestMapper {
 

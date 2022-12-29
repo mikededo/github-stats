@@ -1,6 +1,9 @@
-package io.pakland.mdas.githubstats.application.internal;
+package io.pakland.mdas.githubstats.application;
 
-import io.pakland.mdas.githubstats.domain.entity.*;
+import io.pakland.mdas.githubstats.domain.PullRequest;
+import io.pakland.mdas.githubstats.domain.PullRequestAggregation;
+import io.pakland.mdas.githubstats.domain.Team;
+import io.pakland.mdas.githubstats.domain.User;
 
 import java.util.HashMap;
 import java.util.List;

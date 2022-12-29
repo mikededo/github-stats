@@ -1,6 +1,6 @@
-package io.pakland.mdas.githubstats.application.internal;
+package io.pakland.mdas.githubstats.application;
 
-import io.pakland.mdas.githubstats.domain.entity.Metric;
+import io.pakland.mdas.githubstats.domain.Metric;
 
 import java.io.IOException;
 import java.util.List;

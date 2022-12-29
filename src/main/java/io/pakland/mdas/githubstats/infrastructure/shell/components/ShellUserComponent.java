@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.components;
 
 
-import io.pakland.mdas.githubstats.domain.enums.EntityType;
+import io.pakland.mdas.githubstats.domain.EntityType;
 import io.pakland.mdas.githubstats.infrastructure.controller.MainController;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.DateValidator;

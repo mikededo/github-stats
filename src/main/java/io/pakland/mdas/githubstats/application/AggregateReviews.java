@@ -1,11 +1,15 @@
-package io.pakland.mdas.githubstats.application.internal;
+package io.pakland.mdas.githubstats.application;
 
-import io.pakland.mdas.githubstats.domain.entity.*;
+import io.pakland.mdas.githubstats.domain.Review;
+import io.pakland.mdas.githubstats.domain.ReviewAggregation;
+import io.pakland.mdas.githubstats.domain.Team;
+import io.pakland.mdas.githubstats.domain.User;
+import org.springframework.stereotype.Service;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AggregateReviews {

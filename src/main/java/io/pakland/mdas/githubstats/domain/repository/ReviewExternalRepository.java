@@ -1,8 +1,8 @@
 package io.pakland.mdas.githubstats.domain.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.domain.entity.PullRequest;
-import io.pakland.mdas.githubstats.domain.entity.Review;
+import io.pakland.mdas.githubstats.domain.PullRequest;
+import io.pakland.mdas.githubstats.domain.Review;
 
 import java.util.List;
 

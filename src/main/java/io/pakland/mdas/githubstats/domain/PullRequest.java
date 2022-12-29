@@ -1,6 +1,5 @@
-package io.pakland.mdas.githubstats.domain.entity;
+package io.pakland.mdas.githubstats.domain;
 
-import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
 import lombok.*;
 
 import java.time.Instant;
