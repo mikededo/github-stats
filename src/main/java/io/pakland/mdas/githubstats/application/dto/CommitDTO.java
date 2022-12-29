@@ -12,5 +12,5 @@ public interface CommitDTO {
 
     Integer getDeletions();
 
-    Date getDate();
+    Date getCommittedAt();
 }

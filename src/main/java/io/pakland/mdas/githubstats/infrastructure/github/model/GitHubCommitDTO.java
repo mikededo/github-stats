@@ -3,16 +3,12 @@ package io.pakland.mdas.githubstats.infrastructure.github.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.pakland.mdas.githubstats.application.dto.CommitDTO;
 import io.pakland.mdas.githubstats.application.dto.UserDTO;
-import io.pakland.mdas.githubstats.application.mappers.UserMapper;
-import io.pakland.mdas.githubstats.domain.entity.User;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -28,12 +24,12 @@ public class GitHubCommitDTO implements CommitDTO {
 
     private Integer deletions;
 
-    private Date date;
+    private Date committedAt;
 
     @JsonProperty("commit")
     private void unpackDateFromNestedObject(Map<String, Object> commitJson) {
         Map<String, Object> committer = (Map<String, Object>)commitJson.get("committer");
-        this.date = Date.from(Instant.parse(committer.get("date").toString()));
+        this.committedAt = Date.from(Instant.parse(committer.get("date").toString()));
     }
 
     @JsonProperty("stats")
@@ -62,8 +58,7 @@ public class GitHubCommitDTO implements CommitDTO {
         return this.additions;
     }
 
-    @Override
-    public Date getDate() {
-        return this.date;
+    public Date getCommittedAt() {
+        return this.committedAt;
     }
 }

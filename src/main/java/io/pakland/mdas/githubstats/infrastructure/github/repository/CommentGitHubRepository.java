@@ -8,11 +8,10 @@ import io.pakland.mdas.githubstats.domain.lib.InternalCaching;
 import io.pakland.mdas.githubstats.domain.repository.CommentExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubCommentDTO;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPageableRequest;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-
-import java.util.List;
 
 public class CommentGitHubRepository implements CommentExternalRepository {
 
@@ -26,8 +25,9 @@ public class CommentGitHubRepository implements CommentExternalRepository {
     }
 
     @Override
-    public List<Comment> fetchCommentsFromPullRequestByPage(PullRequest pullRequest, Integer page) throws HttpException {
-        final String uri = String.format("/repos/%s/%s/pulls/%s/reviews?%s",
+    public List<Comment> fetchCommentsFromPullRequestByPage(PullRequest pullRequest, Integer page)
+        throws HttpException {
+        final String uri = String.format("/repos/%s/%s/pulls/%s/comments?%s",
             pullRequest.getRepository().getOwnerLogin(),
             pullRequest.getRepository().getName(),
             pullRequest.getNumber(),

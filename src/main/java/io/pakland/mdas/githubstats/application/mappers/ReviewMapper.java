@@ -9,6 +9,7 @@ public class ReviewMapper {
         return Review.builder()
             .id(dto.getId())
             .user(UserMapper.dtoToEntity(dto.getUser()))
+            .submittedAt(dto.getSubmittedAt())
             .build();
     }
 }

@@ -18,7 +18,7 @@ public class Commit {
 
     private Integer deletions;
 
-    private Date date;
+    private Date committedAt;
 
     private PullRequest pullRequest;
 
