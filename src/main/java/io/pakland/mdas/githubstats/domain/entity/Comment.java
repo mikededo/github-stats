@@ -1,5 +1,6 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
+import java.util.Date;
 import lombok.*;
 
 @Data
@@ -13,6 +14,8 @@ public class Comment {
     private Review review;
 
     private String body;
+
+    private Date createdAt;
 
     public Integer getLength() {
         return this.body.length();
