@@ -6,47 +6,38 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MetricCsvExporter implements MetricExporter {
+
     @Override
     public void export(List<Metric> metrics, String filePath) throws IOException {
         StringBuilder sb = new StringBuilder();
-        sb.append("id")
-            .append(",").append("organization")
-            .append(",").append("team_slug")
-            .append(",").append("user_name")
-            .append(",").append("merged_pulls")
-            .append(",").append("internal_reviews")
-            .append(",").append("external_reviews")
-            .append(",").append("comments_avg_length")
-            .append(",").append("commits_count")
-            .append(",").append("lines_added")
-            .append(",").append("lines_removed")
-            .append(",").append("from")
-            .append(",").append("to")
-            .append("\n");
+        ArrayList<String> headerFields = new ArrayList<>(Arrays.asList(
+            "id", "organization", "team_slug", "user_name", "merged_pulls",
+            "internal_reviews", "external_reviews", "comments_avg_length",
+            "commits_count", "lines_added", "lines_removed", "from", "to"));
 
-        for (Metric metric : metrics) {
-            sb.append(metric.getId())
-                .append(",").append(metric.getOrganization())
-                .append(",").append(metric.getTeamSlug())
-                .append(",").append(metric.getUserName())
-                .append(",").append(metric.getMergedPulls().toString())
-                .append(",").append(metric.getInternalReviews().toString())
-                .append(",").append(metric.getExternalReviews().toString())
-                .append(",").append(metric.getCommentsAvgLength().toString())
-                .append(",").append(metric.getCommitsCount().toString())
-                .append(",").append(metric.getLinesAdded().toString())
-                .append(",").append(metric.getLinesRemoved().toString())
-                .append(",").append(metric.getFrom().toString())
-                .append(",").append(metric.getTo().toString())
-                .append("\n");
-        }
+        sb.append(this.appendStringArrayList(headerFields));
+        metrics.forEach(metric ->
+            sb.append(this.appendStringArrayList(metric.getValuesAsStringArrayList())));
 
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath))) {
             writer.write(sb.toString());
         }
+    }
 
+    private String appendStringArrayList(ArrayList<String> fields) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < fields.size(); i++) {
+            sb.append(fields.get(i));
+            if (i < fields.size() - 1) {
+                sb.append(",");
+            }
+        }
+        sb.append("\n");
+        return sb.toString();
     }
 }
