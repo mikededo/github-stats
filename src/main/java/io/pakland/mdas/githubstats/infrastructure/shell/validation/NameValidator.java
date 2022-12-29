@@ -1,8 +1,8 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.validation;
 
-public class UserNameValidator implements InputValidator<String> {
+public class NameValidator implements InputValidator<String> {
 
-    public UserNameValidator() {}
+    public NameValidator() {}
 
     /**
      * @param input Must pass the Github username creation constraints:
@@ -11,12 +11,14 @@ public class UserNameValidator implements InputValidator<String> {
      *      - Username cannot begin or end with a hyphen.
      *      - Maximum is 39 characters.
      */
-    @Override
     public boolean validate(String input) {
-        if (input == null || input.isBlank()) return false;
+        if (input == null || input.isBlank()) {
+            return false;
+        }
+
         return !input.matches("^-.*")
                 && !input.matches(".*-$")
-                && input.matches("[a-zA-Z0-9\\-]{0,39}")
+                && input.matches("[a-zA-Z\\d\\-]{0,39}")
                 && !input.matches(".*--.*");
     }
 }
