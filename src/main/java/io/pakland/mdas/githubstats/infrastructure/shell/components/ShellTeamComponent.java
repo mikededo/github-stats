@@ -8,6 +8,8 @@ import org.springframework.shell.standard.ShellOption;
 @ShellComponent
 public class ShellTeamComponent {
 
+    // TODO: implement class
+
     private boolean team(
             @ShellOption(value = {"n"}) String teamName,
             @ShellOption(value = {"from"}) String fromDate,

@@ -1,7 +1,6 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.components;
 
-
-import io.pakland.mdas.githubstats.domain.EntityType;
+import io.pakland.mdas.githubstats.domain.enums.EntityType;
 import io.pakland.mdas.githubstats.infrastructure.controller.MainController;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.DateValidator;
@@ -15,7 +14,11 @@ import java.text.SimpleDateFormat;
 @ShellComponent
 public class ShellUserComponent {
 
-    private ShellRequest shellRequest;
+    private final MainController mainController;
+
+    public ShellUserComponent(MainController mainController) {
+        this.mainController = mainController;
+    }
 
     private boolean user(
         @ShellOption(value = {"n"}) String userName,
@@ -35,8 +38,9 @@ public class ShellUserComponent {
             return false;
         }
 
+        ShellRequest shellRequest;
         try {
-            this.shellRequest = ShellRequest.builder()
+            shellRequest = ShellRequest.builder()
                 .entityType(EntityType.USER)
                 .name(userName)
                 .apiKey(apiKey)
@@ -47,9 +51,8 @@ public class ShellUserComponent {
             throw new RuntimeException(e);
         }
 
-        MainController main = new MainController(shellRequest);
-        String serializedOutput = main.execute();
-        System.out.println(serializedOutput);
+        mainController.execute(shellRequest);
+        System.out.println("serializedOutput");
 
         // TODO : return console / file / etc.. output
         return true;
