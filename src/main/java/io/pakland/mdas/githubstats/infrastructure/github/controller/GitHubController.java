@@ -144,9 +144,15 @@ public class GitHubController {
 
     private void fetchReviewsFromPullRequest(PullRequest pullRequest) {
         try {
+            DateRange range = DateRange.builder()
+                .from(userOptionRequest.getFrom().toInstant())
+                .to(userOptionRequest.getTo().toInstant())
+                .build();
             // Fetch Reviews from each Pull Request.
             List<Review> reviewList = new FetchReviewsFromPullRequest(reviewRepository)
-                .execute(pullRequest);
+                .execute(pullRequest, range);
+            LoggerFactory.getLogger(this.getClass()).info(
+                String.format("pr: %s, count: %s", pullRequest.getNumber(), reviewList.size()));
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }

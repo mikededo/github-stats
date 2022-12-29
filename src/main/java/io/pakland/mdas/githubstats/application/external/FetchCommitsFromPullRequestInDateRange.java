@@ -59,10 +59,10 @@ public class FetchCommitsFromPullRequestInDateRange {
                     .toList());
             }
 
-            pullRequest.addCommits(commitList);
             responseResults = apiResults.size();
             page++;
         } while (responseResults != 100);
+        pullRequest.addCommits(commitList);
 
         return commitList;
     }
