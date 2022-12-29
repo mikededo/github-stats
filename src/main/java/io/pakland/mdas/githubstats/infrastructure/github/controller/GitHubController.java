@@ -27,7 +27,6 @@ public class GitHubController {
     private RepositoryExternalRepository repositoryRepository;
     private UserExternalRepository userRepository;
     private PullRequestExternalRepository pullRequestRepository;
-    private CommitExternalRepository commitRepository;
     private ReviewExternalRepository reviewRepository;
     private CommentExternalRepository commentRepository;
 
@@ -40,7 +39,6 @@ public class GitHubController {
         this.repositoryRepository = new RepositoryGitHubRepository(this.webClientConfiguration);
         this.userRepository = new UserGitHubRepository(this.webClientConfiguration);
         this.pullRequestRepository = new PullRequestGitHubRepository(this.webClientConfiguration);
-        this.commitRepository = new CommitGitHubRepository(this.webClientConfiguration);
         this.reviewRepository = new ReviewGitHubRepository(this.webClientConfiguration);
         this.commentRepository = new CommentGitHubRepository(this.webClientConfiguration);
     }
@@ -103,15 +101,12 @@ public class GitHubController {
                 if (isBetweenRequestRange(pullRequest.getCreatedAt())) {
                     prToAggregate.add(pullRequest);
                 }
-                Future<?> future1 = executor.submit(
-                    () -> this.fetchCommitsFromPullRequest(pullRequest));
                 Future<?> future2 = executor.submit(
                     () -> this.fetchReviewsFromPullRequest(pullRequest));
                 Future<?> future3 = executor.submit(
                     () -> this.fetchCommentsFromPullRequest(pullRequest));
 
                 try {
-                    future1.get();
                     future2.get();
                     future3.get();
                 } catch (InterruptedException | ExecutionException e) {
@@ -121,18 +116,6 @@ public class GitHubController {
 
             Map<Team, Map<User, PullRequestAggregation>> prAggregation = new AggregatePullRequests().execute(
                 prToAggregate);
-        } catch (HttpException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void fetchCommitsFromPullRequest(PullRequest pullRequest) {
-        try {
-            // Fetch Commits from each Pull Request.
-            List<Commit> commitList = new FetchCommitsFromPullRequestInDateRange(commitRepository)
-                .execute(pullRequest, getRequestDateRange());
-            LoggerFactory.getLogger(this.getClass()).info(
-                String.format("pr: %s, count: %s", pullRequest.getNumber(), (commitList.size())));
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
