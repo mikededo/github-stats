@@ -129,12 +129,8 @@ public class GitHubController {
     private void fetchCommitsFromPullRequest(PullRequest pullRequest) {
         try {
             // Fetch Commits from each Pull Request.
-            DateRange range = DateRange.builder()
-                .from(userOptionRequest.getFrom().toInstant())
-                .to(userOptionRequest.getTo().toInstant())
-                .build();
             List<Commit> commitList = new FetchCommitsFromPullRequestInDateRange(commitRepository)
-                .execute(pullRequest, range);
+                .execute(pullRequest, getRequestDateRange());
             LoggerFactory.getLogger(this.getClass()).info(
                 String.format("pr: %s, count: %s", pullRequest.getNumber(), (commitList.size())));
         } catch (HttpException e) {
@@ -144,13 +140,9 @@ public class GitHubController {
 
     private void fetchReviewsFromPullRequest(PullRequest pullRequest) {
         try {
-            DateRange range = DateRange.builder()
-                .from(userOptionRequest.getFrom().toInstant())
-                .to(userOptionRequest.getTo().toInstant())
-                .build();
             // Fetch Reviews from each Pull Request.
             List<Review> reviewList = new FetchReviewsFromPullRequest(reviewRepository)
-                .execute(pullRequest, range);
+                .execute(pullRequest, getRequestDateRange());
             LoggerFactory.getLogger(this.getClass()).info(
                 String.format("pr: %s, count: %s", pullRequest.getNumber(), reviewList.size()));
         } catch (HttpException e) {
@@ -162,7 +154,9 @@ public class GitHubController {
         try {
             // Fetch Comments from each Pull Request.
             List<Comment> commentList = new FetchCommentsFromPullRequest(commentRepository)
-                .execute(pullRequest);
+                .execute(pullRequest, getRequestDateRange());
+            LoggerFactory.getLogger(this.getClass()).info(
+                String.format("pr: %s, count: %s", pullRequest.getNumber(), commentList.size()));
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
@@ -171,5 +165,12 @@ public class GitHubController {
     private boolean isBetweenRequestRange(Instant instant) {
         return instant.isAfter(userOptionRequest.getFrom().toInstant()) && instant.isBefore(
             userOptionRequest.getTo().toInstant());
+    }
+
+    private DateRange getRequestDateRange() {
+        return DateRange.builder()
+            .from(userOptionRequest.getFrom().toInstant())
+            .to(userOptionRequest.getTo().toInstant())
+            .build();
     }
 }
