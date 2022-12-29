@@ -1,35 +1,37 @@
-package io.pakland.mdas.githubstats.application.external;
+package io.pakland.mdas.githubstats.application;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.domain.entity.DateRange;
-import io.pakland.mdas.githubstats.domain.entity.PullRequest;
-import io.pakland.mdas.githubstats.domain.entity.Review;
-import io.pakland.mdas.githubstats.domain.repository.ReviewExternalRepository;
+import io.pakland.mdas.githubstats.domain.Comment;
+import io.pakland.mdas.githubstats.domain.DateRange;
+import io.pakland.mdas.githubstats.domain.PullRequest;
+import io.pakland.mdas.githubstats.domain.repository.CommentExternalRepository;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FetchReviewsFromPullRequest {
-    private final ReviewExternalRepository reviewExternalRepository;
+public class FetchCommentsFromPullRequest {
 
-    public FetchReviewsFromPullRequest(ReviewExternalRepository reviewExternalRepository) {
-        this.reviewExternalRepository = reviewExternalRepository;
+    private final CommentExternalRepository commentExternalRepository;
+
+    public FetchCommentsFromPullRequest(CommentExternalRepository commentExternalRepository) {
+        this.commentExternalRepository = commentExternalRepository;
     }
 
-    public List<Review> execute(PullRequest pullRequest, DateRange range)
-        throws HttpException {
+    public List<Comment> execute(PullRequest pullRequest, DateRange range) throws HttpException {
         int page = 1, responseResults = 0;
-        List<Review> reviewList = new ArrayList<>();
+        List<Comment> commentList = new ArrayList<>();
 
         do {
-            List<Review> apiResults = this.reviewExternalRepository.fetchReviewsFromPullRequestByPage(pullRequest, page);
+            List<Comment> apiResults = this.commentExternalRepository
+                .fetchCommentsFromPullRequestByPage(pullRequest, page);
+
             if (apiResults.size() == 0) {
                 break;
             }
 
-            Instant first = apiResults.get(0).getSubmittedAt().toInstant(),
-                last = apiResults.get(apiResults.size() - 1).getSubmittedAt().toInstant();
+            Instant first = apiResults.get(0).getCreatedAt().toInstant(),
+                last = apiResults.get(apiResults.size() - 1).getCreatedAt().toInstant();
 
             // If first is before the start of the range, then we should not keep fetching the
             // data since all will be outside the range
@@ -46,22 +48,22 @@ public class FetchReviewsFromPullRequest {
             }
 
             if (range.isBetweenRange(first) && range.isBetweenRange(last)) {
-                reviewList.addAll(apiResults);
+                commentList.addAll(apiResults);
             } else {
                 // However, if first one is after the range but the last isn't, we have to filter the
                 // commits that are within the range.
                 // We have to do the same thing if the last is not in range but the first is
                 // Also if the first is after but the last is previous, there may be commits in between
                 // that are within the range
-                reviewList.addAll(apiResults.parallelStream()
-                    .filter(review -> range.isBetweenRange(review.getSubmittedAt().toInstant()))
+                commentList.addAll(apiResults.parallelStream()
+                    .filter(commit -> range.isBetweenRange(commit.getCreatedAt().toInstant()))
                     .toList());
             }
 
             responseResults = apiResults.size();
             page++;
-        } while (responseResults != 100);
+        } while (responseResults > 0);
 
-        return reviewList;
+        return commentList;
     }
 }

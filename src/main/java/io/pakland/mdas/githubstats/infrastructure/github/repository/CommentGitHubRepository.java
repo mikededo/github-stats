@@ -2,16 +2,17 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.CommentMapper;
-import io.pakland.mdas.githubstats.domain.entity.Comment;
-import io.pakland.mdas.githubstats.domain.entity.PullRequest;
-import io.pakland.mdas.githubstats.domain.lib.InternalCaching;
+import io.pakland.mdas.githubstats.domain.Comment;
+import io.pakland.mdas.githubstats.domain.PullRequest;
 import io.pakland.mdas.githubstats.domain.repository.CommentExternalRepository;
+import io.pakland.mdas.githubstats.domain.utils.InternalCaching;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubCommentDTO;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPageableRequest;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.util.List;
 
 public class CommentGitHubRepository implements CommentExternalRepository {
 

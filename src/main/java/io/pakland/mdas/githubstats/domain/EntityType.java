@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.domain.enums;
+package io.pakland.mdas.githubstats.domain;
 
 public enum EntityType {
     ORGANIZATION,

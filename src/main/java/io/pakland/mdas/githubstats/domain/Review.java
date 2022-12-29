@@ -1,12 +1,12 @@
-package io.pakland.mdas.githubstats.domain.entity;
+package io.pakland.mdas.githubstats.domain;
 
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -31,7 +31,7 @@ public class Review {
 
     public boolean isInternal() {
         return getPullRequest().getRepository().getTeam()
-                .equals(getUser().getTeam());
+            .equals(getUser().getTeam());
     }
 
     public boolean isReviewFromTeam(Team team) {

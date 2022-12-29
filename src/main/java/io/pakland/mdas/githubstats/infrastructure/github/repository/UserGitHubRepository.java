@@ -2,8 +2,8 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.UserMapper;
-import io.pakland.mdas.githubstats.domain.entity.Team;
-import io.pakland.mdas.githubstats.domain.entity.User;
+import io.pakland.mdas.githubstats.domain.Team;
+import io.pakland.mdas.githubstats.domain.User;
 import io.pakland.mdas.githubstats.domain.repository.UserExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserDTO;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package io.pakland.mdas.githubstats.domain.entity;
+package io.pakland.mdas.githubstats.domain;
 
 import java.util.List;
 
@@ -45,8 +45,8 @@ public class ReviewAggregation {
     public float getTotalCommentLengthAvg() {
         if (internalCommentCount + externalCommentCount == 0) return 0;
         return (float)
-                (internalCommentLengthSum + externalCommentLengthSum) /
-                (internalCommentCount + externalCommentCount);
+            (internalCommentLengthSum + externalCommentLengthSum) /
+            (internalCommentCount + externalCommentCount);
     }
 
     public int getInternalCommentLengthSum() {

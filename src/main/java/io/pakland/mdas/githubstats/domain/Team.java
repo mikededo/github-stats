@@ -1,10 +1,14 @@
-package io.pakland.mdas.githubstats.domain.entity;
+package io.pakland.mdas.githubstats.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.*;
-import javax.persistence.*;
-import lombok.*;
-import org.springframework.web.reactive.result.HandlerResultHandlerSupport;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -34,7 +38,7 @@ public class Team {
     }
 
     public void addRepositories(Collection<Repository> repositories) {
-       repositories.forEach(this::addRepository);
+        repositories.forEach(this::addRepository);
     }
 
     public void addRepository(Repository repository) {

@@ -1,9 +1,8 @@
 package io.pakland.mdas.githubstats.infrastructure.github.controller;
 
+import io.pakland.mdas.githubstats.application.*;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
-import io.pakland.mdas.githubstats.application.external.*;
-import io.pakland.mdas.githubstats.application.internal.AggregatePullRequests;
-import io.pakland.mdas.githubstats.domain.entity.*;
+import io.pakland.mdas.githubstats.domain.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;

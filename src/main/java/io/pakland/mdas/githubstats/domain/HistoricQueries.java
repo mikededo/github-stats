@@ -1,6 +1,5 @@
-package io.pakland.mdas.githubstats.domain.entity;
+package io.pakland.mdas.githubstats.domain;
 
-import io.pakland.mdas.githubstats.domain.enums.EntityType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +17,7 @@ public class HistoricQueries {
     @Column(updatable = false, nullable = false)
     private Integer id;
 
-    @Column(name="entity_type", nullable = false)
+    @Column(name = "entity_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private EntityType entityType;
 

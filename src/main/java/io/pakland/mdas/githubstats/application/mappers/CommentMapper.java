@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.application.mappers;
 
 import io.pakland.mdas.githubstats.application.dto.CommentDTO;
-import io.pakland.mdas.githubstats.domain.entity.Comment;
+import io.pakland.mdas.githubstats.domain.Comment;
 
 public class CommentMapper {
 
