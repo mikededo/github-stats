@@ -1,9 +1,15 @@
 package io.pakland.mdas.githubstats.domain.repository;
 
-import io.pakland.mdas.githubstats.domain.HistoricQueries;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import io.pakland.mdas.githubstats.domain.entity.Metric;
+import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
+import org.springframework.data.repository.query.Param;
 
-@Repository
-public interface MetricRepository extends JpaRepository<HistoricQueries, Integer> {
+import java.util.List;
+
+public interface MetricRepository {
+
+    Long countUserMonthsFromRange(ShellRequest req);
+
+    List<Metric> findUserMetricsFromRange(ShellRequest req);
+
 }
