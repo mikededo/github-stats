@@ -1,10 +1,11 @@
 package io.pakland.mdas.githubstats.domain.entity;
 
 import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
+import lombok.*;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -21,6 +22,12 @@ public class PullRequest {
     private Instant closedAt;
 
     private Instant createdAt;
+
+    private Integer numCommits;
+
+    private Integer additions;
+
+    private Integer deletions;
 
     @ToString.Exclude
     private Repository repository;

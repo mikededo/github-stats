@@ -7,14 +7,17 @@ import io.pakland.mdas.githubstats.domain.entity.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.*;
 import lombok.NoArgsConstructor;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Component
 @NoArgsConstructor
@@ -96,11 +99,8 @@ public class GitHubController {
                     .execute(repository, userOptionRequest.getFrom(), userOptionRequest.getTo());
 
             ExecutorService executor = Executors.newFixedThreadPool(3);
-            List<PullRequest> prToAggregate = new ArrayList<>();
             pullRequestList.parallelStream().forEach(pullRequest -> {
-                if (isBetweenRequestRange(pullRequest.getCreatedAt())) {
-                    prToAggregate.add(pullRequest);
-                }
+
                 Future<?> future2 = executor.submit(
                     () -> this.fetchReviewsFromPullRequest(pullRequest));
                 Future<?> future3 = executor.submit(
@@ -115,7 +115,7 @@ public class GitHubController {
             });
 
             Map<Team, Map<User, PullRequestAggregation>> prAggregation = new AggregatePullRequests().execute(
-                prToAggregate);
+                pullRequestList);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }

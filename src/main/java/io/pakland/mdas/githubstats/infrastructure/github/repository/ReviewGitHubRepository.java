@@ -46,7 +46,7 @@ public class ReviewGitHubRepository implements ReviewExternalRepository {
                 .retrieve()
                 .bodyToFlux(GitHubReviewDTO.class)
                 .parallel()
-                .filter(review -> Objects.nonNull(review.getUser()))
+                .filter(review -> Objects.nonNull(review.getSubmittedAt()) && Objects.nonNull(review.getUser()))
                 .map(ReviewMapper::dtoToEntity)
                 .sequential()
                 .collectList()
