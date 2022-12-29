@@ -4,6 +4,7 @@ import io.pakland.mdas.githubstats.domain.EntityType;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.YearMonth;
 import java.util.Date;
 
 @Data
@@ -16,7 +17,9 @@ public class ShellRequest {
 
     private String name;
 
-    private Date from;
+    private YearMonth dateFrom;
 
-    private Date to;
+    private YearMonth dateTo;
+
+    private String filePath;
 }
