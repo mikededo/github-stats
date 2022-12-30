@@ -1,16 +1,20 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.infrastructure.serializer;
 
+import io.pakland.mdas.githubstats.application.MetricExporter;
 import io.pakland.mdas.githubstats.domain.Metric;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MetricCsvExporter implements MetricExporter {
+@Component
+public class CsvMetricExporter implements MetricExporter, Serializable {
 
     @Override
     public void export(List<Metric> metrics, String filePath) throws IOException {
