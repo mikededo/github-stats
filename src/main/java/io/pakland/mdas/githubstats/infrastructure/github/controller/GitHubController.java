@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 import lombok.NoArgsConstructor;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,7 +45,7 @@ public class GitHubController {
                 new FetchAvailableOrganizations(organizationRepository).execute();
             organizationList
                 .parallelStream()
-                .filter(organization -> !userOptionRequest.getType().equals(OptionType.ORGANIZATION)
+                .filter(organization -> !userOptionRequest.isOrganizationType()
                     || organization.isNamed(userOptionRequest.getName()))
                 .forEach(this::fetchTeamsFromOrganization);
         } catch (HttpException e) {
@@ -61,7 +60,7 @@ public class GitHubController {
             teamList
                 .parallelStream()
                 .filter(
-                    team -> !userOptionRequest.getType().equals(OptionType.TEAM)
+                    team -> !userOptionRequest.isTeamType()
                         || team.isNamed(userOptionRequest.getName()))
                 .forEach(this::fetchRepositoriesFromTeam);
         } catch (HttpException e) {
@@ -114,7 +113,10 @@ public class GitHubController {
         try {
             // Fetch Reviews from each Pull Request.
             List<Review> reviewList = new FetchReviewsFromPullRequest(reviewRepository)
-                .execute(pullRequest, getRequestDateRange());
+                .execute(pullRequest, getRequestDateRange())
+                .parallelStream()
+                .filter(review -> !userOptionRequest.isUserType()
+                    || review.isAuthorNamed(userOptionRequest.getName())).toList();
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
@@ -124,15 +126,14 @@ public class GitHubController {
         try {
             // Fetch Comments from each Pull Request.
             List<Comment> commentList = new FetchCommentsFromPullRequest(commentRepository)
-                .execute(pullRequest, getRequestDateRange());
+                .execute(pullRequest, getRequestDateRange())
+                .parallelStream()
+                .filter(comment -> !userOptionRequest.isUserType()
+                    || comment.isAuthorNamed(userOptionRequest.getName()))
+                .toList();
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private boolean isBetweenRequestRange(Instant instant) {
-        return instant.isAfter(userOptionRequest.getFrom().toInstant()) && instant.isBefore(
-            userOptionRequest.getTo().toInstant());
     }
 
     private DateRange getRequestDateRange() {

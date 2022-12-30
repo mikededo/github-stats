@@ -19,6 +19,10 @@ public class User {
 
     private Team team;
 
+    public boolean isNamed(String name) {
+        return login.equals(name);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

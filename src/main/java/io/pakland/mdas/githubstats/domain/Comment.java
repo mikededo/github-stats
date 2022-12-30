@@ -1,11 +1,7 @@
 package io.pakland.mdas.githubstats.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.Date;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -22,4 +18,8 @@ public class Comment {
     private Date createdAt;
 
     private PullRequest pullRequest;
+
+    public boolean isAuthorNamed(String name) {
+        return this.user.isNamed(name);
+    }
 }
