@@ -2,6 +2,8 @@ package io.pakland.mdas.githubstats.infrastructure.controller;
 
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 
+import java.io.IOException;
+
 public abstract class Middleware {
 
     private Middleware next;
@@ -15,13 +17,13 @@ public abstract class Middleware {
         return first;
     }
 
-    public abstract String execute(ShellRequest request);
+    public abstract void execute(ShellRequest request);
 
-    protected String checkNext(ShellRequest request) {
+    protected void checkNext(ShellRequest request) {
 
         if (next == null) {
-            return "unknow middleware";
+            return;
         }
-        return next.execute(request);
+        next.execute(request);
     }
 }

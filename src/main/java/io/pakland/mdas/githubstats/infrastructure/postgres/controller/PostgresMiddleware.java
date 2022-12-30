@@ -30,7 +30,7 @@ public class PostgresMiddleware extends Middleware {
     }
 
     @Override
-    public String execute(ShellRequest request) {
+    public void execute(ShellRequest request) {
 
         if (checkMetricsFromUserByRange.execute(request)) {
             List<Metric> metrics = getMetricsFromUser.execute(request);
@@ -38,12 +38,11 @@ public class PostgresMiddleware extends Middleware {
             try {
                 metricExporter.export(metrics, "prueba.csv");
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println("Error writing csv file");
             }
-
-            return "csv from db";
+            return;
         }
        
-        return super.checkNext(request);
+        super.checkNext(request);
     }
 }

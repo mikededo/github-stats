@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 public class GitHubMiddleware extends Middleware {
 
     @Override
-    public String execute(ShellRequest request) {
+    public void execute(ShellRequest request) {
         GitHubController gitHubController = new GitHubController(
                 GitHubUserOptionRequest.builder()
                         .userName(request.getName())
@@ -22,6 +22,5 @@ public class GitHubMiddleware extends Middleware {
                         .build());
 
         gitHubController.execute();
-        return "csv from github";
     }
 }

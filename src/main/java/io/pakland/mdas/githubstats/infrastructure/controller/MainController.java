@@ -14,7 +14,7 @@ public class MainController {
         middleware = Middleware.link( postgresMiddleware, gitHubMiddleware);
     }
 
-    public String execute(ShellRequest request) {
-        return middleware.execute(request);
+    public void execute(ShellRequest request) {
+        middleware.execute(request);
     }
 }
