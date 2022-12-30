@@ -32,8 +32,8 @@ public class Organization {
         team.setOrganization(this);
     }
 
-    public List<Team> getTeams() {
-        return teams.stream().toList();
+    public boolean isNamed(String name) {
+        return this.login.equals(name);
     }
 
     @Override

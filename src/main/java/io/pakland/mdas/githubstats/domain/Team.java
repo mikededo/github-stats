@@ -50,8 +50,8 @@ public class Team {
         repository.setTeam(this);
     }
 
-    public List<Repository> getRepositories() {
-        return repositories.stream().toList();
+    public boolean isNamed(String name) {
+        return this.slug.equals(name);
     }
 
     @Override

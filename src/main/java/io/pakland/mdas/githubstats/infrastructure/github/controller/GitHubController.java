@@ -4,45 +4,39 @@ import io.pakland.mdas.githubstats.application.*;
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.domain.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
-import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserOptionRequest;
+import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
-import lombok.NoArgsConstructor;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
+import lombok.NoArgsConstructor;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 @Component
 @NoArgsConstructor
 public class GitHubController {
 
-    private WebClientConfiguration webClientConfiguration;
-    private GitHubUserOptionRequest userOptionRequest;
+    private GitHubOptionRequest userOptionRequest;
     private OrganizationExternalRepository organizationRepository;
     private TeamExternalRepository teamRepository;
     private RepositoryExternalRepository repositoryRepository;
-    private UserExternalRepository userRepository;
     private PullRequestExternalRepository pullRequestRepository;
     private ReviewExternalRepository reviewRepository;
     private CommentExternalRepository commentRepository;
 
-    public GitHubController(GitHubUserOptionRequest userOptionRequest) {
-        this.webClientConfiguration = new WebClientConfiguration(
+    public GitHubController(GitHubOptionRequest userOptionRequest) {
+        WebClientConfiguration webClientConfiguration = new WebClientConfiguration(
             "https://api.github.com", userOptionRequest.getApiKey());
+
         this.userOptionRequest = userOptionRequest;
-        this.organizationRepository = new OrganizationGitHubRepository(this.webClientConfiguration);
-        this.teamRepository = new TeamGitHubRepository(this.webClientConfiguration);
-        this.repositoryRepository = new RepositoryGitHubRepository(this.webClientConfiguration);
-        this.userRepository = new UserGitHubRepository(this.webClientConfiguration);
-        this.pullRequestRepository = new PullRequestGitHubRepository(this.webClientConfiguration);
-        this.reviewRepository = new ReviewGitHubRepository(this.webClientConfiguration);
-        this.commentRepository = new CommentGitHubRepository(this.webClientConfiguration);
+        this.organizationRepository = new OrganizationGitHubRepository(webClientConfiguration);
+        this.teamRepository = new TeamGitHubRepository(webClientConfiguration);
+        this.repositoryRepository = new RepositoryGitHubRepository(webClientConfiguration);
+        this.pullRequestRepository = new PullRequestGitHubRepository(webClientConfiguration);
+        this.reviewRepository = new ReviewGitHubRepository(webClientConfiguration);
+        this.commentRepository = new CommentGitHubRepository(webClientConfiguration);
     }
 
     public void execute() {
@@ -50,7 +44,11 @@ public class GitHubController {
             // Fetch the API key's available organizations.
             List<Organization> organizationList =
                 new FetchAvailableOrganizations(organizationRepository).execute();
-            organizationList.forEach(this::fetchTeamsFromOrganization);
+            organizationList
+                .parallelStream()
+                .filter(organization -> !userOptionRequest.getType().equals(OptionType.ORGANIZATION)
+                    || organization.isNamed(userOptionRequest.getName()))
+                .forEach(this::fetchTeamsFromOrganization);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
@@ -60,10 +58,12 @@ public class GitHubController {
         try {
             List<Team> teamList = new FetchTeamsFromOrganization(teamRepository)
                 .execute(organization);
-            teamList.parallelStream().forEach(team -> {
-                this.fetchRepositoriesFromTeam(team);
-                this.fetchUsersFromTeam(team);
-            });
+            teamList
+                .parallelStream()
+                .filter(
+                    team -> !userOptionRequest.getType().equals(OptionType.TEAM)
+                        || team.isNamed(userOptionRequest.getName()))
+                .forEach(this::fetchRepositoriesFromTeam);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
@@ -81,15 +81,6 @@ public class GitHubController {
         }
     }
 
-    private void fetchUsersFromTeam(Team team) {
-        try {
-            // Fetch the members of each team.
-            new FetchUsersFromTeam(userRepository).execute(team);
-        } catch (HttpException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private void fetchPullRequestsFromRepository(Repository repository) {
         try {
             // Fetch pull requests from each team.
@@ -99,7 +90,6 @@ public class GitHubController {
 
             ExecutorService executor = Executors.newFixedThreadPool(3);
             pullRequestList.parallelStream().forEach(pullRequest -> {
-
                 Future<?> reviewsFuture = executor.submit(
                     () -> this.fetchReviewsFromPullRequest(pullRequest));
                 Future<?> commentsFuture = executor.submit(
