@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.domain;
 
 public enum EntityType {
-    ORGANIZATION("organization"),
+    ORG("org"),
     TEAM("team"),
     USER("user");
 

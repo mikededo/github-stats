@@ -3,6 +3,7 @@ package io.pakland.mdas.githubstats.infrastructure.shell.validation;
 import io.pakland.mdas.githubstats.domain.EntityType;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class EntityTypeValidator implements InputValidator<String> {
 
@@ -10,6 +11,10 @@ public class EntityTypeValidator implements InputValidator<String> {
 
     @Override
     public boolean validate(String input) {
-        return Arrays.stream(EntityType.values()).anyMatch(e -> e.name().equals(input.toLowerCase()));
+        boolean valid = Arrays.stream(EntityType.values()).anyMatch(e -> e.name().equals(input.toLowerCase()));
+        if(!valid) {
+            System.out.println("El tipo de entidad no es válido: "+ Arrays.stream(EntityType.values()).map(EntityType::getEntity).toList());
+        }
+        return valid;
     }
 }
