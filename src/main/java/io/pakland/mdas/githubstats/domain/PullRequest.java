@@ -32,6 +32,4 @@ public class PullRequest {
     private Repository repository;
 
     private User user;
-
-    private List<Review> reviews = new ArrayList<>();
 }

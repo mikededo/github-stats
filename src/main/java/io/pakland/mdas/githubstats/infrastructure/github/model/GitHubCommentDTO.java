@@ -2,6 +2,7 @@ package io.pakland.mdas.githubstats.infrastructure.github.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.pakland.mdas.githubstats.application.dto.CommentDTO;
+import io.pakland.mdas.githubstats.application.dto.UserDTO;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +18,9 @@ public class GitHubCommentDTO implements CommentDTO {
 
     @JsonProperty("body")
     private String body;
+
+    @JsonProperty("user")
+    private GitHubUserDTO user;
 
     @JsonProperty("created_at")
     private Date createdAt;
@@ -35,4 +39,10 @@ public class GitHubCommentDTO implements CommentDTO {
     public Date getCreatedAt() {
         return this.createdAt;
     }
+
+    @Override
+    public UserDTO getUser() {
+        return this.user;
+    }
+
 }

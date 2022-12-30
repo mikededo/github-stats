@@ -7,5 +7,7 @@ public interface CommentDTO {
 
     String getBody();
 
+    UserDTO getUser();
+
     Date getCreatedAt();
 }

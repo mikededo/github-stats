@@ -16,8 +16,14 @@ public class GitHubReviewDTO implements ReviewDTO {
     @JsonProperty("id")
     private Integer id;
 
+    @JsonProperty("body")
+    private String body;
+
     @JsonProperty("user")
     private GitHubUserDTO user;
+
+    @JsonProperty("author_association")
+    private String authorAssociation;
 
     @JsonProperty("submitted_at")
     private Date submittedAt;
@@ -28,6 +34,11 @@ public class GitHubReviewDTO implements ReviewDTO {
     }
 
     @Override
+    public String getBody() {
+        return this.body;
+    }
+
+    @Override
     public UserDTO getUser() {
         return this.user;
     }
@@ -35,5 +46,13 @@ public class GitHubReviewDTO implements ReviewDTO {
     @Override
     public Date getSubmittedAt() {
         return this.submittedAt;
+    }
+
+    @Override
+    public boolean getReviewFromInternalAuthor() {
+        return switch (this.authorAssociation) {
+            case "MEMBER", "COLLABORATOR", "OWNER" -> true;
+            default -> false;
+        };
     }
 }
