@@ -5,7 +5,6 @@ import io.pakland.mdas.githubstats.domain.Comment;
 import io.pakland.mdas.githubstats.domain.DateRange;
 import io.pakland.mdas.githubstats.domain.PullRequest;
 import io.pakland.mdas.githubstats.domain.repository.CommentExternalRepository;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +62,7 @@ public class FetchCommentsFromPullRequest {
             responseResults = apiResults.size();
             page++;
         } while (responseResults > 0);
+        commentList.parallelStream().forEach(comment -> comment.setPullRequest(pullRequest));
 
         return commentList;
     }

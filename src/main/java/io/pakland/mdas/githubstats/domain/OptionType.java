@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.domain;
 
-public enum EntityType {
+public enum OptionType {
     ORGANIZATION,
     TEAM,
     USER

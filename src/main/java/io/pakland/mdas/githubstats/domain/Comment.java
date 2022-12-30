@@ -1,27 +1,31 @@
 package io.pakland.mdas.githubstats.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.Date;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 public class Comment {
 
     private Integer id;
 
-    private Review review;
+    private User user;
 
     private String body;
 
     private Date createdAt;
 
-    public Integer getLength() {
+    @ToString.Exclude
+    private PullRequest pullRequest;
+
+    public boolean isAuthorNamed(String name) {
+        return this.user.isNamed(name);
+    }
+
+    public int bodySize() {
         return this.body.length();
     }
 }
