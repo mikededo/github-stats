@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.command.CommandRegistration;
 
 @Configuration
-public class CommandConfiguration {
+public class ShellConfiguration {
 
     private final ShellController shellController;
 
-    public CommandConfiguration(ShellController shellController) {
+    public ShellConfiguration(ShellController shellController) {
         this.shellController = shellController;
     }
 
@@ -60,6 +60,12 @@ public class CommandConfiguration {
                 .arity(CommandRegistration.OptionArity.EXACTLY_ONE)
                 .type(String.class)
                 .required()
+                .and()
+            .withOption()
+                .longNames("path")
+                .label("FILE_PATH")
+                .arity(CommandRegistration.OptionArity.EXACTLY_ONE)
+                .type(String.class)
                 .and()
             .build();
     }

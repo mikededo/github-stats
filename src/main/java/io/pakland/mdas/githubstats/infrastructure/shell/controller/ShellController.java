@@ -55,9 +55,7 @@ public class ShellController {
                 .build();
 
         mainController.execute(shellRequest);
-        System.out.println("serializedOutput");
 
-        // TODO : return console / file / etc.. output
         return true;
     }
 
