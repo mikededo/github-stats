@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.configuration;
 
-import io.pakland.mdas.githubstats.infrastructure.shell.components.ShellController;
+import io.pakland.mdas.githubstats.infrastructure.shell.controller.ShellController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.command.CommandRegistration;
@@ -18,15 +18,23 @@ public class CommandConfiguration {
     public CommandRegistration buildUserCommand() {
 
         return CommandRegistration.builder()
-                .command("user")
-                .description("Get data from a specified user.")
+                .command("get")
+                .description("Get data from a specified entityType.")
             .withTarget()
-                .method(shellController, "user")
+                .method(shellController, "build")
+                .and()
+            .withOption()
+                .shortNames('e')
+                .longNames("entity")
+                .label("ENTITY_TYPE")
+                .arity(CommandRegistration.OptionArity.EXACTLY_ONE)
+                .type(String.class)
+                .required()
                 .and()
             .withOption()
                 .shortNames('n')
                 .longNames("name")
-                .label("USER_NAME")
+                .label("NAME")
                 .arity(CommandRegistration.OptionArity.EXACTLY_ONE)
                 .type(String.class)
                 .required()

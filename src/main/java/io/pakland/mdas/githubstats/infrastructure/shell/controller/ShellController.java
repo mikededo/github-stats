@@ -1,8 +1,9 @@
-package io.pakland.mdas.githubstats.infrastructure.shell.components;
+package io.pakland.mdas.githubstats.infrastructure.shell.controller;
 
 import io.pakland.mdas.githubstats.domain.EntityType;
 import io.pakland.mdas.githubstats.infrastructure.controller.MainController;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
+import io.pakland.mdas.githubstats.infrastructure.shell.validation.EntityTypeValidator;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.YearMonthValidator;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.NameValidator;
 import org.springframework.shell.standard.ShellComponent;
@@ -22,7 +23,8 @@ public class ShellController {
         this.mainController = mainController;
     }
 
-    private boolean user(
+    private boolean build(
+            @ShellOption(value = "entity") String entity,
             @ShellOption(value = "name") String name,
             @ShellOption(value = "key") String apiKey,
             @ShellOption(value = "from") String from,
@@ -31,8 +33,10 @@ public class ShellController {
 
         YearMonthValidator yearMonthValidator = new YearMonthValidator();
         NameValidator nameValidator = new NameValidator();
+        EntityTypeValidator entityTypeValidator = new EntityTypeValidator();
 
         boolean isInputValid =
+                entityTypeValidator.validate(entity) &&
                 yearMonthValidator.validate(from) &&
                 yearMonthValidator.validate(to) &&
                 nameValidator.validate(name);
