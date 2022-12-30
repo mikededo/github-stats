@@ -19,7 +19,7 @@ public class HistoricQueries {
 
     @Column(name = "entity_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private EntityType entityType;
+    private OptionType entityType;
 
     @Column(nullable = false)
     private String name;

@@ -1,7 +1,9 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.configuration;
 
+import io.pakland.mdas.githubstats.infrastructure.shell.components.ShellOrganizationComponent;
 import io.pakland.mdas.githubstats.infrastructure.shell.components.ShellTeamComponent;
 import io.pakland.mdas.githubstats.infrastructure.shell.components.ShellUserComponent;
+import io.pakland.mdas.githubstats.infrastructure.shell.model.CommandRegistrationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.command.CommandRegistration;
@@ -9,81 +11,31 @@ import org.springframework.shell.command.CommandRegistration;
 @Configuration
 public class CommandConfiguration {
 
+
     @Bean
     public CommandRegistration buildUserCommand() {
-        ShellUserComponent shellUserComponent = new ShellUserComponent();
-
-        return CommandRegistration.builder()
-                .command("user")
-                .description("Get data from a specified user.")
-            .withTarget()
-                .method(shellUserComponent, "user")
-                .and()
-            .withOption()
-                .shortNames('n')
-                .longNames("name")
-                .label("USER_NAME")
-                .arity(CommandRegistration.OptionArity.EXACTLY_ONE)
-                .type(String.class)
-                .required()
-                .and()
-            .withOption()
-                .shortNames('k')
-                .longNames("key")
-                .label("API_KEY")
-                .arity(CommandRegistration.OptionArity.EXACTLY_ONE)
-                .type(String.class)
-                .required()
-                .and()
-            .withOption()
-                .longNames("from")
-                .label("FROM_DATE")
-                .arity(CommandRegistration.OptionArity.EXACTLY_ONE)
-                .type(String.class)
-                .required()
-                .and()
-            .withOption()
-                .longNames("to")
-                .label("TO_DATE")
-                .arity(CommandRegistration.OptionArity.EXACTLY_ONE)
-                .type(String.class)
-                .required()
-                .and()
-            .build();
+        return new CommandRegistrationBuilder(
+            "user",
+            "Load data from the specified user",
+            "<user-name>"
+        ).build(new ShellUserComponent());
     }
 
     @Bean
     public CommandRegistration buildTeamCommand() {
-        ShellTeamComponent shellTeamComponent = new ShellTeamComponent();
+        return new CommandRegistrationBuilder(
+            "team",
+            "Load data from all users of the specified team",
+            "<team-name>"
+        ).build(new ShellTeamComponent());
+    }
 
-        return CommandRegistration.builder()
-                .command("team")
-                .description("Get data from a specified team and its sub teams.")
-            .withTarget()
-                .method(shellTeamComponent, "team")
-                .and()
-            .withOption()
-                .shortNames('n')
-                .longNames("name")
-                .label("TEAM_NAME")
-                .arity(CommandRegistration.OptionArity.EXACTLY_ONE)
-                .type(String.class)
-                .required()
-                .and()
-            .withOption()
-                .longNames("from")
-                .label("FROM_DATE")
-                .arity(CommandRegistration.OptionArity.EXACTLY_ONE)
-                .type(String.class)
-                .required()
-                .and()
-            .withOption()
-                .longNames("to")
-                .label("TO_DATE")
-                .arity(CommandRegistration.OptionArity.EXACTLY_ONE)
-                .type(String.class)
-                .required()
-                .and()
-            .build();
+    @Bean
+    public CommandRegistration buildUserComponent() {
+        return new CommandRegistrationBuilder(
+            "organization",
+            "Load data from all users of the specified organization, grouped by their team",
+            "<organization-name>"
+        ).build(new ShellOrganizationComponent());
     }
 }
