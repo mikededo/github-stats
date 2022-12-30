@@ -1,0 +1,10 @@
+databaseChangeLog:
+    - changeSet:
+        id:  addUniqueConstraint-OrgTeamUserYearMonth
+        author: Paco_Lozano
+        changes:
+            -  addUniqueConstraint:
+                columnNames:  organization, team_slug, user_name, year_month
+                constraintName:  org_team_user_yearmonth_uniq
+                schemaName:  public
+                tableName:  metric
