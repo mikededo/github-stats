@@ -24,10 +24,7 @@ public class CheckMetricsFromUserByRange {
     }
 
     private Long calculateMonthFromGivenRange(ShellRequest req) {
-        return ChronoUnit.MONTHS.between(
-                convertDateToYearMonth(req.getFrom()),
-                convertDateToYearMonth(req.getTo())
-        );
+        return ChronoUnit.MONTHS.between(req.getDateFrom(),req.getDateTo());
     }
 
     private YearMonth convertDateToYearMonth(Date date) {

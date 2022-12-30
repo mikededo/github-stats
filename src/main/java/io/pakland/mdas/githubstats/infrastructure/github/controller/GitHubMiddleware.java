@@ -15,10 +15,13 @@ public class GitHubMiddleware extends Middleware {
                 GitHubUserOptionRequest.builder()
                         .userName(request.getName())
                         .apiKey(request.getApiKey())
-                        .from(request.getFrom())
-                        .to(request.getTo()).build());
-        gitHubController.execute();
 
+                        // TODO : temporal workarround
+                        .from(java.sql.Date.valueOf(request.getDateFrom().atDay(1)))
+                        .to(java.sql.Date.valueOf(request.getDateTo().atDay(1)))
+                        .build());
+
+        gitHubController.execute();
         return "csv from github";
     }
 }
