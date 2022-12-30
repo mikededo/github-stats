@@ -11,7 +11,9 @@ public class EntityTypeValidator implements InputValidator<String> {
 
     @Override
     public boolean validate(String input) {
-        boolean valid = Arrays.stream(EntityType.values()).anyMatch(e -> e.name().equals(input.toLowerCase()));
+        boolean valid = Arrays.stream(EntityType.values())
+                .map(EntityType::getEntity)
+                .anyMatch(e -> e.equals(input.toLowerCase()));
         if(!valid) {
             System.out.println("El tipo de entidad no es válido: "+ Arrays.stream(EntityType.values()).map(EntityType::getEntity).toList());
         }

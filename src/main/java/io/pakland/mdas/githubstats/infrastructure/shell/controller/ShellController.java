@@ -17,8 +17,6 @@ public class ShellController {
 
     private final MainController mainController;
 
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yy/MM");
-
     public ShellController(MainController mainController) {
         this.mainController = mainController;
     }
@@ -45,8 +43,8 @@ public class ShellController {
             return false;
         }
 
-        YearMonth dateFrom = YearMonth.parse(from,dateTimeFormatter);
-        YearMonth dateTo = YearMonth.parse(from,dateTimeFormatter);
+        YearMonth dateFrom = YearMonth.parse(from, yearMonthValidator.getFormatter());
+        YearMonth dateTo = YearMonth.parse(from, yearMonthValidator.getFormatter());
 
         ShellRequest shellRequest = ShellRequest.builder()
                 .entityType(EntityType.USER)
