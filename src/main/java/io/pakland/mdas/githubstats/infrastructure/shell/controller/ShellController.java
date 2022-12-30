@@ -44,7 +44,7 @@ public class ShellController {
         }
 
         YearMonth dateFrom = YearMonth.parse(from, yearMonthValidator.getFormatter());
-        YearMonth dateTo = YearMonth.parse(from, yearMonthValidator.getFormatter());
+        YearMonth dateTo = YearMonth.parse(to, yearMonthValidator.getFormatter());
 
         ShellRequest shellRequest = ShellRequest.builder()
                 .entityType(EntityType.USER)
