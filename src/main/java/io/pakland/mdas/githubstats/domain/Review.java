@@ -17,25 +17,24 @@ public class Review {
 
     private Integer id;
 
+    private String body;
+
     private User user;
 
     private Date submittedAt;
 
     private PullRequest pullRequest;
 
-    private List<Comment> comments = new ArrayList<>();
-
-    public int sumCommentLength() {
-        return comments.stream().mapToInt(Comment::getLength).sum();
-    }
+    // This value allows us to know if the author of the review is part of the team that
+    // owns the repository
+    private boolean isReviewFromInternalAuthor;
 
     public boolean isInternal() {
-        return getPullRequest().getRepository().getTeam()
-            .equals(getUser().getTeam());
+        return this.isReviewFromInternalAuthor;
     }
 
-    public boolean isReviewFromTeam(Team team) {
-        return pullRequest.getRepository().getTeam().equals(team);
+    public boolean isAuthorNamed(String name) {
+        return user.isNamed(name);
     }
 
 }

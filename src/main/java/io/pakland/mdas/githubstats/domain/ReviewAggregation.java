@@ -12,16 +12,6 @@ public class ReviewAggregation {
     public ReviewAggregation aggregate(List<Review> reviews) {
         resetMetrics();
 
-        reviews.forEach(userReview -> {
-            if (userReview.isInternal()) {
-                internalCommentLengthSum += userReview.sumCommentLength();
-                internalCommentCount++;
-            } else {
-                externalCommentLengthSum += userReview.sumCommentLength();
-                externalCommentCount++;
-            }
-        });
-
         return this;
     }
 

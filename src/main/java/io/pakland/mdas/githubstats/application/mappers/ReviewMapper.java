@@ -8,7 +8,9 @@ public class ReviewMapper {
     public static Review dtoToEntity(ReviewDTO dto) {
         return Review.builder()
             .id(dto.getId())
+            .body(dto.getBody())
             .user(UserMapper.dtoToEntity(dto.getUser()))
+            .isReviewFromInternalAuthor(dto.getReviewFromInternalAuthor())
             .submittedAt(dto.getSubmittedAt())
             .build();
     }

@@ -15,13 +15,11 @@ public class Comment {
 
     private Integer id;
 
-    private Review review;
+    private User user;
 
     private String body;
 
     private Date createdAt;
 
-    public Integer getLength() {
-        return this.body.length();
-    }
+    private PullRequest pullRequest;
 }

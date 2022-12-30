@@ -9,6 +9,7 @@ public class CommentMapper {
         return Comment.builder()
             .id(dto.getId())
             .body(dto.getBody())
+            .user(UserMapper.dtoToEntity(dto.getUser()))
             .createdAt(dto.getCreatedAt())
             .build();
     }

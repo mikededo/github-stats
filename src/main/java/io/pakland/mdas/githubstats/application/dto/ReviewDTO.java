@@ -6,7 +6,11 @@ public interface ReviewDTO {
 
     Integer getId();
 
+    String getBody();
+
     UserDTO getUser();
 
     Date getSubmittedAt();
+
+    boolean getReviewFromInternalAuthor();
 }
