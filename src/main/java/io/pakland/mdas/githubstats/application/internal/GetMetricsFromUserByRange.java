@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.application.internal;
 
-import io.pakland.mdas.githubstats.domain.entity.Metric;
+import io.pakland.mdas.githubstats.domain.Metric;
 import io.pakland.mdas.githubstats.infrastructure.postgres.repository.PostgresMetricRepository;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 import org.springframework.stereotype.Service;
