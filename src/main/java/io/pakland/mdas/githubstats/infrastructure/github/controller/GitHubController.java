@@ -115,8 +115,6 @@ public class GitHubController {
             // Fetch Reviews from each Pull Request.
             List<Review> reviewList = new FetchReviewsFromPullRequest(reviewRepository)
                 .execute(pullRequest, getRequestDateRange());
-            LoggerFactory.getLogger(this.getClass()).info(
-                String.format("pr: %s, count: %s", pullRequest.getNumber(), reviewList.size()));
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
@@ -127,8 +125,6 @@ public class GitHubController {
             // Fetch Comments from each Pull Request.
             List<Comment> commentList = new FetchCommentsFromPullRequest(commentRepository)
                 .execute(pullRequest, getRequestDateRange());
-            LoggerFactory.getLogger(this.getClass()).info(
-                String.format("pr: %s, count: %s", pullRequest.getNumber(), commentList.size()));
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
