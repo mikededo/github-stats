@@ -61,6 +61,7 @@ public class FetchReviewsFromPullRequest {
             responseResults = apiResults.size();
             page++;
         } while (responseResults != 100);
+        reviewList.parallelStream().forEach(review -> review.setPullRequest(pullRequest));
 
         return reviewList;
     }

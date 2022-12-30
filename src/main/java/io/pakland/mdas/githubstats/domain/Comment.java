@@ -6,6 +6,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 public class Comment {
 
@@ -17,6 +18,7 @@ public class Comment {
 
     private Date createdAt;
 
+    @ToString.Exclude
     private PullRequest pullRequest;
 
     public boolean isAuthorNamed(String name) {

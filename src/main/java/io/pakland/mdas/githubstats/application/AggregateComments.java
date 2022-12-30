@@ -18,7 +18,7 @@ public class AggregateComments {
         return comments
             .stream()
             .collect(
-                Collectors.groupingBy(comment -> comment.getUser().getTeam(),
+                Collectors.groupingBy(comment -> comment.getPullRequest().getRepository().getTeam(),
                     Collectors.groupingBy(Comment::getUser)));
     }
 

@@ -8,6 +8,7 @@ import io.pakland.mdas.githubstats.domain.repository.CommentExternalRepository;
 import io.pakland.mdas.githubstats.domain.utils.InternalCaching;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubCommentDTO;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPageableRequest;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -46,6 +47,13 @@ public class CommentGitHubRepository implements CommentExternalRepository {
                 .retrieve()
                 .bodyToFlux(GitHubCommentDTO.class)
                 .parallel()
+                .filter(comment -> {
+                    if (comment.getUser() == null) {
+                        System.out.println(pullRequest.getNumber());
+                    }
+                    return Objects.nonNull(comment.getCreatedAt()) && Objects.nonNull(
+                        comment.getUser());
+                })
                 .map(CommentMapper::dtoToEntity)
                 .sequential()
                 .collectList()

@@ -6,7 +6,6 @@ import io.pakland.mdas.githubstats.domain.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -89,14 +88,17 @@ public class GitHubController {
 
             ExecutorService executor = Executors.newFixedThreadPool(3);
             pullRequestList.parallelStream().forEach(pullRequest -> {
-                Future<?> reviewsFuture = executor.submit(
-                    () -> this.fetchReviewsFromPullRequest(pullRequest));
                 Future<?> commentsFuture = executor.submit(
                     () -> this.fetchCommentsFromPullRequest(pullRequest));
 
                 try {
-                    reviewsFuture.get();
                     commentsFuture.get();
+                    if (true) {
+                        return;
+                    }
+                    Future<?> reviewsFuture = executor.submit(
+                        () -> this.fetchReviewsFromPullRequest(pullRequest));
+                    reviewsFuture.get();
                 } catch (InterruptedException | ExecutionException e) {
                     throw new RuntimeException(e);
                 }
