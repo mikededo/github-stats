@@ -1,7 +1,9 @@
 package io.pakland.mdas.githubstats.domain;
 
 import java.util.List;
+import lombok.Getter;
 
+@Getter
 public class ReviewAggregation {
 
     private int bodyLength;

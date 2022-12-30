@@ -10,6 +10,7 @@ public class PullRequestMapper {
             .id(dto.getId())
             .number(dto.getNumber())
             .state(dto.getState())
+            .merged(dto.getMerged())
             .createdAt(dto.getCreatedAt())
             .closedAt(dto.getClosedAt())
             .numCommits(dto.getNumCommits())

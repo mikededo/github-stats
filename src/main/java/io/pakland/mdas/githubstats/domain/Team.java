@@ -54,6 +54,14 @@ public class Team {
         return this.slug.equals(name);
     }
 
+    public boolean hasUser(User user) {
+        if (users == null) {
+            return false;
+        }
+
+        return users.contains(user);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

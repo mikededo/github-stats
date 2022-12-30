@@ -35,6 +35,9 @@ public class Metric {
     @Column(name = "user_name", nullable = false)
     private String userName;
 
+    @Column(name = "total_pulls", nullable = false)
+    private Integer totalPulls;
+
     @Column(name = "merged_pulls", nullable = false)
     private Integer mergedPulls;
 

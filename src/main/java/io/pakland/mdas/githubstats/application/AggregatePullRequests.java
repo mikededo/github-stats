@@ -8,8 +8,6 @@ import java.util.stream.Collectors;
 
 public class AggregatePullRequests {
 
-    PullRequestAggregation pullRequestAggregation = new PullRequestAggregation();
-
     public AggregatePullRequests() {
     }
 
@@ -36,7 +34,7 @@ public class AggregatePullRequests {
         Map<User, List<PullRequest>> userPrMap) {
         Map<User, PullRequestAggregation> aggPullRequestsByUser = new HashMap<>();
         userPrMap.forEach((user, prList) -> aggPullRequestsByUser.put(user,
-            pullRequestAggregation.aggregate(prList)));
+            PullRequestAggregation.aggregate(prList)));
         return aggPullRequestsByUser;
     }
 

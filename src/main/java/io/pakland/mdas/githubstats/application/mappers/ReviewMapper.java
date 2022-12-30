@@ -10,7 +10,6 @@ public class ReviewMapper {
             .id(dto.getId())
             .body(dto.getBody())
             .user(UserMapper.dtoToEntity(dto.getUser()))
-            .isReviewFromInternalAuthor(dto.getReviewFromInternalAuthor())
             .submittedAt(dto.getSubmittedAt())
             .build();
     }

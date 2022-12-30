@@ -20,6 +20,7 @@ public class GitHubController {
     private OrganizationExternalRepository organizationRepository;
     private TeamExternalRepository teamRepository;
     private RepositoryExternalRepository repositoryRepository;
+    private UserExternalRepository userRepository;
     private PullRequestExternalRepository pullRequestRepository;
     private ReviewExternalRepository reviewRepository;
     private CommentExternalRepository commentRepository;
@@ -32,6 +33,7 @@ public class GitHubController {
         this.organizationRepository = new OrganizationGitHubRepository(webClientConfiguration);
         this.teamRepository = new TeamGitHubRepository(webClientConfiguration);
         this.repositoryRepository = new RepositoryGitHubRepository(webClientConfiguration);
+        this.userRepository = new UserGitHubRepository(webClientConfiguration);
         this.pullRequestRepository = new PullRequestGitHubRepository(webClientConfiguration);
         this.reviewRepository = new ReviewGitHubRepository(webClientConfiguration);
         this.commentRepository = new CommentGitHubRepository(webClientConfiguration);
@@ -61,7 +63,10 @@ public class GitHubController {
                 .filter(
                     team -> !userOptionRequest.isTeamType()
                         || team.isNamed(userOptionRequest.getName()))
-                .forEach(this::fetchRepositoriesFromTeam);
+                .forEach(team -> {
+                    fetchUsersFromTeam(team);
+                    fetchRepositoriesFromTeam(team);
+                });
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
@@ -74,6 +79,15 @@ public class GitHubController {
                 repositoryRepository).execute(team);
             // Add the team to the repository
             repositoryList.parallelStream().forEach(this::fetchPullRequestsFromRepository);
+        } catch (HttpException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void fetchUsersFromTeam(Team team) {
+        try {
+            // Fetch the members of each team.
+            new FetchUsersFromTeam(userRepository).execute(team);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }

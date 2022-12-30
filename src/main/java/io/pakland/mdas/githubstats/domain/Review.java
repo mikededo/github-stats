@@ -25,16 +25,12 @@ public class Review {
 
     private PullRequest pullRequest;
 
-    // This value allows us to know if the author of the review is part of the team that
-    // owns the repository
-    private boolean isReviewFromInternalAuthor;
-
     public boolean isInternal() {
-        return this.isReviewFromInternalAuthor;
+        return pullRequest.getRepository().getTeam().hasUser(user);
     }
 
     public int bodySize() {
-        return this.body.length();
+        return body.length();
     }
 
     public boolean isAuthorNamed(String name) {

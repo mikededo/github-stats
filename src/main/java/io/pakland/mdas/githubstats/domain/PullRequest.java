@@ -18,6 +18,8 @@ public class PullRequest {
 
     private PullRequestState state;
 
+    private boolean merged;
+
     private Instant closedAt;
 
     private Instant createdAt;
@@ -32,4 +34,8 @@ public class PullRequest {
     private Repository repository;
 
     private User user;
+
+    public boolean isMerged() {
+        return this.merged;
+    }
 }
