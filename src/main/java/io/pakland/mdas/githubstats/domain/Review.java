@@ -33,6 +33,10 @@ public class Review {
         return this.isReviewFromInternalAuthor;
     }
 
+    public int bodySize() {
+        return this.body.length();
+    }
+
     public boolean isAuthorNamed(String name) {
         return user.isNamed(name);
     }

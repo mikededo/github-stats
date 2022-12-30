@@ -22,4 +22,8 @@ public class Comment {
     public boolean isAuthorNamed(String name) {
         return this.user.isNamed(name);
     }
+
+    public int bodySize() {
+        return this.body.length();
+    }
 }

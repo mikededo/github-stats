@@ -4,55 +4,31 @@ import java.util.List;
 
 public class ReviewAggregation {
 
-    private int internalCommentLengthSum = 0;
-    private int externalCommentLengthSum = 0;
-    private int internalCommentCount = 0;
-    private int externalCommentCount = 0;
+    private int bodyLength;
+    private int internalReviewCount;
+    private int externalReviewCount;
 
-    public ReviewAggregation aggregate(List<Review> reviews) {
-        resetMetrics();
-
-        return this;
+    private ReviewAggregation() {
+        this.bodyLength = 0;
+        this.internalReviewCount = 0;
+        this.externalReviewCount = 0;
     }
 
-    private void resetMetrics() {
-        internalCommentLengthSum = 0;
-        externalCommentLengthSum = 0;
-        internalCommentCount = 0;
-        externalCommentCount = 0;
+    public static ReviewAggregation aggregate(List<Review> reviews) {
+        ReviewAggregation aggregation = new ReviewAggregation();
+        reviews.forEach(review -> {
+            if (review.isInternal()) {
+                aggregation.internalReviewCount++;
+            } else {
+                aggregation.externalReviewCount++;
+            }
+
+            aggregation.bodyLength += review.bodySize();
+        });
+        return aggregation;
     }
 
-    public float getInternalCommentLengthAvg() {
-        if (internalCommentCount == 0) return 0;
-        return (float) internalCommentLengthSum / internalCommentCount;
+    public int averageBodyLength() {
+        return bodyLength / (internalReviewCount + externalReviewCount);
     }
-
-    public float getExternalCommentLengthAvg() {
-        if (externalCommentCount == 0) return 0;
-        return (float) externalCommentLengthSum / externalCommentCount;
-    }
-
-    public float getTotalCommentLengthAvg() {
-        if (internalCommentCount + externalCommentCount == 0) return 0;
-        return (float)
-            (internalCommentLengthSum + externalCommentLengthSum) /
-            (internalCommentCount + externalCommentCount);
-    }
-
-    public int getInternalCommentLengthSum() {
-        return internalCommentLengthSum;
-    }
-
-    public int getExternalCommentLengthSum() {
-        return externalCommentLengthSum;
-    }
-
-    public int getInternalCommentCount() {
-        return internalCommentCount;
-    }
-
-    public int getExternalCommentCount() {
-        return externalCommentCount;
-    }
-
 }
