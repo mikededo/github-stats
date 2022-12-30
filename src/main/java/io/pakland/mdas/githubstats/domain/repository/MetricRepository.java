@@ -8,8 +8,8 @@ import java.util.Date;
 
 public interface MetricRepository {
 
-    Long countUserMonthsFromRangeQuery(String name, Date from, Date to);
+    Long countUserMonthsFromRange(ShellRequest req);
 
-    List<Metric> findUserMetricsFromRangeQuery(String name, Date from, Date to);
+    List<Metric> findUserMetricsFromRange(ShellRequest req);
 
 }

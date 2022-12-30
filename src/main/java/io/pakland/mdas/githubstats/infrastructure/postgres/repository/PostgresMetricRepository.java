@@ -18,39 +18,31 @@ public interface PostgresMetricRepository extends JpaRepository<Metric, Integer>
 
     @Transactional(readOnly=true)
     @Query(nativeQuery = true, value= """
-           SELECT COUNT(1)
+           SELECT COUNT(*)
            FROM (
-                 SELECT COUNT(1)
+                 SELECT COUNT(*)
                    FROM metric
-                  WHERE user_name = :name
-                    AND year_month BETWEEN :from AND :to
-               GROUP BY user_name, EXTRACT(YEAR from year_month), EXTRACT(MONTH from year_month)
+                  WHERE user_name = :#{#req.name}
+                    AND year_month 
+                        BETWEEN to_date(:#{#req.dateFrom.toString()}, 'YYYY-MM')
+                        AND to_date(:#{#req.dateTo.toString()}, 'YYYY-MM')
+               GROUP BY user_name,
+                        EXTRACT(YEAR from year_month), 
+                        EXTRACT(MONTH from year_month)
            ) as sub
     """)
-    Long countUserMonthsFromRangeQuery(@Param(value="name") String name, @Param(value="from") Date from, @Param(value="to") Date to);
-
-    default Long countUserMonthsFromRange(ShellRequest req) {
-        Date from = Date.from(req.getDateFrom().atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date to = Date.from(req.getDateTo().atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        System.out.println(from);
-        return countUserMonthsFromRangeQuery(req.getName(), from, to);
-    }
+    Long countUserMonthsFromRange(@Param(value="req") ShellRequest req);
 
     @Transactional(readOnly=true)
     @Query(nativeQuery = true, value= """
              SELECT *
                FROM metric
-              WHERE user_name = :name
-                AND year_month BETWEEN :from AND :to
+              WHERE user_name = :#{#req.name}
+                AND year_month 
+                    BETWEEN to_date(:#{#req.dateFrom.toString()}, 'YYYY-MM') 
+                    AND to_date(:#{#req.dateTo.toString()}, 'YYYY-MM')
            ORDER BY user_name, year_month
     """)
-    List<Metric> findUserMetricsFromRangeQuery(@Param(value="name") String name, @Param(value="from") Date from, @Param(value="to") Date to);
-
-    default List<Metric> findUserMetricsFromRange(ShellRequest req) {
-        Date from = Date.from(req.getDateFrom().atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date to = Date.from(req.getDateTo().atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        System.out.println(from);
-        return findUserMetricsFromRangeQuery(req.getName(), from, to);
-    }
+    List<Metric> findUserMetricsFromRange(@Param(value="req") ShellRequest req);
 
 }
