@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id:  renameColumn-dateMonth
+      author:  Paco_Lozano
+      changes:
+      -  renameColumn:
+          oldColumnName: date_month
+          newColumnName: year_month
+          schemaName: public
+          tableName: metric

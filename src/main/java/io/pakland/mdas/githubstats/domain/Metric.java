@@ -1,5 +1,6 @@
 package io.pakland.mdas.githubstats.domain;
 
+import io.pakland.mdas.githubstats.domain.utils.YearMonthDateAttributeConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +19,10 @@ import java.util.Arrays;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "metric")
+@Table(name = "metric",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {
+            "organization", "team_slug", "user_name", "year_month" })
+})
 public class Metric {
 
     @Id
@@ -56,7 +60,14 @@ public class Metric {
     @Column(name = "lines_removed", nullable = false)
     private Integer linesRemoved;
 
-    @Column(name="year_month", nullable = false)
+    @Column(
+            name = "year_month",
+            columnDefinition = "date",
+            nullable = false
+    )
+    @Convert(
+            converter = YearMonthDateAttributeConverter.class
+    )
     private YearMonth yearMonth;
 
     @Override
