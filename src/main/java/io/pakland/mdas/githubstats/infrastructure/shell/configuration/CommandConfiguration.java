@@ -31,7 +31,7 @@ public class CommandConfiguration {
     }
 
     @Bean
-    public CommandRegistration buildUserComponent() {
+    public CommandRegistration buildOrganizationCommand() {
         return new CommandRegistrationBuilder(
             "organization",
             "Load data from all users of the specified organization, grouped by their team",

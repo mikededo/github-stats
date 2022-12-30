@@ -88,16 +88,13 @@ public class GitHubController {
 
             ExecutorService executor = Executors.newFixedThreadPool(3);
             pullRequestList.parallelStream().forEach(pullRequest -> {
+                Future<?> reviewsFuture = executor.submit(
+                    () -> this.fetchReviewsFromPullRequest(pullRequest));
                 Future<?> commentsFuture = executor.submit(
                     () -> this.fetchCommentsFromPullRequest(pullRequest));
 
                 try {
                     commentsFuture.get();
-                    if (true) {
-                        return;
-                    }
-                    Future<?> reviewsFuture = executor.submit(
-                        () -> this.fetchReviewsFromPullRequest(pullRequest));
                     reviewsFuture.get();
                 } catch (InterruptedException | ExecutionException e) {
                     throw new RuntimeException(e);
