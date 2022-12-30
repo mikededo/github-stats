@@ -2,10 +2,10 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.ReviewMapper;
-import io.pakland.mdas.githubstats.domain.entity.PullRequest;
-import io.pakland.mdas.githubstats.domain.entity.Review;
-import io.pakland.mdas.githubstats.domain.lib.InternalCaching;
+import io.pakland.mdas.githubstats.domain.PullRequest;
+import io.pakland.mdas.githubstats.domain.Review;
 import io.pakland.mdas.githubstats.domain.repository.ReviewExternalRepository;
+import io.pakland.mdas.githubstats.domain.utils.InternalCaching;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPageableRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubReviewDTO;
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ public class ReviewGitHubRepository implements ReviewExternalRepository {
                 .retrieve()
                 .bodyToFlux(GitHubReviewDTO.class)
                 .parallel()
-                .filter(review -> Objects.nonNull(review.getUser()))
+                .filter(review -> Objects.nonNull(review.getSubmittedAt()) && Objects.nonNull(review.getUser()))
                 .map(ReviewMapper::dtoToEntity)
                 .sequential()
                 .collectList()

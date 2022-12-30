@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.application.mappers;
 
 import io.pakland.mdas.githubstats.application.dto.ReviewDTO;
-import io.pakland.mdas.githubstats.domain.entity.Review;
+import io.pakland.mdas.githubstats.domain.Review;
 
 public class ReviewMapper {
 
@@ -9,6 +9,7 @@ public class ReviewMapper {
         return Review.builder()
             .id(dto.getId())
             .user(UserMapper.dtoToEntity(dto.getUser()))
+            .submittedAt(dto.getSubmittedAt())
             .build();
     }
 }

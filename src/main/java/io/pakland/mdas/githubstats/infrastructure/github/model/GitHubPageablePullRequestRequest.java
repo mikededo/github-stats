@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.infrastructure.github.model;
 
-import io.pakland.mdas.githubstats.domain.enums.PullRequestState;
+import io.pakland.mdas.githubstats.domain.PullRequestState;
 
 public class GitHubPageablePullRequestRequest extends GitHubPageableRequest {
     private PullRequestState state;

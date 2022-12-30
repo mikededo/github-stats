@@ -1,6 +1,6 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.model;
 
-import io.pakland.mdas.githubstats.domain.enums.EntityType;
+import io.pakland.mdas.githubstats.domain.EntityType;
 import lombok.Builder;
 import lombok.Data;
 

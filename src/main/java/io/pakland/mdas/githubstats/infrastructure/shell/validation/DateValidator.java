@@ -22,8 +22,7 @@ public class DateValidator implements InputValidator<String> {
 
         try {
             LocalDateTime date = LocalDateTime.parse(getInitialDateFromMMYY(input), formatter);
-            LocalDateTime now = LocalDateTime.now();
-            return date.isBefore(now.minusMonths(1));
+            return date.isBefore(LocalDateTime.now().plusMonths(1));
         } catch (DateTimeParseException e) {
             // Input was not properly formatted
             return false;

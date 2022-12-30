@@ -1,7 +1,7 @@
 package io.pakland.mdas.githubstats.application.mappers;
 
 import io.pakland.mdas.githubstats.application.dto.OrganizationDTO;
-import io.pakland.mdas.githubstats.domain.entity.Organization;
+import io.pakland.mdas.githubstats.domain.Organization;
 
 public class OrganizationMapper {
 
