@@ -26,6 +26,9 @@ public class CommentAggregation {
     }
 
     public CommentAggregation merge(CommentAggregation other) {
+        if (other == null) {
+            return this;
+        }
         CommentAggregation result = new CommentAggregation();
         result.bodyLength = this.bodyLength + other.bodyLength;
         result.commentCount = this.commentCount + other.commentCount;

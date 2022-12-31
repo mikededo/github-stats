@@ -35,6 +35,9 @@ public class ReviewAggregation {
     }
 
     public ReviewAggregation merge(ReviewAggregation other) {
+        if (other == null) {
+            return this;
+        }
         ReviewAggregation result = new ReviewAggregation();
         result.bodyLength = this.bodyLength + other.bodyLength;
         result.externalReviewCount = this.externalReviewCount + other.externalReviewCount;
