@@ -5,11 +5,9 @@ import io.pakland.mdas.githubstats.domain.OptionType;
 import io.pakland.mdas.githubstats.infrastructure.controller.MainController;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.DateValidator;
-import io.pakland.mdas.githubstats.infrastructure.shell.validation.UserNameValidator;
+import io.pakland.mdas.githubstats.infrastructure.shell.validation.NameValidator;
 import org.springframework.shell.standard.ShellOption;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
@@ -32,11 +30,11 @@ public abstract class ShellComponent {
         @ShellOption(value = {"to"}) String toDate
     ) {
         DateValidator dateValidator = new DateValidator();
-        UserNameValidator userNameValidator = new UserNameValidator();
+        NameValidator nameValidator = new NameValidator();
 
         boolean isInputValid = dateValidator.validate(fromDate)
             && dateValidator.validate(toDate)
-            && userNameValidator.validate(userName);
+            && nameValidator.validate(userName);
 
         if (!isInputValid) {
             return false;
