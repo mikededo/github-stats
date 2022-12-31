@@ -68,6 +68,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: total_pulls
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
                   name: internal_reviews
                   type: int
                   constraints:

@@ -38,4 +38,8 @@ public class PullRequest {
     public boolean isMerged() {
         return this.merged;
     }
+
+    public boolean isAuthorNamed(String name) {
+        return this.user.isNamed(name);
+    }
 }

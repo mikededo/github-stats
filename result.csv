@@ -1,0 +1,2 @@
+organization,team_slug,user_name,merged_pulls,internal_reviews,external_reviews,comments_avg_length,commits_count,lines_added,lines_removed,from,to
+github-stats-22,gs-internal,mikededo,0,0,4,24,1,2,1,01/12/2022,01/01/2023

@@ -39,6 +39,7 @@ public class MergeAggregatesIntoMetrics {
                 metric.setLinesRemoved(pullRequestAggregation.getDeletions());
                 metric.setTotalPulls(pullRequestAggregation.getPullRequestCount());
                 metric.setMergedPulls(pullRequestAggregation.getMergePullRequests());
+                metric.setCommitsCount(pullRequestAggregation.getCommitCount());
 
                 metric.setTo(range.getTo().atZone(ZoneId.systemDefault()).toLocalDate());
                 metric.setFrom(range.getFrom().atZone(ZoneId.systemDefault()).toLocalDate());

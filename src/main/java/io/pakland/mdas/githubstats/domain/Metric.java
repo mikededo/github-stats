@@ -79,7 +79,7 @@ public class Metric {
 
     public ArrayList<String> getValuesAsStringArrayList() {
         return new ArrayList<>(Arrays.asList(
-            Integer.toString(id), organization, teamSlug, userName,
+            organization, teamSlug, userName,
             Integer.toString(mergedPulls), Integer.toString(internalReviews), Integer.toString(externalReviews),
             Integer.toString(commentsAvgLength), Integer.toString(commitsCount), Integer.toString(linesAdded),
             Integer.toString(linesRemoved), from.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), to.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))

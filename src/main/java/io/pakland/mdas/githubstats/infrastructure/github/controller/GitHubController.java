@@ -6,8 +6,11 @@ import io.pakland.mdas.githubstats.domain.*;
 import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.*;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -37,6 +40,40 @@ public class GitHubController {
         this.pullRequestRepository = new PullRequestGitHubRepository(webClientConfiguration);
         this.reviewRepository = new ReviewGitHubRepository(webClientConfiguration);
         this.commentRepository = new CommentGitHubRepository(webClientConfiguration);
+    }
+
+    private static void mergeReviewAggregations(
+        Map<Team, Map<User, ReviewAggregation>> result,
+        Entry<Team, Map<User, ReviewAggregation>> futureEntry
+    ) {
+        Map<User, ReviewAggregation> maybeReviewAggregation = result.get(
+            futureEntry.getKey());
+        if (maybeReviewAggregation == null) {
+            result.put(futureEntry.getKey(), futureEntry.getValue());
+        } else {
+            maybeReviewAggregation.entrySet().parallelStream().forEach(ttEntry -> {
+                maybeReviewAggregation
+                    .put(ttEntry.getKey(),
+                        ttEntry.getValue().merge(futureEntry.getValue().get(ttEntry.getKey())));
+            });
+        }
+    }
+
+    private static void mergeCommentAggregation(
+        Map<Team, Map<User, CommentAggregation>> result,
+        Entry<Team, Map<User, CommentAggregation>> futureEntry
+    ) {
+        Map<User, CommentAggregation> maybeCommentAggregation = result.get(
+            futureEntry.getKey());
+        if (maybeCommentAggregation == null) {
+            result.put(futureEntry.getKey(), futureEntry.getValue());
+        } else {
+            maybeCommentAggregation.entrySet().parallelStream().forEach(ttEntry -> {
+                maybeCommentAggregation
+                    .put(ttEntry.getKey(),
+                        ttEntry.getValue().merge(futureEntry.getValue().get(ttEntry.getKey())));
+            });
+        }
     }
 
     public void execute() {
@@ -93,7 +130,8 @@ public class GitHubController {
         }
     }
 
-    private void fetchPullRequestsFromRepository(Repository repository) {
+    private void fetchPullRequestsFromRepository(
+        Repository repository) {
         try {
             // Fetch pull requests from each team.
             List<PullRequest> pullRequestList =
@@ -101,28 +139,48 @@ public class GitHubController {
                     .execute(repository, userOptionRequest.getFrom(), userOptionRequest.getTo());
 
             ExecutorService executor = Executors.newFixedThreadPool(3);
+            Map<Team, Map<User, ReviewAggregation>> reviewAggregationResult = new HashMap<>();
+            Map<Team, Map<User, CommentAggregation>> commentAggregationResult = new HashMap<>();
             pullRequestList.parallelStream().forEach(pullRequest -> {
-                Future<?> reviewsFuture = executor.submit(
+                Future<Map<Team, Map<User, ReviewAggregation>>> reviewsFuture = executor.submit(
                     () -> this.fetchReviewsFromPullRequest(pullRequest));
-                Future<?> commentsFuture = executor.submit(
+                Future<Map<Team, Map<User, CommentAggregation>>> commentsFuture = executor.submit(
                     () -> this.fetchCommentsFromPullRequest(pullRequest));
 
                 try {
-                    commentsFuture.get();
-                    reviewsFuture.get();
+                    commentsFuture.get().entrySet().parallelStream().forEach(futureEntry -> {
+                        mergeCommentAggregation(commentAggregationResult, futureEntry);
+                    });
+                    reviewsFuture.get().entrySet().parallelStream().forEach(futureEntry -> {
+                        mergeReviewAggregations(reviewAggregationResult, futureEntry);
+                    });
                 } catch (InterruptedException | ExecutionException e) {
                     throw new RuntimeException(e);
                 }
             });
 
-            Map<Team, Map<User, PullRequestAggregation>> prAggregation = new AggregatePullRequests().execute(
-                pullRequestList);
+            new MetricCsvExporter().export(new MergeAggregatesIntoMetrics().execute(
+                new AggregatePullRequests().execute(
+                    pullRequestList
+                        .stream()
+                        .filter(pr -> !userOptionRequest.isUserType()
+                            || pr.isAuthorNamed(userOptionRequest.getName()))
+                        .toList()
+                ),
+                commentAggregationResult,
+                reviewAggregationResult,
+                getRequestDateRange()
+            ), "result.csv");
+
         } catch (HttpException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void fetchReviewsFromPullRequest(PullRequest pullRequest) {
+    private Map<Team, Map<User, ReviewAggregation>> fetchReviewsFromPullRequest(
+        PullRequest pullRequest) {
         try {
             // Fetch Reviews from each Pull Request.
             List<Review> reviewList = new FetchReviewsFromPullRequest(reviewRepository)
@@ -130,12 +188,14 @@ public class GitHubController {
                 .parallelStream()
                 .filter(review -> !userOptionRequest.isUserType()
                     || review.isAuthorNamed(userOptionRequest.getName())).toList();
+            return new AggregateReviews().execute(reviewList);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void fetchCommentsFromPullRequest(PullRequest pullRequest) {
+    private Map<Team, Map<User, CommentAggregation>> fetchCommentsFromPullRequest(
+        PullRequest pullRequest) {
         try {
             // Fetch Comments from each Pull Request.
             List<Comment> commentList = new FetchCommentsFromPullRequest(commentRepository)
@@ -144,6 +204,7 @@ public class GitHubController {
                 .filter(comment -> !userOptionRequest.isUserType()
                     || comment.isAuthorNamed(userOptionRequest.getName()))
                 .toList();
+            return new AggregateComments().execute(commentList);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }

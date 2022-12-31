@@ -33,4 +33,12 @@ public class ReviewAggregation {
     public int averageBodyLength() {
         return bodyLength / (internalReviewCount + externalReviewCount);
     }
+
+    public ReviewAggregation merge(ReviewAggregation other) {
+        ReviewAggregation result = new ReviewAggregation();
+        result.bodyLength = this.bodyLength + other.bodyLength;
+        result.externalReviewCount = this.externalReviewCount + other.externalReviewCount;
+        result.internalReviewCount = this.internalReviewCount + other.internalReviewCount;
+        return result;
+    }
 }

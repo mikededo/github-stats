@@ -24,4 +24,11 @@ public class CommentAggregation {
     public int averageBodyLength() {
         return bodyLength / commentCount;
     }
+
+    public CommentAggregation merge(CommentAggregation other) {
+        CommentAggregation result = new CommentAggregation();
+        result.bodyLength = this.bodyLength + other.bodyLength;
+        result.commentCount = this.commentCount + other.commentCount;
+        return result;
+    }
 }

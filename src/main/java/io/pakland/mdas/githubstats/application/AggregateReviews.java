@@ -17,7 +17,7 @@ public class AggregateReviews {
         return reviews
             .stream()
             .collect(
-                Collectors.groupingBy(review -> review.getUser().getTeam(),
+                Collectors.groupingBy(review -> review.getPullRequest().getRepository().getTeam(),
                     Collectors.groupingBy(Review::getUser)));
     }
 
