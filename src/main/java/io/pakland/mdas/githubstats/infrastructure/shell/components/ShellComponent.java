@@ -17,7 +17,8 @@ public abstract class ShellComponent {
         @ShellOption(value = {"n"}) String userName,
         @ShellOption(value = {"key"}) String apiKey,
         @ShellOption(value = {"from"}) String fromDate,
-        @ShellOption(value = {"to"}) String toDate
+        @ShellOption(value = {"to"}) String toDate,
+        @ShellOption(value = {"path"}) String path
     ) {
         DateValidator dateValidator = new DateValidator();
         UserNameValidator userNameValidator = new UserNameValidator();
@@ -39,6 +40,7 @@ public abstract class ShellComponent {
                 .apiKey(apiKey)
                 .from(new SimpleDateFormat("dd/MM/yy").parse("01/" + fromDate))
                 .to(new SimpleDateFormat("dd/MM/yy").parse("01/" + toDate))
+                .filePath(path)
                 .build();
         } catch (ParseException e) {
             throw new RuntimeException(e);

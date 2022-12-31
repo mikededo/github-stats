@@ -1,5 +1,6 @@
-package io.pakland.mdas.githubstats.application;
+package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
+import io.pakland.mdas.githubstats.domain.repository.FileMetricExporter;
 import io.pakland.mdas.githubstats.domain.Metric;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MetricCsvExporter implements MetricExporter {
+public class GitHubMetricCsvExporter implements FileMetricExporter {
 
     @Override
     public void export(List<Metric> metrics, String filePath) throws IOException {

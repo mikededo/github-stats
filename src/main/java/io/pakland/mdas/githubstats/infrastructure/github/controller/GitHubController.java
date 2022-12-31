@@ -9,8 +9,6 @@ import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.*;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -53,7 +51,10 @@ public class GitHubController {
                 .filter(organization -> !userOptionRequest.isOrganizationType()
                     || organization.isNamed(userOptionRequest.getName()))
                 .forEach(organization -> resultMetrics.addAll(this.fetchTeamsFromOrganization(organization)));
-            new MetricCsvExporter().export(resultMetrics, "result.csv");
+
+            // Finally export the results
+            new ExportMetricsToFile(new GitHubMetricCsvExporter())
+                .execute(resultMetrics, userOptionRequest.getFilePath());
         } catch (HttpException | IOException e) {
             throw new RuntimeException(e);
         }
