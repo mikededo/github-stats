@@ -1,38 +1,5 @@
 databaseChangeLog:
   - changeSet:
-      id: "1"
-      author: Paco_Lozano
-      changes:
-        - createTable:
-            tableName: historic_queries
-            columns:
-              - column:
-                  name: id
-                  type: INT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-                    primaryKeyName: historic_queries_pk
-              - column:
-                  name: entity_type
-                  type: VARCHAR(16)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: name
-                  type: VARCHAR(255)
-              - column:
-                  name: from
-                  type: date
-                  constraints:
-                    nullable: false
-              - column:
-                  name: to
-                  type: date
-                  constraints:
-                    nullable: false
-  - changeSet:
       id: "2"
       author: Paco_Lozano
       changes:
