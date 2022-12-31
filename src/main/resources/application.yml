@@ -19,10 +19,11 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/changelog-master.yaml
-  logging:
-    level:
-      root: INFO
   profiles:
     active: prod
   file:
     name: console_output.log
+
+logging:
+  level:
+    root: INFO
