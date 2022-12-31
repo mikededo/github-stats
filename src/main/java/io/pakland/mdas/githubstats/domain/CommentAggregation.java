@@ -14,6 +14,9 @@ public class CommentAggregation {
 
     public static CommentAggregation aggregate(List<Comment> comments) {
         CommentAggregation aggregation = new CommentAggregation();
+        if (comments == null) {
+           return aggregation;
+        }
         comments.forEach(comment -> {
             aggregation.bodyLength += comment.bodySize();
             aggregation.commentCount++;

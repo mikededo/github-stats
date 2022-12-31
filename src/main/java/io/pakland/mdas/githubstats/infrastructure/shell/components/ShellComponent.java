@@ -13,14 +13,6 @@ import java.text.SimpleDateFormat;
 
 @org.springframework.shell.standard.ShellComponent
 public abstract class ShellComponent {
-
-    private final OptionType optionType;
-
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    protected ShellComponent(OptionType optionType) {
-       this.optionType = optionType;
-    }
-
     private boolean run(
         @ShellOption(value = {"n"}) String userName,
         @ShellOption(value = {"key"}) String apiKey,
@@ -42,7 +34,7 @@ public abstract class ShellComponent {
         ShellRequest shellRequest;
         try {
             shellRequest = ShellRequest.builder()
-                .entityType(this.optionType)
+                .entityType(getType())
                 .name(userName)
                 .apiKey(apiKey)
                 .from(new SimpleDateFormat("dd/MM/yy").parse("01/" + fromDate))
@@ -59,5 +51,7 @@ public abstract class ShellComponent {
         // TODO : return console / file / etc.. output
         return true;
     }
+
+    abstract OptionType getType();
 
 }

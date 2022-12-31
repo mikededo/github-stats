@@ -1,1 +1,4 @@
-organization,team_slug,user_name,merged_pulls,internal_reviews,external_reviews,comments_avg_length,commits_count,lines_added,lines_removed,from,to
+organization,team_slug,user_name,total_pulls,merged_pulls,internal_reviews,external_reviews,comments_avg_length,commits_count,lines_added,lines_removed,from,to
+github-stats-22,gs-external,mikededo,45,42,91,0,114,220,5926,7059,01/10/2022,01/01/2023
+github-stats-22,gs-external,manerow,15,14,37,0,263,61,3281,2433,01/10/2022,01/01/2023
+github-stats-22,gs-external,cjp4,4,2,2,0,101,15,6797,710,01/10/2022,01/01/2023

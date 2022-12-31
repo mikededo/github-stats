@@ -25,6 +25,9 @@ public class PullRequestAggregation {
 
     public static PullRequestAggregation aggregate(List<PullRequest> pullRequests) {
         PullRequestAggregation aggregation = new PullRequestAggregation();
+        if (pullRequests == null) {
+            return aggregation;
+        }
 
         aggregation.pullRequestCount = pullRequests.size();
         pullRequests.forEach(pr -> {

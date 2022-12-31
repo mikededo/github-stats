@@ -7,7 +7,7 @@ import io.pakland.mdas.githubstats.domain.repository.*;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubOptionRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -81,20 +81,23 @@ public class GitHubController {
             // Fetch the API key's available organizations.
             List<Organization> organizationList =
                 new FetchAvailableOrganizations(organizationRepository).execute();
+            List<Metric> resultMetrics = new ArrayList<>();
             organizationList
                 .parallelStream()
                 .filter(organization -> !userOptionRequest.isOrganizationType()
                     || organization.isNamed(userOptionRequest.getName()))
-                .forEach(this::fetchTeamsFromOrganization);
-        } catch (HttpException e) {
+                .forEach(organization -> resultMetrics.addAll(this.fetchTeamsFromOrganization(organization)));
+            new MetricCsvExporter().export(resultMetrics, "result.csv");
+        } catch (HttpException | IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void fetchTeamsFromOrganization(Organization organization) {
+    private List<Metric> fetchTeamsFromOrganization(Organization organization) {
         try {
             List<Team> teamList = new FetchTeamsFromOrganization(teamRepository)
                 .execute(organization);
+            List<Metric> teamMetrics = new ArrayList<>();
             teamList
                 .parallelStream()
                 .filter(
@@ -102,26 +105,33 @@ public class GitHubController {
                         || team.isNamed(userOptionRequest.getName()))
                 .forEach(team -> {
                     fetchUsersFromTeam(team);
-                    fetchRepositoriesFromTeam(team);
+                    teamMetrics.addAll(fetchRepositoriesFromTeam(team));
                 });
+            return teamMetrics;
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void fetchRepositoriesFromTeam(Team team) {
+    private List<Metric> fetchRepositoriesFromTeam(Team team) {
         try {
             // Fetch the repositories for each team.
             List<Repository> repositoryList = new FetchRepositoriesFromTeam(
                 repositoryRepository).execute(team);
             // Add the team to the repository
-            repositoryList.parallelStream().forEach(this::fetchPullRequestsFromRepository);
+            List<Metric> repositoryMetrics = new ArrayList<>();
+            repositoryList.parallelStream().forEach(repository ->
+                repositoryMetrics.addAll(this.fetchPullRequestsFromRepository(repository))
+            );
+            return repositoryMetrics;
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
     }
 
     private void fetchUsersFromTeam(Team team) {
+        // We use this method to link the users to the team to later check if a user belongs to a
+        // team
         try {
             // Fetch the members of each team.
             new FetchUsersFromTeam(userRepository).execute(team);
@@ -130,7 +140,7 @@ public class GitHubController {
         }
     }
 
-    private void fetchPullRequestsFromRepository(
+    private List<Metric> fetchPullRequestsFromRepository(
         Repository repository) {
         try {
             // Fetch pull requests from each team.
@@ -139,72 +149,61 @@ public class GitHubController {
                     .execute(repository, userOptionRequest.getFrom(), userOptionRequest.getTo());
 
             ExecutorService executor = Executors.newFixedThreadPool(3);
-            Map<Team, Map<User, ReviewAggregation>> reviewAggregationResult = new HashMap<>();
-            Map<Team, Map<User, CommentAggregation>> commentAggregationResult = new HashMap<>();
+            List<Review> reviewList = new ArrayList<>();
+            List<Comment> commentList = new ArrayList<>();
             pullRequestList.parallelStream().forEach(pullRequest -> {
-                Future<Map<Team, Map<User, ReviewAggregation>>> reviewsFuture = executor.submit(
+                Future<List<Review>> reviewsFuture = executor.submit(
                     () -> this.fetchReviewsFromPullRequest(pullRequest));
-                Future<Map<Team, Map<User, CommentAggregation>>> commentsFuture = executor.submit(
+                Future<List<Comment>> commentsFuture = executor.submit(
                     () -> this.fetchCommentsFromPullRequest(pullRequest));
 
                 try {
-                    commentsFuture.get().entrySet().parallelStream().forEach(futureEntry -> {
-                        mergeCommentAggregation(commentAggregationResult, futureEntry);
-                    });
-                    reviewsFuture.get().entrySet().parallelStream().forEach(futureEntry -> {
-                        mergeReviewAggregations(reviewAggregationResult, futureEntry);
-                    });
+                    commentList.addAll(commentsFuture.get());
+                    reviewList.addAll(reviewsFuture.get());
                 } catch (InterruptedException | ExecutionException e) {
                     throw new RuntimeException(e);
                 }
             });
 
-            new MetricCsvExporter().export(new MergeAggregatesIntoMetrics().execute(
+            return new MergeAggregatesIntoMetrics().execute(
                 new AggregatePullRequests().execute(
                     pullRequestList
                         .stream()
-                        .filter(pr -> !userOptionRequest.isUserType()
-                            || pr.isAuthorNamed(userOptionRequest.getName()))
+                        .filter(this::isAuthorValidForUserOption)
                         .toList()
                 ),
-                commentAggregationResult,
-                reviewAggregationResult,
+                new AggregateComments().execute(commentList),
+                new AggregateReviews().execute(reviewList),
                 getRequestDateRange()
-            ), "result.csv");
+            );
 
         } catch (HttpException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Map<Team, Map<User, ReviewAggregation>> fetchReviewsFromPullRequest(
-        PullRequest pullRequest) {
+    private List<Review> fetchReviewsFromPullRequest(PullRequest pullRequest) {
         try {
             // Fetch Reviews from each Pull Request.
-            List<Review> reviewList = new FetchReviewsFromPullRequest(reviewRepository)
+            return new FetchReviewsFromPullRequest(reviewRepository)
                 .execute(pullRequest, getRequestDateRange())
                 .parallelStream()
-                .filter(review -> !userOptionRequest.isUserType()
-                    || review.isAuthorNamed(userOptionRequest.getName())).toList();
-            return new AggregateReviews().execute(reviewList);
+                .filter(this::isAuthorValidForUserOption)
+                .toList();
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Map<Team, Map<User, CommentAggregation>> fetchCommentsFromPullRequest(
+    private List<Comment> fetchCommentsFromPullRequest(
         PullRequest pullRequest) {
         try {
             // Fetch Comments from each Pull Request.
-            List<Comment> commentList = new FetchCommentsFromPullRequest(commentRepository)
+            return new FetchCommentsFromPullRequest(commentRepository)
                 .execute(pullRequest, getRequestDateRange())
                 .parallelStream()
-                .filter(comment -> !userOptionRequest.isUserType()
-                    || comment.isAuthorNamed(userOptionRequest.getName()))
+                .filter(this::isAuthorValidForUserOption)
                 .toList();
-            return new AggregateComments().execute(commentList);
         } catch (HttpException e) {
             throw new RuntimeException(e);
         }
@@ -215,5 +214,13 @@ public class GitHubController {
             .from(userOptionRequest.getFrom().toInstant())
             .to(userOptionRequest.getTo().toInstant())
             .build();
+    }
+
+    private boolean isAuthorValidForUserOption(Authored entity) {
+        boolean isValidUser = !userOptionRequest.isUserType()
+            || entity.isAuthorNamed(userOptionRequest.getName());
+        boolean isValidTeam = !userOptionRequest.isTeamType()
+            || entity.isAuthorFromEntityTeam();
+        return isValidUser && isValidTeam;
     }
 }

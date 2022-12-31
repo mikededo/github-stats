@@ -18,6 +18,10 @@ public class ReviewAggregation {
 
     public static ReviewAggregation aggregate(List<Review> reviews) {
         ReviewAggregation aggregation = new ReviewAggregation();
+        if (reviews == null) {
+            return aggregation;
+        }
+
         reviews.forEach(review -> {
             if (review.isInternal()) {
                 aggregation.internalReviewCount++;

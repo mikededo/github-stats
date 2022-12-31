@@ -18,7 +18,7 @@ public class MergeAggregatesIntoMetrics {
 
         for (Team team : pullRequestAggregations.keySet()) {
             for (User user : pullRequestAggregations.get(team).keySet()) {
-                Metric metric = new Metric();
+                Metric metric = Metric.empty();
                 metric.setOrganization(team.getOrganization().getLogin());
                 metric.setTeamSlug(team.getSlug());
                 metric.setUserName(user.getLogin());
@@ -30,10 +30,18 @@ public class MergeAggregatesIntoMetrics {
                 ReviewAggregation reviewAggregation =
                     reviewAggregations.get(team).get(user);
 
-                metric.setCommentsAvgLength(commentAggregation.averageBodyLength());
+                // If the comment aggregation is null means that, for the current combination of team
+                // and user no comment has been made (which is possible)
+                // Therefore, we just want to keep the numbers as 0
+                if (commentAggregation != null) {
+                    metric.setCommentsAvgLength(commentAggregation.averageBodyLength());
+                }
 
-                metric.setExternalReviews(reviewAggregation.getExternalReviewCount());
-                metric.setInternalReviews(reviewAggregation.getInternalReviewCount());
+                // Same happens with reviews
+                if (reviewAggregation != null) {
+                    metric.setExternalReviews(reviewAggregation.getExternalReviewCount());
+                    metric.setInternalReviews(reviewAggregation.getInternalReviewCount());
+                }
 
                 metric.setLinesAdded(pullRequestAggregation.getAdditions());
                 metric.setLinesRemoved(pullRequestAggregation.getDeletions());

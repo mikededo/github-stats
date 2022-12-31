@@ -8,12 +8,11 @@ import io.pakland.mdas.githubstats.domain.repository.CommentExternalRepository;
 import io.pakland.mdas.githubstats.domain.utils.InternalCaching;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubCommentDTO;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPageableRequest;
+import java.util.List;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-
-import java.util.List;
 
 public class CommentGitHubRepository implements CommentExternalRepository {
 
@@ -41,19 +40,13 @@ public class CommentGitHubRepository implements CommentExternalRepository {
         }
 
         try {
-            logger.info(" - Fetching comments from pull request: " + pullRequest.getNumber());
             List<Comment> result = this.webClientConfiguration.getWebClient().get()
                 .uri(uri)
                 .retrieve()
                 .bodyToFlux(GitHubCommentDTO.class)
                 .parallel()
-                .filter(comment -> {
-                    if (comment.getUser() == null) {
-                        System.out.println(pullRequest.getNumber());
-                    }
-                    return Objects.nonNull(comment.getCreatedAt()) && Objects.nonNull(
-                        comment.getUser());
-                })
+                .filter(comment -> Objects.nonNull(comment.getCreatedAt())
+                    && Objects.nonNull(comment.getUser()))
                 .map(CommentMapper::dtoToEntity)
                 .sequential()
                 .collectList()

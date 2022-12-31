@@ -65,6 +65,20 @@ public class Metric {
     @Column(nullable = false)
     private LocalDate to;
 
+    public static Metric empty() {
+        Metric result = new Metric();
+        result.totalPulls = 0;
+        result.mergedPulls = 0;
+        result.internalReviews = 0;
+        result.externalReviews = 0;
+        result.commentsAvgLength = 0;
+        result.commitsCount = 0;
+        result.linesAdded = 0;
+        result.linesRemoved = 0;
+        return result;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,7 +94,7 @@ public class Metric {
     public ArrayList<String> getValuesAsStringArrayList() {
         return new ArrayList<>(Arrays.asList(
             organization, teamSlug, userName,
-            Integer.toString(mergedPulls), Integer.toString(internalReviews), Integer.toString(externalReviews),
+            Integer.toString(totalPulls), Integer.toString(mergedPulls), Integer.toString(internalReviews), Integer.toString(externalReviews),
             Integer.toString(commentsAvgLength), Integer.toString(commitsCount), Integer.toString(linesAdded),
             Integer.toString(linesRemoved), from.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), to.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
         ));

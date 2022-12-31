@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PullRequest {
+public class PullRequest implements Authored {
 
     private Integer id;
 
@@ -39,7 +39,17 @@ public class PullRequest {
         return this.merged;
     }
 
+    public boolean userBelongsToTeam(User user) {
+        return this.repository.getTeam().hasUser(user);
+    }
+
+    @Override
     public boolean isAuthorNamed(String name) {
         return this.user.isNamed(name);
+    }
+
+    @Override
+    public boolean isAuthorFromEntityTeam() {
+        return this.repository.getTeam().hasUser(user);
     }
 }
