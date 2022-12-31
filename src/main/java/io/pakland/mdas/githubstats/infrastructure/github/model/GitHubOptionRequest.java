@@ -17,6 +17,7 @@ public class GitHubOptionRequest {
     private Date from;
     private Date to;
     private String filePath;
+    private boolean silenced;
 
     public boolean isOrganizationType() {
         return type.equals(OptionType.ORGANIZATION);

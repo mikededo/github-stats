@@ -6,19 +6,20 @@ import io.pakland.mdas.githubstats.infrastructure.controller.MainController;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.DateValidator;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.UserNameValidator;
-import org.springframework.shell.standard.ShellOption;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import org.springframework.shell.standard.ShellOption;
 
 @org.springframework.shell.standard.ShellComponent
 public abstract class ShellComponent {
+
     private boolean run(
         @ShellOption(value = {"n"}) String userName,
         @ShellOption(value = {"key"}) String apiKey,
         @ShellOption(value = {"from"}) String fromDate,
         @ShellOption(value = {"to"}) String toDate,
-        @ShellOption(value = {"path"}) String path
+        @ShellOption(value = {"path"}) String path,
+        @ShellOption(value = {"silence"}) String silence
     ) {
         DateValidator dateValidator = new DateValidator();
         UserNameValidator userNameValidator = new UserNameValidator();
@@ -41,6 +42,7 @@ public abstract class ShellComponent {
                 .from(new SimpleDateFormat("dd/MM/yy").parse("01/" + fromDate))
                 .to(new SimpleDateFormat("dd/MM/yy").parse("01/" + toDate))
                 .filePath(path)
+                .silence(silence == "true")
                 .build();
         } catch (ParseException e) {
             throw new RuntimeException(e);

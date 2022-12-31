@@ -20,9 +20,11 @@ public class CommandConfiguration {
             "<user-name>"
         );
 
-        return new FileNameCommandRegistration(
-            new ToDateCommandRegistration(new FromDateCommandRegistration(builder)),
-            "output-user.csv"
+        return new LoggerSilencerCommandRegistration(
+            new FileNameCommandRegistration(
+                new ToDateCommandRegistration(new FromDateCommandRegistration(builder)),
+                "output-user.csv"
+            )
         ).generate().build();
     }
 
@@ -35,9 +37,11 @@ public class CommandConfiguration {
             "<team-name>"
         );
 
-        return new FileNameCommandRegistration(
-            new ToDateCommandRegistration(new FromDateCommandRegistration(builder)),
-            "output-team.csv"
+        return new LoggerSilencerCommandRegistration(
+            new FileNameCommandRegistration(
+                new ToDateCommandRegistration(new FromDateCommandRegistration(builder)),
+                "output-team.csv"
+            )
         ).generate().build();
     }
 
@@ -50,9 +54,11 @@ public class CommandConfiguration {
             "<organization-name>"
         );
 
-        return new FileNameCommandRegistration(
-            new ToDateCommandRegistration(new FromDateCommandRegistration(builder)),
-            "output-organization.csv"
+        return new LoggerSilencerCommandRegistration(
+            new FileNameCommandRegistration(
+                new ToDateCommandRegistration(new FromDateCommandRegistration(builder)),
+                "output-organization.csv"
+            )
         ).generate().build();
     }
 }

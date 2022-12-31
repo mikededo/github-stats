@@ -10,14 +10,11 @@ import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubCommentDTO;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPageableRequest;
 import java.util.List;
 import java.util.Objects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 public class CommentGitHubRepository implements CommentExternalRepository {
 
     private final WebClientConfiguration webClientConfiguration;
-    private final Logger logger = LoggerFactory.getLogger(CommentGitHubRepository.class);
 
     private final InternalCaching<String, List<Comment>> cache = new InternalCaching<>();
 
@@ -56,7 +53,7 @@ public class CommentGitHubRepository implements CommentExternalRepository {
             return result;
 
         } catch (WebClientResponseException ex) {
-            logger.error(ex.toString());
+            System.err.println(ex);
             throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
         }
     }

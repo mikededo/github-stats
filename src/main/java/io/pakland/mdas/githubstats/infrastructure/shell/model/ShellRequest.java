@@ -21,4 +21,6 @@ public class ShellRequest {
     private Date to;
 
     private String filePath;
+
+    private boolean silence;
 }

@@ -20,9 +20,10 @@ public class GitHubMiddleware extends Middleware {
                 .from(super.request.getFrom())
                 .to(super.request.getTo())
                 .filePath(super.request.getFilePath())
+                .silenced(super.request.isSilence())
                 .build());
         gitHubController.execute();
 
-        return "csv from github";
+        return String.format("- Generated results in %s", super.request.getFilePath());
     }
 }
