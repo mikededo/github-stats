@@ -18,9 +18,10 @@ public class CommandConfiguration {
             "<user-name>"
         );
 
-        return new ToDateCommandRegistration(new FromDateCommandRegistration(builder))
-            .generate()
-            .build();
+        return new FileNameCommandRegistration(
+            new ToDateCommandRegistration(new FromDateCommandRegistration(builder)),
+            "output-user.csv"
+        ).generate().build();
     }
 
     @Bean
@@ -32,9 +33,10 @@ public class CommandConfiguration {
             "<team-name>"
         );
 
-        return new ToDateCommandRegistration(new FromDateCommandRegistration(builder))
-            .generate()
-            .build();
+        return new FileNameCommandRegistration(
+            new ToDateCommandRegistration(new FromDateCommandRegistration(builder)),
+            "output-team.csv"
+        ).generate().build();
     }
 
     @Bean
@@ -46,8 +48,9 @@ public class CommandConfiguration {
             "<organization-name>"
         );
 
-        return new ToDateCommandRegistration(new FromDateCommandRegistration(builder))
-            .generate()
-            .build();
+        return new FileNameCommandRegistration(
+            new ToDateCommandRegistration(new FromDateCommandRegistration(builder)),
+            "output-organization.csv"
+        ).generate().build();
     }
 }

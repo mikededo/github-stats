@@ -18,7 +18,9 @@ public class GitHubMiddleware extends Middleware {
                 .apiKey(super.request.getApiKey())
                 .type(super.request.getEntityType())
                 .from(super.request.getFrom())
-                .to(super.request.getTo()).build());
+                .to(super.request.getTo())
+                .filePath(super.request.getFilePath())
+                .build());
         gitHubController.execute();
 
         return "csv from github";

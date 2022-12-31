@@ -19,4 +19,6 @@ public class ShellRequest {
     private Date from;
 
     private Date to;
+
+    private String filePath;
 }
