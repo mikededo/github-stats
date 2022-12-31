@@ -4,7 +4,7 @@ spring:
   main:
     banner-mode: off
   datasource:
-    url: jdbc:postgresql://pksuns.pakland.io:9000/github_stats
+    url: jdbc:postgresql://pksuns.pakland.io:9000/github_stats2
     username: mdas
     password: 6%9%cqA#y#89rHS8
     driverClassName: org.postgresql.Driver

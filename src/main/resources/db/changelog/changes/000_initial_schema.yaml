@@ -1,10 +1,11 @@
 databaseChangeLog:
   - changeSet:
-      id: "2"
+      id: "1"
       author: Paco_Lozano
       changes:
         - createTable:
             tableName: metric
+            schemaName: public
             columns:
               - column:
                   name: id
@@ -65,12 +66,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: from
-                  type: date
-                  constraints:
-                    nullable: false
-              - column:
-                  name: to
+                  name: year_month
                   type: date
                   constraints:
                     nullable: false

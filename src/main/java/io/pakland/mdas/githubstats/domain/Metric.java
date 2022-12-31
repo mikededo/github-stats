@@ -1,5 +1,6 @@
 package io.pakland.mdas.githubstats.domain;
 
+import io.pakland.mdas.githubstats.domain.utils.YearMonthDateAttributeConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,11 +58,15 @@ public class Metric {
     @Column(name = "lines_removed", nullable = false)
     private Integer linesRemoved;
 
-    @Column(nullable = false)
-    private LocalDate from;
-
-    @Column(nullable = false)
-    private LocalDate to;
+    @Column(
+            name = "year_month",
+            columnDefinition = "date",
+            nullable = false
+    )
+    @Convert(
+            converter = YearMonthDateAttributeConverter.class
+    )
+    private YearMonth yearMonth;
 
     @Override
     public boolean equals(Object o) {
@@ -75,11 +81,13 @@ public class Metric {
     }
 
     public ArrayList<String> getValuesAsStringArrayList() {
+        String yearMonthDate = yearMonth.atDay(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
         return new ArrayList<>(Arrays.asList(
-            Integer.toString(id), organization, teamSlug, userName,
-            Integer.toString(mergedPulls), Integer.toString(internalReviews), Integer.toString(externalReviews),
-            Integer.toString(commentsAvgLength), Integer.toString(commitsCount), Integer.toString(linesAdded),
-            Integer.toString(linesRemoved), from.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), to.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-        ));
+                Integer.toString(id), organization, teamSlug, userName,
+                Integer.toString(mergedPulls), Integer.toString(internalReviews), Integer.toString(externalReviews),
+                Integer.toString(commentsAvgLength), Integer.toString(commitsCount), Integer.toString(linesAdded),
+                Integer.toString(linesRemoved), yearMonthDate)
+        );
     }
 }
