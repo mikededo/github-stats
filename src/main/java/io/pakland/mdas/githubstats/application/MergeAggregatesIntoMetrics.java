@@ -1,6 +1,7 @@
 package io.pakland.mdas.githubstats.application;
 
 import io.pakland.mdas.githubstats.domain.*;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +50,10 @@ public class MergeAggregatesIntoMetrics {
                 metric.setMergedPulls(pullRequestAggregation.getMergePullRequests());
                 metric.setCommitsCount(pullRequestAggregation.getCommitCount());
 
-                metric.setTo(range.getTo().atZone(ZoneId.systemDefault()).toLocalDate());
-                metric.setFrom(range.getFrom().atZone(ZoneId.systemDefault()).toLocalDate());
+                metric.setTo(
+                    YearMonth.from(range.getTo().atZone(ZoneId.systemDefault()).toLocalDate()));
+                metric.setFrom(
+                    YearMonth.from(range.getFrom().atZone(ZoneId.systemDefault()).toLocalDate()));
 
                 metrics.add(metric);
             }

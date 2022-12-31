@@ -1,23 +1,23 @@
 package io.pakland.mdas.githubstats.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NaturalId;
-
-import javax.persistence.*;
-import java.time.LocalDate;
+import io.pakland.mdas.githubstats.domain.utils.YearMonthDateAttributeConverter;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "metric")
+@Table(name = "metric",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {
+        "organization", "team_slug", "user_name", "to", "from"})
+    })
 public class Metric {
 
     @Id
@@ -59,11 +59,25 @@ public class Metric {
     @Column(name = "lines_removed", nullable = false)
     private Integer linesRemoved;
 
-    @Column(nullable = false)
-    private LocalDate from;
+    @Column(
+        name = "to",
+        columnDefinition = "date",
+        nullable = false
+    )
+    @Convert(
+        converter = YearMonthDateAttributeConverter.class
+    )
+    private YearMonth to;
 
-    @Column(nullable = false)
-    private LocalDate to;
+    @Column(
+        name = "from",
+        columnDefinition = "date",
+        nullable = false
+    )
+    @Convert(
+        converter = YearMonthDateAttributeConverter.class
+    )
+    private YearMonth from;
 
     public static Metric empty() {
         Metric result = new Metric();
@@ -81,8 +95,12 @@ public class Metric {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Metric)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Metric)) {
+            return false;
+        }
         return id != null && id.equals(((Metric) o).getId());
     }
 
@@ -92,11 +110,16 @@ public class Metric {
     }
 
     public ArrayList<String> getValuesAsStringArrayList() {
+        String to = this.to.atDay(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String from = this.from.atDay(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
         return new ArrayList<>(Arrays.asList(
             organization, teamSlug, userName,
-            Integer.toString(totalPulls), Integer.toString(mergedPulls), Integer.toString(internalReviews), Integer.toString(externalReviews),
-            Integer.toString(commentsAvgLength), Integer.toString(commitsCount), Integer.toString(linesAdded),
-            Integer.toString(linesRemoved), from.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), to.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-        ));
+            Integer.toString(totalPulls), Integer.toString(mergedPulls),
+            Integer.toString(internalReviews), Integer.toString(externalReviews),
+            Integer.toString(commentsAvgLength), Integer.toString(commitsCount),
+            Integer.toString(linesAdded),
+            Integer.toString(linesRemoved), from, to)
+        );
     }
 }
