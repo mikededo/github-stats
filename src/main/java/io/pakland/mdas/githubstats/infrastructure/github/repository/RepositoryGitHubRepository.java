@@ -6,16 +6,12 @@ import io.pakland.mdas.githubstats.domain.Repository;
 import io.pakland.mdas.githubstats.domain.Team;
 import io.pakland.mdas.githubstats.domain.repository.RepositoryExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubRepositoryDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-
 import java.util.List;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 public class RepositoryGitHubRepository implements RepositoryExternalRepository {
 
     private final WebClientConfiguration webClientConfiguration;
-    private final Logger logger = LoggerFactory.getLogger(OrganizationGitHubRepository.class);
 
     public RepositoryGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
@@ -37,7 +33,6 @@ public class RepositoryGitHubRepository implements RepositoryExternalRepository 
                 .collectList()
                 .block();
         } catch (WebClientResponseException ex) {
-            logger.error(ex.toString());
             throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
         }
     }

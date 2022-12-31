@@ -6,18 +6,14 @@ import io.pakland.mdas.githubstats.domain.Team;
 import io.pakland.mdas.githubstats.domain.User;
 import io.pakland.mdas.githubstats.domain.repository.UserExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubUserDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-
-import java.util.List;
 
 @Repository
 public class UserGitHubRepository implements UserExternalRepository {
 
     private final WebClientConfiguration webClientConfiguration;
-    private final Logger logger = LoggerFactory.getLogger(UserGitHubRepository.class);
 
     public UserGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
@@ -31,8 +27,6 @@ public class UserGitHubRepository implements UserExternalRepository {
         );
 
         try {
-            logger.info(" - Fetching users from team: " + team.getOrganization().getLogin() + "/" + team.getSlug());
-
             return this.webClientConfiguration.getWebClient().get()
                 .uri(uri)
                 .retrieve()
@@ -41,7 +35,7 @@ public class UserGitHubRepository implements UserExternalRepository {
                 .collectList()
                 .block();
         } catch (WebClientResponseException ex) {
-            logger.error(ex.toString());
+            System.err.println(ex);
             throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
         }
     }

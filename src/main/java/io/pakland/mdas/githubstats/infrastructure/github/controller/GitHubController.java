@@ -40,7 +40,19 @@ public class GitHubController {
         this.commentRepository = new CommentGitHubRepository(webClientConfiguration);
     }
 
+    private boolean isLoggerSilenced() {
+        return this.userOptionRequest.isSilenced();
+    }
+
+    private void logIfNotSilenced(String text) {
+        if (!isLoggerSilenced()) {
+            System.out.println(text);
+        }
+    }
+
     public void execute() {
+        logIfNotSilenced("- Fetching organizations");
+
         try {
             // Fetch the API key's available organizations.
             List<Organization> organizationList =
@@ -50,8 +62,14 @@ public class GitHubController {
                 .parallelStream()
                 .filter(organization -> !userOptionRequest.isOrganizationType()
                     || organization.isNamed(userOptionRequest.getName()))
-                .forEach(organization -> resultMetrics.addAll(this.fetchTeamsFromOrganization(organization)));
+                .forEach(organization -> {
+                    logIfNotSilenced(
+                        String.format("- Fetching teams of -> %s", organization.getLogin()));
+                    resultMetrics.addAll(
+                        this.fetchTeamsFromOrganization(organization));
+                });
 
+            logIfNotSilenced("- Preparing CSV...");
             // Finally export the results
             new ExportMetricsToFile(new GitHubMetricCsvExporter())
                 .execute(resultMetrics, userOptionRequest.getFilePath());
@@ -71,7 +89,12 @@ public class GitHubController {
                     team -> !userOptionRequest.isTeamType()
                         || team.isNamed(userOptionRequest.getName()))
                 .forEach(team -> {
+                    logIfNotSilenced(
+                        String.format("- Fetching user of team -> %s", team.getSlug()));
                     fetchUsersFromTeam(team);
+
+                    logIfNotSilenced(
+                        String.format("- Fetching repositories of team -> %s", team.getSlug()));
                     teamMetrics.addAll(fetchRepositoriesFromTeam(team));
                 });
             return teamMetrics;
@@ -87,9 +110,11 @@ public class GitHubController {
                 repositoryRepository).execute(team);
             // Add the team to the repository
             List<Metric> repositoryMetrics = new ArrayList<>();
-            repositoryList.parallelStream().forEach(repository ->
-                repositoryMetrics.addAll(this.fetchPullRequestsFromRepository(repository))
-            );
+            repositoryList.parallelStream().forEach(repository -> {
+                logIfNotSilenced(
+                    String.format("- Fetching pull requests of repository -> %s", team.getSlug()));
+                repositoryMetrics.addAll(this.fetchPullRequestsFromRepository(repository));
+            });
             return repositoryMetrics;
         } catch (HttpException e) {
             throw new RuntimeException(e);
@@ -119,8 +144,21 @@ public class GitHubController {
             List<Review> reviewList = new ArrayList<>();
             List<Comment> commentList = new ArrayList<>();
             pullRequestList.parallelStream().forEach(pullRequest -> {
+                logIfNotSilenced(
+                    String.format(
+                        "- Fetching reviews of pull request -> %s",
+                        pullRequest.getNumber()
+                    )
+                );
                 Future<List<Review>> reviewsFuture = executor.submit(
                     () -> this.fetchReviewsFromPullRequest(pullRequest));
+
+                logIfNotSilenced(
+                    String.format(
+                        "- Fetching comments of pull request -> %s",
+                        pullRequest.getNumber()
+                    )
+                );
                 Future<List<Comment>> commentsFuture = executor.submit(
                     () -> this.fetchCommentsFromPullRequest(pullRequest));
 
@@ -132,6 +170,8 @@ public class GitHubController {
                 }
             });
 
+            logIfNotSilenced(
+                String.format("- Aggregation data for repository -> %s", repository.getName()));
             return new MergeAggregatesIntoMetrics().execute(
                 new AggregatePullRequests().execute(
                     pullRequestList

@@ -23,7 +23,11 @@ public class ShellRequest {
 
     private String filePath;
 
+    private boolean silence;
+
     public Date transformYearMonthToDate(YearMonth yearMonth) {
+        System.out.format("%s, %s\n", yearMonth.toString(),
+            yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toString());
         return Date.from(yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }

@@ -2,27 +2,20 @@ package io.pakland.mdas.githubstats.infrastructure.github.repository;
 
 import io.pakland.mdas.githubstats.application.exceptions.HttpException;
 import io.pakland.mdas.githubstats.application.mappers.PullRequestMapper;
-import io.pakland.mdas.githubstats.domain.DateRange;
-import io.pakland.mdas.githubstats.domain.PullRequest;
-import io.pakland.mdas.githubstats.domain.PullRequestState;
-import io.pakland.mdas.githubstats.domain.Repository;
+import io.pakland.mdas.githubstats.domain.*;
 import io.pakland.mdas.githubstats.domain.repository.PullRequestExternalRepository;
 import io.pakland.mdas.githubstats.domain.utils.InternalCaching;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPageablePullRequestRequest;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubPullRequestDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.core.publisher.Mono;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Mono;
 
 public class PullRequestGitHubRepository implements PullRequestExternalRepository {
 
     private final WebClientConfiguration webClientConfiguration;
-    private final Logger logger = LoggerFactory.getLogger(PullRequestGitHubRepository.class);
 
     private final InternalCaching<String, List<PullRequest>> cache = new InternalCaching<>();
 
@@ -54,7 +47,8 @@ public class PullRequestGitHubRepository implements PullRequestExternalRepositor
                 .parallel()
                 .filter(pr -> {
                     boolean isNull = Objects.isNull(pr.getUser());
-                    boolean isInRange = DateRange.builder().from(from.toInstant()).to(to.toInstant()).build().isBetweenRange(pr.getCreatedAt());
+                    boolean isInRange = DateRange.builder().from(from.toInstant())
+                        .to(to.toInstant()).build().isBetweenRange(pr.getCreatedAt());
                     return !isNull && isInRange;
                 })
                 .flatMap(pr -> fetchPullRequestDetail(repository, pr.getNumber()))
@@ -66,13 +60,15 @@ public class PullRequestGitHubRepository implements PullRequestExternalRepositor
 
             return result;
         } catch (WebClientResponseException ex) {
-            logger.error(ex.toString());
+            System.err.println(ex);
             throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
         }
     }
 
-    private Mono<GitHubPullRequestDTO> fetchPullRequestDetail(Repository repository, Integer prNumber) {
-        final String prDetailUri = String.format("https://api.github.com/repos/%s/%s/pulls/%s", repository.getOwnerLogin(),
+    private Mono<GitHubPullRequestDTO> fetchPullRequestDetail(Repository repository,
+        Integer prNumber) {
+        final String prDetailUri = String.format("https://api.github.com/repos/%s/%s/pulls/%s",
+            repository.getOwnerLogin(),
             repository.getName(), prNumber);
         return this.webClientConfiguration.getWebClient().get()
             .uri(prDetailUri)

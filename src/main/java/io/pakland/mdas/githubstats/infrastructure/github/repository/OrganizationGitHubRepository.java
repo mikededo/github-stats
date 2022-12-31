@@ -5,16 +5,12 @@ import io.pakland.mdas.githubstats.application.mappers.OrganizationMapper;
 import io.pakland.mdas.githubstats.domain.Organization;
 import io.pakland.mdas.githubstats.domain.repository.OrganizationExternalRepository;
 import io.pakland.mdas.githubstats.infrastructure.github.model.GitHubOrganizationDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-
 import java.util.List;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 public class OrganizationGitHubRepository implements OrganizationExternalRepository {
 
     private final WebClientConfiguration webClientConfiguration;
-    private final Logger logger = LoggerFactory.getLogger(OrganizationGitHubRepository.class);
 
     public OrganizationGitHubRepository(WebClientConfiguration webClientConfiguration) {
         this.webClientConfiguration = webClientConfiguration;
@@ -33,7 +29,7 @@ public class OrganizationGitHubRepository implements OrganizationExternalReposit
                 .collectList()
                 .block();
         } catch (WebClientResponseException ex) {
-            logger.error(ex.toString());
+            System.err.println(ex);
             throw new HttpException(ex.getRawStatusCode(), ex.getMessage());
         }
     }

@@ -7,6 +7,7 @@ import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.NameValidator;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.YearMonthValidator;
 import java.time.YearMonth;
+import java.util.Objects;
 import org.springframework.shell.standard.ShellOption;
 
 @org.springframework.shell.standard.ShellComponent
@@ -17,7 +18,8 @@ public abstract class ShellComponent {
         @ShellOption(value = {"key"}) String apiKey,
         @ShellOption(value = {"from"}) String fromDate,
         @ShellOption(value = {"to"}) String toDate,
-        @ShellOption(value = {"path"}) String path
+        @ShellOption(value = {"path"}) String path,
+        @ShellOption(value = {"silence"}) String silence
     ) {
         YearMonthValidator yearMonthValidator = new YearMonthValidator();
         NameValidator nameValidator = new NameValidator();
@@ -41,6 +43,7 @@ public abstract class ShellComponent {
             .dateFrom(dateFrom)
             .dateTo(dateTo)
             .filePath(path)
+            .silence(Objects.equals(silence, "true"))
             .build();
 
         MainController main = new MainController(shellRequest);
