@@ -19,7 +19,10 @@ import java.util.Arrays;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "metric")
+@Table(name = "metric",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {
+                "organization", "team_slug", "user_name", "year_month" })
+        })
 public class Metric {
 
     @Id
