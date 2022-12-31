@@ -6,20 +6,11 @@ import io.pakland.mdas.githubstats.infrastructure.controller.MainController;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.NameValidator;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.YearMonthValidator;
-import org.springframework.shell.standard.ShellOption;
-
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
+import org.springframework.shell.standard.ShellOption;
 
 @org.springframework.shell.standard.ShellComponent
 public abstract class ShellComponent {
-
-    private final OptionType optionType;
-
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    protected ShellComponent(OptionType optionType) {
-       this.optionType = optionType;
-    }
 
     private boolean run(
         @ShellOption(value = {"n"}) String userName,
@@ -32,19 +23,18 @@ public abstract class ShellComponent {
 
         boolean isInputValid =
             yearMonthValidator.validate(fromDate) &&
-            yearMonthValidator.validate(toDate) &&
-            nameValidator.validate(userName);
+                yearMonthValidator.validate(toDate) &&
+                nameValidator.validate(userName);
 
         if (!isInputValid) {
             return false;
         }
 
-        YearMonth dateFrom = YearMonth.parse(fromDate,yearMonthValidator.getFormatter());
-        YearMonth dateTo = YearMonth.parse(toDate,yearMonthValidator.getFormatter());
+        YearMonth dateFrom = YearMonth.parse(fromDate, yearMonthValidator.getFormatter());
+        YearMonth dateTo = YearMonth.parse(toDate, yearMonthValidator.getFormatter());
 
-        ShellRequest shellRequest;
-        shellRequest = ShellRequest.builder()
-            .entityType(this.optionType)
+        ShellRequest shellRequest = ShellRequest.builder()
+            .entityType(getType())
             .name(userName)
             .apiKey(apiKey)
             .dateFrom(dateFrom)
@@ -57,5 +47,7 @@ public abstract class ShellComponent {
 
         return true;
     }
+
+    abstract OptionType getType();
 
 }

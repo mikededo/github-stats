@@ -18,6 +18,9 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
     @JsonProperty("state")
     private GitHubPullRequestStateDTO state;
 
+    @JsonProperty("merged_at")
+    private String mergedTimestamp;
+
     @JsonProperty("created_at")
     private Instant createdAt;
 
@@ -49,6 +52,11 @@ public class GitHubPullRequestDTO implements PullRequestDTO {
     @Override
     public PullRequestState getState() {
         return this.state.getValue();
+    }
+
+    @Override
+    public boolean getMerged() {
+        return this.mergedTimestamp != null;
     }
 
     @Override

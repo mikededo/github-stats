@@ -4,7 +4,7 @@ spring:
   main:
     banner-mode: off
   datasource:
-    url: jdbc:postgresql://pksuns.pakland.io:9000/github_stats2
+    url: jdbc:postgresql://pksuns.pakland.io:9000/github_stats
     username: mdas
     password: 6%9%cqA#y#89rHS8
     driverClassName: org.postgresql.Driver
@@ -28,7 +28,3 @@ logging:
     root: INFO
   file:
     name: console_output.log
-github:
-  api:
-    url: https://api.github.com
-    key: #TODO: introduce your own API Key until setting it on console functionality is available.

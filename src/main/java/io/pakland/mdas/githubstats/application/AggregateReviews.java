@@ -17,12 +17,13 @@ public class AggregateReviews {
         return reviews
             .stream()
             .collect(
-                Collectors.groupingBy(review -> review.getUser().getTeam(),
+                Collectors.groupingBy(review -> review.getPullRequest().getRepository().getTeam(),
                     Collectors.groupingBy(Review::getUser)));
     }
 
     private static Map<User, ReviewAggregation> groupReviewAggregationsByUser(
-        Map<User, List<Review>> userReviewMap) {
+        Map<User, List<Review>> userReviewMap
+    ) {
         Map<User, ReviewAggregation> aggReviewsByUser = new HashMap<>();
         userReviewMap.forEach((user, reviewList) ->
             aggReviewsByUser.put(user, ReviewAggregation.aggregate(reviewList))

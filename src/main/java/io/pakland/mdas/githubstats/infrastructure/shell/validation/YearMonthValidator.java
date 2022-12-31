@@ -16,12 +16,12 @@ public class YearMonthValidator implements InputValidator<String> {
             inputYearMonth = YearMonth.parse(input,getFormatter());
         }
         catch (DateTimeParseException e) {
-            System.out.println("Input date doesn't have correct MM/YY format");
+            System.err.println("Input date doesn't have correct MM/YY format");
             return false;
         }
 
         if(YearMonth.now().isBefore(inputYearMonth.plusMonths(1))) {
-            System.out.println("Is not allowed to request a present month or future dates");
+            System.err.println("Is not allowed to request a present month or future dates");
             return false;
         }
 

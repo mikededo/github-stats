@@ -1,7 +1,9 @@
 package io.pakland.mdas.githubstats.domain;
 
 import java.util.List;
+import lombok.Getter;
 
+@Getter
 public class ReviewAggregation {
 
     private int bodyLength;
@@ -16,6 +18,10 @@ public class ReviewAggregation {
 
     public static ReviewAggregation aggregate(List<Review> reviews) {
         ReviewAggregation aggregation = new ReviewAggregation();
+        if (reviews == null) {
+            return aggregation;
+        }
+
         reviews.forEach(review -> {
             if (review.isInternal()) {
                 aggregation.internalReviewCount++;
@@ -30,5 +36,16 @@ public class ReviewAggregation {
 
     public int averageBodyLength() {
         return bodyLength / (internalReviewCount + externalReviewCount);
+    }
+
+    public ReviewAggregation merge(ReviewAggregation other) {
+        if (other == null) {
+            return this;
+        }
+        ReviewAggregation result = new ReviewAggregation();
+        result.bodyLength = this.bodyLength + other.bodyLength;
+        result.externalReviewCount = this.externalReviewCount + other.externalReviewCount;
+        result.internalReviewCount = this.internalReviewCount + other.internalReviewCount;
+        return result;
     }
 }

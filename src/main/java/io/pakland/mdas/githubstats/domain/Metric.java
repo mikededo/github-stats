@@ -1,18 +1,13 @@
 package io.pakland.mdas.githubstats.domain;
 
 import io.pakland.mdas.githubstats.domain.utils.YearMonthDateAttributeConverter;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NaturalId;
-
-import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Data
@@ -20,9 +15,9 @@ import java.util.Arrays;
 @AllArgsConstructor
 @Builder
 @Table(name = "metric",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {
-                "organization", "team_slug", "user_name", "year_month" })
-        })
+    uniqueConstraints = {@UniqueConstraint(columnNames = {
+        "organization", "team_slug", "user_name", "to", "from"})
+    })
 public class Metric {
 
     @Id
@@ -39,6 +34,9 @@ public class Metric {
 
     @Column(name = "user_name", nullable = false)
     private String userName;
+
+    @Column(name = "total_pulls", nullable = false)
+    private Integer totalPulls;
 
     @Column(name = "merged_pulls", nullable = false)
     private Integer mergedPulls;
@@ -62,19 +60,47 @@ public class Metric {
     private Integer linesRemoved;
 
     @Column(
-            name = "year_month",
-            columnDefinition = "date",
-            nullable = false
+        name = "to",
+        columnDefinition = "date",
+        nullable = false
     )
     @Convert(
-            converter = YearMonthDateAttributeConverter.class
+        converter = YearMonthDateAttributeConverter.class
     )
-    private YearMonth yearMonth;
+    private YearMonth to;
+
+    @Column(
+        name = "from",
+        columnDefinition = "date",
+        nullable = false
+    )
+    @Convert(
+        converter = YearMonthDateAttributeConverter.class
+    )
+    private YearMonth from;
+
+    public static Metric empty() {
+        Metric result = new Metric();
+        result.totalPulls = 0;
+        result.mergedPulls = 0;
+        result.internalReviews = 0;
+        result.externalReviews = 0;
+        result.commentsAvgLength = 0;
+        result.commitsCount = 0;
+        result.linesAdded = 0;
+        result.linesRemoved = 0;
+        return result;
+    }
+
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Metric)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Metric)) {
+            return false;
+        }
         return id != null && id.equals(((Metric) o).getId());
     }
 
@@ -84,13 +110,16 @@ public class Metric {
     }
 
     public ArrayList<String> getValuesAsStringArrayList() {
-        String yearMonthDate = yearMonth.atDay(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String to = this.to.atDay(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        String from = this.from.atDay(1).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         return new ArrayList<>(Arrays.asList(
-                Integer.toString(id), organization, teamSlug, userName,
-                Integer.toString(mergedPulls), Integer.toString(internalReviews), Integer.toString(externalReviews),
-                Integer.toString(commentsAvgLength), Integer.toString(commitsCount), Integer.toString(linesAdded),
-                Integer.toString(linesRemoved), yearMonthDate)
+            organization, teamSlug, userName,
+            Integer.toString(totalPulls), Integer.toString(mergedPulls),
+            Integer.toString(internalReviews), Integer.toString(externalReviews),
+            Integer.toString(commentsAvgLength), Integer.toString(commitsCount),
+            Integer.toString(linesAdded),
+            Integer.toString(linesRemoved), from, to)
         );
     }
 }

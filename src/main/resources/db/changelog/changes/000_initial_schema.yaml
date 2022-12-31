@@ -36,6 +36,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: total_pulls
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
                   name: internal_reviews
                   type: int
                   constraints:
@@ -66,7 +71,17 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: year_month
+                  name: from
                   type: date
                   constraints:
                     nullable: false
+              - column:
+                  name: to
+                  type: date
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            columnNames:  organization, team_slug, user_name, from, to
+            constraintName:  org_team_user_range_uniq
+            schemaName:  public
+            tableName:  metric
