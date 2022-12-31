@@ -42,40 +42,6 @@ public class GitHubController {
         this.commentRepository = new CommentGitHubRepository(webClientConfiguration);
     }
 
-    private static void mergeReviewAggregations(
-        Map<Team, Map<User, ReviewAggregation>> result,
-        Entry<Team, Map<User, ReviewAggregation>> futureEntry
-    ) {
-        Map<User, ReviewAggregation> maybeReviewAggregation = result.get(
-            futureEntry.getKey());
-        if (maybeReviewAggregation == null) {
-            result.put(futureEntry.getKey(), futureEntry.getValue());
-        } else {
-            maybeReviewAggregation.entrySet().parallelStream().forEach(ttEntry -> {
-                maybeReviewAggregation
-                    .put(ttEntry.getKey(),
-                        ttEntry.getValue().merge(futureEntry.getValue().get(ttEntry.getKey())));
-            });
-        }
-    }
-
-    private static void mergeCommentAggregation(
-        Map<Team, Map<User, CommentAggregation>> result,
-        Entry<Team, Map<User, CommentAggregation>> futureEntry
-    ) {
-        Map<User, CommentAggregation> maybeCommentAggregation = result.get(
-            futureEntry.getKey());
-        if (maybeCommentAggregation == null) {
-            result.put(futureEntry.getKey(), futureEntry.getValue());
-        } else {
-            maybeCommentAggregation.entrySet().parallelStream().forEach(ttEntry -> {
-                maybeCommentAggregation
-                    .put(ttEntry.getKey(),
-                        ttEntry.getValue().merge(futureEntry.getValue().get(ttEntry.getKey())));
-            });
-        }
-    }
-
     public void execute() {
         try {
             // Fetch the API key's available organizations.
