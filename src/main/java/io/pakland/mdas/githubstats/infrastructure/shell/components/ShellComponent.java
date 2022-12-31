@@ -10,6 +10,8 @@ import org.springframework.shell.standard.ShellOption;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 
 @org.springframework.shell.standard.ShellComponent
 public abstract class ShellComponent {
@@ -20,6 +22,8 @@ public abstract class ShellComponent {
     protected ShellComponent(OptionType optionType) {
        this.optionType = optionType;
     }
+
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM/yy");
 
     private boolean run(
         @ShellOption(value = {"n"}) String userName,
@@ -35,28 +39,25 @@ public abstract class ShellComponent {
             && userNameValidator.validate(userName);
 
         if (!isInputValid) {
-            // Alert user, and halt command
             return false;
         }
 
+        YearMonth dateFrom = YearMonth.parse(fromDate,dateTimeFormatter);
+        YearMonth dateTo = YearMonth.parse(toDate,dateTimeFormatter);
+
         ShellRequest shellRequest;
-        try {
-            shellRequest = ShellRequest.builder()
-                .entityType(this.optionType)
-                .name(userName)
-                .apiKey(apiKey)
-                .from(new SimpleDateFormat("dd/MM/yy").parse("01/" + fromDate))
-                .to(new SimpleDateFormat("dd/MM/yy").parse("01/" + toDate))
-                .build();
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        shellRequest = ShellRequest.builder()
+            .entityType(this.optionType)
+            .name(userName)
+            .apiKey(apiKey)
+            .dateFrom(dateFrom)
+            .dateTo(dateTo)
+            .build();
 
         MainController main = new MainController(shellRequest);
         String serializedOutput = main.execute();
         System.out.println(serializedOutput);
 
-        // TODO : return console / file / etc.. output
         return true;
     }
 
