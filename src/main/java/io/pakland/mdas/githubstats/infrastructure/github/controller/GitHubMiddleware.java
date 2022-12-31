@@ -19,6 +19,7 @@ public class GitHubMiddleware extends Middleware {
                 .type(super.request.getEntityType())
                 .from(super.request.transformYearMonthToDate(request.getDateFrom()))
                 .to(super.request.transformYearMonthToDate(request.getDateTo()))
+                .filePath(super.request.getFilePath())
                 .build());
         gitHubController.execute();
 

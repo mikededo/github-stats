@@ -16,7 +16,8 @@ public abstract class ShellComponent {
         @ShellOption(value = {"n"}) String userName,
         @ShellOption(value = {"key"}) String apiKey,
         @ShellOption(value = {"from"}) String fromDate,
-        @ShellOption(value = {"to"}) String toDate
+        @ShellOption(value = {"to"}) String toDate,
+        @ShellOption(value = {"path"}) String path
     ) {
         YearMonthValidator yearMonthValidator = new YearMonthValidator();
         NameValidator nameValidator = new NameValidator();
@@ -39,6 +40,7 @@ public abstract class ShellComponent {
             .apiKey(apiKey)
             .dateFrom(dateFrom)
             .dateTo(dateTo)
+            .filePath(path)
             .build();
 
         MainController main = new MainController(shellRequest);

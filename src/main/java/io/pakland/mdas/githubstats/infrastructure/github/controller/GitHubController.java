@@ -9,8 +9,6 @@ import io.pakland.mdas.githubstats.infrastructure.github.repository.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.*;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -42,40 +40,6 @@ public class GitHubController {
         this.commentRepository = new CommentGitHubRepository(webClientConfiguration);
     }
 
-    private static void mergeReviewAggregations(
-        Map<Team, Map<User, ReviewAggregation>> result,
-        Entry<Team, Map<User, ReviewAggregation>> futureEntry
-    ) {
-        Map<User, ReviewAggregation> maybeReviewAggregation = result.get(
-            futureEntry.getKey());
-        if (maybeReviewAggregation == null) {
-            result.put(futureEntry.getKey(), futureEntry.getValue());
-        } else {
-            maybeReviewAggregation.entrySet().parallelStream().forEach(ttEntry -> {
-                maybeReviewAggregation
-                    .put(ttEntry.getKey(),
-                        ttEntry.getValue().merge(futureEntry.getValue().get(ttEntry.getKey())));
-            });
-        }
-    }
-
-    private static void mergeCommentAggregation(
-        Map<Team, Map<User, CommentAggregation>> result,
-        Entry<Team, Map<User, CommentAggregation>> futureEntry
-    ) {
-        Map<User, CommentAggregation> maybeCommentAggregation = result.get(
-            futureEntry.getKey());
-        if (maybeCommentAggregation == null) {
-            result.put(futureEntry.getKey(), futureEntry.getValue());
-        } else {
-            maybeCommentAggregation.entrySet().parallelStream().forEach(ttEntry -> {
-                maybeCommentAggregation
-                    .put(ttEntry.getKey(),
-                        ttEntry.getValue().merge(futureEntry.getValue().get(ttEntry.getKey())));
-            });
-        }
-    }
-
     public void execute() {
         try {
             // Fetch the API key's available organizations.
@@ -87,7 +51,10 @@ public class GitHubController {
                 .filter(organization -> !userOptionRequest.isOrganizationType()
                     || organization.isNamed(userOptionRequest.getName()))
                 .forEach(organization -> resultMetrics.addAll(this.fetchTeamsFromOrganization(organization)));
-            new MetricCsvExporter().export(resultMetrics, "result.csv");
+
+            // Finally export the results
+            new ExportMetricsToFile(new GitHubMetricCsvExporter())
+                .execute(resultMetrics, userOptionRequest.getFilePath());
         } catch (HttpException | IOException e) {
             throw new RuntimeException(e);
         }

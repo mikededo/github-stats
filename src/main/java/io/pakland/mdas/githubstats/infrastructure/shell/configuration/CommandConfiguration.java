@@ -3,7 +3,7 @@ package io.pakland.mdas.githubstats.infrastructure.shell.configuration;
 import io.pakland.mdas.githubstats.infrastructure.shell.components.ShellOrganizationComponent;
 import io.pakland.mdas.githubstats.infrastructure.shell.components.ShellTeamComponent;
 import io.pakland.mdas.githubstats.infrastructure.shell.components.ShellUserComponent;
-import io.pakland.mdas.githubstats.infrastructure.shell.model.CommandRegistrationBuilder;
+import io.pakland.mdas.githubstats.infrastructure.shell.model.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.shell.command.CommandRegistration;
@@ -11,31 +11,48 @@ import org.springframework.shell.command.CommandRegistration;
 @Configuration
 public class CommandConfiguration {
 
-
     @Bean
     public CommandRegistration buildUserCommand() {
-        return new CommandRegistrationBuilder(
+        CommandRegistrationBuilder builder = new BaseCommandRegistration(
+            new ShellUserComponent(),
             "user",
             "Load data from the specified user",
             "<user-name>"
-        ).build(new ShellUserComponent());
+        );
+
+        return new FileNameCommandRegistration(
+            new ToDateCommandRegistration(new FromDateCommandRegistration(builder)),
+            "output-user.csv"
+        ).generate().build();
     }
 
     @Bean
     public CommandRegistration buildTeamCommand() {
-        return new CommandRegistrationBuilder(
+        CommandRegistrationBuilder builder = new BaseCommandRegistration(
+            new ShellTeamComponent(),
             "team",
             "Load data from all users of the specified team",
             "<team-name>"
-        ).build(new ShellTeamComponent());
+        );
+
+        return new FileNameCommandRegistration(
+            new ToDateCommandRegistration(new FromDateCommandRegistration(builder)),
+            "output-team.csv"
+        ).generate().build();
     }
 
     @Bean
     public CommandRegistration buildOrganizationCommand() {
-        return new CommandRegistrationBuilder(
+        CommandRegistrationBuilder builder = new BaseCommandRegistration(
+            new ShellOrganizationComponent(),
             "organization",
             "Load data from all users of the specified organization, grouped by their team",
             "<organization-name>"
-        ).build(new ShellOrganizationComponent());
+        );
+
+        return new FileNameCommandRegistration(
+            new ToDateCommandRegistration(new FromDateCommandRegistration(builder)),
+            "output-organization.csv"
+        ).generate().build();
     }
 }
