@@ -11,6 +11,4 @@ public interface ReviewDTO {
     UserDTO getUser();
 
     Date getSubmittedAt();
-
-    boolean getReviewFromInternalAuthor();
 }

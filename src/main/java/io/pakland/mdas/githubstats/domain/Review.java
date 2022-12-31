@@ -1,19 +1,14 @@
 package io.pakland.mdas.githubstats.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import lombok.*;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Review {
+@Getter
+@Setter
+public class Review implements Authored {
 
     private Integer id;
 
@@ -25,20 +20,21 @@ public class Review {
 
     private PullRequest pullRequest;
 
-    // This value allows us to know if the author of the review is part of the team that
-    // owns the repository
-    private boolean isReviewFromInternalAuthor;
-
     public boolean isInternal() {
-        return this.isReviewFromInternalAuthor;
+        return pullRequest.getRepository().getTeam().hasUser(user);
     }
 
     public int bodySize() {
-        return this.body.length();
+        return body.length();
     }
 
+    @Override
     public boolean isAuthorNamed(String name) {
         return user.isNamed(name);
     }
 
+    @Override
+    public boolean isAuthorFromEntityTeam() {
+        return this.pullRequest.userBelongsToTeam(this.user);
+    }
 }

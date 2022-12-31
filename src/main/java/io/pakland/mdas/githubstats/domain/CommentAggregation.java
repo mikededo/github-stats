@@ -14,6 +14,9 @@ public class CommentAggregation {
 
     public static CommentAggregation aggregate(List<Comment> comments) {
         CommentAggregation aggregation = new CommentAggregation();
+        if (comments == null) {
+           return aggregation;
+        }
         comments.forEach(comment -> {
             aggregation.bodyLength += comment.bodySize();
             aggregation.commentCount++;
@@ -23,5 +26,15 @@ public class CommentAggregation {
 
     public int averageBodyLength() {
         return bodyLength / commentCount;
+    }
+
+    public CommentAggregation merge(CommentAggregation other) {
+        if (other == null) {
+            return this;
+        }
+        CommentAggregation result = new CommentAggregation();
+        result.bodyLength = this.bodyLength + other.bodyLength;
+        result.commentCount = this.commentCount + other.commentCount;
+        return result;
     }
 }

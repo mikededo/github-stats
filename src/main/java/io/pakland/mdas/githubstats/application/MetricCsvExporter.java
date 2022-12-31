@@ -1,7 +1,6 @@
 package io.pakland.mdas.githubstats.application;
 
 import io.pakland.mdas.githubstats.domain.Metric;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,7 +15,7 @@ public class MetricCsvExporter implements MetricExporter {
     public void export(List<Metric> metrics, String filePath) throws IOException {
         StringBuilder sb = new StringBuilder();
         ArrayList<String> headerFields = new ArrayList<>(Arrays.asList(
-            "id", "organization", "team_slug", "user_name", "merged_pulls",
+            "organization", "team_slug", "user_name", "total_pulls", "merged_pulls",
             "internal_reviews", "external_reviews", "comments_avg_length",
             "commits_count", "lines_added", "lines_removed", "from", "to"));
 

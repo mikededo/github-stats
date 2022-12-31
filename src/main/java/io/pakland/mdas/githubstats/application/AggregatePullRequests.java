@@ -8,16 +8,24 @@ import java.util.stream.Collectors;
 
 public class AggregatePullRequests {
 
-    PullRequestAggregation pullRequestAggregation = new PullRequestAggregation();
-
     public AggregatePullRequests() {
     }
 
     private static Map<Team, Map<User, List<PullRequest>>> groupPullRequestsByTeam(
-        List<PullRequest> pullRequests) {
+        List<PullRequest> pullRequests
+    ) {
         return pullRequests.stream().collect(
             Collectors.groupingBy(pr -> pr.getRepository().getTeam(),
                 Collectors.groupingBy(PullRequest::getUser)));
+    }
+
+    private static Map<User, PullRequestAggregation> groupPullRequestAggregationsByUser(
+        Map<User, List<PullRequest>> userPrMap
+    ) {
+        Map<User, PullRequestAggregation> aggPullRequestsByUser = new HashMap<>();
+        userPrMap.forEach((user, prList) -> aggPullRequestsByUser.put(user,
+            PullRequestAggregation.aggregate(prList)));
+        return aggPullRequestsByUser;
     }
 
     public Map<Team, Map<User, PullRequestAggregation>> execute(List<PullRequest> pullRequests) {
@@ -30,14 +38,6 @@ public class AggregatePullRequests {
         );
 
         return aggPullRequests;
-    }
-
-    private Map<User, PullRequestAggregation> groupPullRequestAggregationsByUser(
-        Map<User, List<PullRequest>> userPrMap) {
-        Map<User, PullRequestAggregation> aggPullRequestsByUser = new HashMap<>();
-        userPrMap.forEach((user, prList) -> aggPullRequestsByUser.put(user,
-            pullRequestAggregation.aggregate(prList)));
-        return aggPullRequestsByUser;
     }
 
 }

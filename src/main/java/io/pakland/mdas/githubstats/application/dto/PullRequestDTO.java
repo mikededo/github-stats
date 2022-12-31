@@ -11,6 +11,8 @@ public interface PullRequestDTO {
 
     PullRequestState getState();
 
+    boolean getMerged();
+
     Instant getClosedAt();
 
     Instant getCreatedAt();

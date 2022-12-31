@@ -47,12 +47,4 @@ public class GitHubReviewDTO implements ReviewDTO {
     public Date getSubmittedAt() {
         return this.submittedAt;
     }
-
-    @Override
-    public boolean getReviewFromInternalAuthor() {
-        return switch (this.authorAssociation) {
-            case "MEMBER", "COLLABORATOR", "OWNER" -> true;
-            default -> false;
-        };
-    }
 }
