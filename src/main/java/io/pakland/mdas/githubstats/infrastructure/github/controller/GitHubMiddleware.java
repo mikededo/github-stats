@@ -17,8 +17,8 @@ public class GitHubMiddleware extends Middleware {
                 .name(super.request.getName())
                 .apiKey(super.request.getApiKey())
                 .type(super.request.getEntityType())
-                .from(super.request.getFrom())
-                .to(super.request.getTo())
+                .from(super.request.transformYearMonthToDate(request.getDateFrom()))
+                .to(super.request.transformYearMonthToDate(request.getDateTo()))
                 .filePath(super.request.getFilePath())
                 .silenced(super.request.isSilence())
                 .build());
