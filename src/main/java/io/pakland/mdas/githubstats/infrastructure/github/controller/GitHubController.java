@@ -10,12 +10,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@Component
-@NoArgsConstructor
+import org.springframework.stereotype.Controller;
+
+import javax.annotation.PostConstruct;
+
+@Controller
 public class GitHubController {
+
+    private final SaveMetrics saveMetrics;
 
     private GitHubOptionRequest userOptionRequest;
     private OrganizationExternalRepository organizationRepository;
@@ -26,9 +29,13 @@ public class GitHubController {
     private ReviewExternalRepository reviewRepository;
     private CommentExternalRepository commentRepository;
 
-    public GitHubController(GitHubOptionRequest userOptionRequest) {
+    public GitHubController(SaveMetrics saveMetrics) {
+        this.saveMetrics = saveMetrics;
+    }
+
+    private void githubInit(GitHubOptionRequest userOptionRequest) {
         WebClientConfiguration webClientConfiguration = new WebClientConfiguration(
-            "https://api.github.com", userOptionRequest.getApiKey());
+                "https://api.github.com", userOptionRequest.getApiKey());
 
         this.userOptionRequest = userOptionRequest;
         this.organizationRepository = new OrganizationGitHubRepository(webClientConfiguration);
@@ -50,7 +57,9 @@ public class GitHubController {
         }
     }
 
-    public void execute() {
+    public void execute(GitHubOptionRequest userOptionRequest) {
+        githubInit(userOptionRequest);
+
         logIfNotSilenced("- Fetching organizations");
 
         try {
@@ -68,6 +77,9 @@ public class GitHubController {
                     resultMetrics.addAll(
                         this.fetchTeamsFromOrganization(organization));
                 });
+
+            logIfNotSilenced("- Saving data to database...");
+            saveMetrics.execute(resultMetrics);
 
             logIfNotSilenced("- Preparing CSV...");
             // Finally export the results

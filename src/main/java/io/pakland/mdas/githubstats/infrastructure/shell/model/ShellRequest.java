@@ -1,6 +1,8 @@
 package io.pakland.mdas.githubstats.infrastructure.shell.model;
 
 import io.pakland.mdas.githubstats.domain.OptionType;
+
+import java.time.Instant;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.Date;
@@ -13,7 +15,7 @@ public class ShellRequest {
 
     private String apiKey;
 
-    private OptionType entityType;
+    private OptionType optionType;
 
     private String name;
 
@@ -26,8 +28,6 @@ public class ShellRequest {
     private boolean silence;
 
     public Date transformYearMonthToDate(YearMonth yearMonth) {
-        System.out.format("%s, %s\n", yearMonth.toString(),
-            yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toString());
-        return Date.from(yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return Date.from(Instant.from(yearMonth.atDay(1).atStartOfDay(ZoneId.of("UTC")).toInstant()));
     }
 }

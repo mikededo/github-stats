@@ -60,7 +60,7 @@ public class Metric {
     private Integer linesRemoved;
 
     @Column(
-        name = "to",
+        name = "\"to\"",
         columnDefinition = "date",
         nullable = false
     )
@@ -70,7 +70,7 @@ public class Metric {
     private YearMonth to;
 
     @Column(
-        name = "from",
+        name = "\"from\"",
         columnDefinition = "date",
         nullable = false
     )
