@@ -1,21 +1,20 @@
 package io.pakland.mdas.githubstats.infrastructure.controller;
 
 import io.pakland.mdas.githubstats.infrastructure.github.controller.GitHubMiddleware;
-import io.pakland.mdas.githubstats.infrastructure.postgres.PostgresMiddleware;
+import io.pakland.mdas.githubstats.infrastructure.postgres.controller.PostgresMiddleware;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class MainController {
 
     private final Middleware middleware;
 
-    public MainController(ShellRequest request) {
-        middleware = Middleware.link(
-            new PostgresMiddleware(request),
-            new GitHubMiddleware(request)
-        );
+    public MainController(PostgresMiddleware postgresMiddleware, GitHubMiddleware gitHubMiddleware) {
+        middleware = Middleware.link( postgresMiddleware, gitHubMiddleware);
     }
 
-    public String execute() {
-        return middleware.execute();
+    public void execute(ShellRequest request) {
+        middleware.execute(request);
     }
 }

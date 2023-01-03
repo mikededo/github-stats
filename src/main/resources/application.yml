@@ -16,15 +16,14 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         default_schema: public
-        jdbc:
-          time_zone: UTC
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/changelog-master.yaml
   profiles:
-    active: dev
+    active: prod
+  file:
+    name: console_output.log
+
 logging:
   level:
     root: INFO
-  file:
-    name: console_output.log

@@ -6,14 +6,21 @@ import io.pakland.mdas.githubstats.infrastructure.controller.MainController;
 import io.pakland.mdas.githubstats.infrastructure.shell.model.ShellRequest;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.NameValidator;
 import io.pakland.mdas.githubstats.infrastructure.shell.validation.YearMonthValidator;
+import org.springframework.shell.standard.ShellOption;
+
 import java.time.YearMonth;
 import java.util.Objects;
-import org.springframework.shell.standard.ShellOption;
 
 @org.springframework.shell.standard.ShellComponent
 public abstract class ShellComponent {
 
-    private boolean run(
+    private final MainController mainController;
+
+    protected ShellComponent(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    private void run(
         @ShellOption(value = {"n"}) String userName,
         @ShellOption(value = {"key"}) String apiKey,
         @ShellOption(value = {"from"}) String fromDate,
@@ -30,14 +37,14 @@ public abstract class ShellComponent {
                 nameValidator.validate(userName);
 
         if (!isInputValid) {
-            return false;
+            return;
         }
 
         YearMonth dateFrom = YearMonth.parse(fromDate, yearMonthValidator.getFormatter());
         YearMonth dateTo = YearMonth.parse(toDate, yearMonthValidator.getFormatter());
 
         ShellRequest shellRequest = ShellRequest.builder()
-            .entityType(getType())
+            .optionType(getType())
             .name(userName)
             .apiKey(apiKey)
             .dateFrom(dateFrom)
@@ -46,11 +53,8 @@ public abstract class ShellComponent {
             .silence(Objects.equals(silence, "true"))
             .build();
 
-        MainController main = new MainController(shellRequest);
-        String serializedOutput = main.execute();
-        System.out.println(serializedOutput);
+        mainController.execute(shellRequest);
 
-        return true;
     }
 
     abstract OptionType getType();
