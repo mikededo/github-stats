@@ -35,3 +35,30 @@ Here's an example of an execution command:
 # fetching information for github stats organization
 github-stats> organization -n github-stats-22 -k <api-key> --from 11/22 --to 12/22 --path output/github-stats-22.csv
 ```
+
+### CheckStyle
+
+```sh
+# compile the code
+mvn clean site
+```
+
+### Sonar
+
+Before running sonar:
+
+- Create a user
+- Register the project in sonar
+- Choose maven
+- Copy git code with credentials
+
+```sh
+# run in docker 
+docker run -d --name sonarqube -p 9000:9000 sonarqube
+
+# example 
+mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=github-stats \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=sqp_3767710a555637629d9c6281fbf1bdf5fe87a942
+```
